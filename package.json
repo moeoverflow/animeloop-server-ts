@@ -1,0 +1,43 @@
+{
+  "name": "animeloop-server-ts",
+  "version": "1.0.0",
+  "description": "Animeloop server based on TypeScript",
+  "main": "index.js",
+  "repository": "https://github.com/shincurry/animeloop-server-ts.git",
+  "author": "ShinCurry <shincurryyang@gmail.com>",
+  "license": "GPL 3.0",
+  "scripts": {
+    "lint": "node_modules/.bin/tslint --project tsconfig.json --config tslint.json",
+    "test": "node_modules/.bin/mocha",
+    "build": "node_modules/.bin/tsc",
+    "watch": "node_modules/.bin/tsc -w",
+    "dev-api": "node_modules/.bin/nodemon --stack_trace_limit=100 dist/entrypoints/api.js",
+    "start-api": "node dist/entrypoints/api.js"
+  },
+  "devDependencies": {
+    "@types/async": "^2.0.49",
+    "@types/body-parser": "^1.17.0",
+    "@types/chai": "^4.1.5",
+    "@types/chai-as-promised": "^7.1.0",
+    "@types/express": "^4.16.0",
+    "@types/express-session": "^1.15.11",
+    "@types/mocha": "^5.2.5",
+    "@types/mongodb": "^3.1.9",
+    "@types/mongoose": "^5.2.17",
+    "@types/node": "^10.10.3",
+    "chai": "^4.1.2",
+    "mocha": "^5.2.0",
+    "mocha-steps": "^1.1.0",
+    "nodemon": "^1.18.4",
+    "ts-node": "^7.0.1",
+    "tslint": "^5.11.0",
+    "typescript": "^3.0.3"
+  },
+  "dependencies": {
+    "async": "^2.6.1",
+    "express": "^4.16.3",
+    "express-session": "^1.15.6",
+    "express-validator": "^5.3.0",
+    "mongoose": "^5.2.17"
+  }
+}
