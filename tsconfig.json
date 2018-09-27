@@ -4,6 +4,9 @@
         "esModuleInterop": true,
         "target": "es6",
         "noImplicitAny": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "noUnusedLocals": true,
         "moduleResolution": "node",
         "sourceMap": true,
         "outDir": "dist",
@@ -16,6 +19,10 @@
         }
     },
     "include": [
-        "src/**/*"
+        "src/**/*.ts",
+        "test/*.ts"
+    ],
+    "exclude": [
+        "node_modules"
     ]
 }
