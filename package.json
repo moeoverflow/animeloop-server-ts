@@ -12,7 +12,9 @@
     "build": "node_modules/.bin/tsc",
     "watch": "node_modules/.bin/tsc -w",
     "dev-api": "NODE_ENV=development node_modules/.bin/nodemon --stack_trace_limit=100 dist/entrypoints/api.js",
-    "start-api": "NODE_ENV=production node dist/entrypoints/api.js"
+    "dev-automator": "NODE_ENV=development node_modules/.bin/nodemon --stack_trace_limit=100 dist/entrypoints/automator.js",
+    "start-api": "NODE_ENV=production node dist/entrypoints/api.js",
+    "start-automator": "NODE_ENV=production node dist/entrypoints/automator.js"
   },
   "devDependencies": {
     "@types/async": "^2.0.49",
@@ -29,6 +31,7 @@
     "@types/mongoose": "^5.2.17",
     "@types/mongoose-auto-increment": "^5.0.30",
     "@types/node": "^10.10.3",
+    "@types/node-schedule": "^1.2.2",
     "chai": "^4.1.2",
     "mocha": "^5.2.0",
     "mocha-steps": "^1.1.0",
@@ -38,17 +41,32 @@
     "typescript": "^3.0.3"
   },
   "dependencies": {
+    "@types/bull": "^3.3.20",
+    "@types/mkdirp": "^0.5.2",
+    "@types/shell-escape": "^0.2.0",
+    "@types/shelljs": "^0.8.0",
     "async": "^2.6.1",
+    "bluebird": "^3.5.2",
+    "bull": "^3.4.8",
     "connect-redis": "^3.3.3",
     "cors": "^2.8.4",
+    "date-fns": "^1.29.0",
     "express": "^4.16.3",
     "express-session": "^1.15.6",
     "express-validator": "^5.3.0",
+    "lodash": "^4.17.11",
     "log4js": "^3.0.5",
+    "mkdirp": "^0.5.1",
     "mongoose": "^5.2.17",
     "mongoose-auto-increment": "^5.0.1",
-    "mongoose-findorcreate": "^3.0.0",
+    "node-schedule": "^1.3.0",
     "reflect-metadata": "^0.1.12",
-    "typedi": "^0.8.0"
+    "rss-parser": "^3.4.3",
+    "shell-escape": "^0.2.0",
+    "shelljs": "^0.8.2",
+    "transmission": "^0.4.9",
+    "typedi": "^0.8.0",
+    "typegoose": "^5.4.0",
+    "types": "^0.1.1"
   }
 }

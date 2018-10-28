@@ -1,3 +1,5 @@
+const path = require('path')
+
 const config = {
   mongodb: {
     url: 'mongodb://localhost:27017/animeloop-dev'
@@ -14,6 +16,19 @@ const config = {
         db: 10,
       }
     },
+  },
+  horribleSubs: {
+    blacklist: [],
+    rss: ''
+  },
+  transmission: {
+    host: 'localhost',
+    port: 9091,
+    username: '',
+    password: '',
+    ssl: false,
+    url: '/transmission/rpc',
+    downloadDir: ''
   }
 }
 
