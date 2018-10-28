@@ -1,3 +1,9 @@
+# VS Code
+.vscode
+
+# JetBrains
+.idea
+
 # Config
 config.js
 
