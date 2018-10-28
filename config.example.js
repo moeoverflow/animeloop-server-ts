@@ -4,6 +4,12 @@ const config = {
   mongodb: {
     url: 'mongodb://localhost:27017/animeloop-dev'
   },
+  redis: {
+    host: '127.0.0.1',
+    port: 6379,
+    auth: '',
+    db: 10
+  },
   api: {
     host: '127.0.0.1',
     port: 7775,
@@ -16,6 +22,17 @@ const config = {
         db: 10,
       }
     },
+  },
+  storage: {
+    dir: {
+      data: path.join(__dirname, 'storage', 'data'),
+      upload: path.join(__dirname, 'storage', 'upload'),
+      raw: path.join(__dirname, 'storage', 'raw'),
+      autogen: path.join(__dirname, 'storage', 'autogen'),
+    },
+  },
+  animeloopCli: {
+    bin: ''
   },
   horribleSubs: {
     blacklist: [],
