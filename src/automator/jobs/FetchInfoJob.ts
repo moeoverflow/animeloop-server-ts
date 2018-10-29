@@ -74,7 +74,7 @@ export async function FetchInfoJob(job: Queue.Job<any>) {
 
   const { seriesTitle, episodeNo, anilistId } = parseResult(result)
 
-  animeloopTask.update({
+  await animeloopTask.update({
     $set: {
       status: AnimeloopTaskStatus.InfoCompleted,
       seriesTitle,
@@ -82,6 +82,7 @@ export async function FetchInfoJob(job: Queue.Job<any>) {
       anilistId
     }
   })
+  job.progress(100)
 }
 
 function parseResult(doc: ITraceMoeDoc) {

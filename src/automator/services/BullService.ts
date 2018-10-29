@@ -39,7 +39,6 @@ export class BullService {
     const { taskId } = data
     logger.info(`add animeloop-cli job: ${taskId}`)
     return await this.queue.add(Jobs.AnimeloopCli, data, {
-      jobId: `--ANIMELOOP-CLI--${taskId}`,
       delay: 1 * 1000
     })
   }
@@ -47,9 +46,7 @@ export class BullService {
   async addFetchInfoJob(data: FetchInfoJobData) {
     const { taskId } = data
     logger.info(`fetch info job: ${taskId}`)
-    return await this.queue.add(Jobs.FetchInfo, data, {
-      jobId: `--FETCH-INFO--${taskId}`
-    })
+    return await this.queue.add(Jobs.FetchInfo, data)
   }
 
 

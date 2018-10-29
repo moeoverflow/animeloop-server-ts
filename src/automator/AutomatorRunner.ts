@@ -197,18 +197,28 @@ export default class AutomatorRunner {
 
 
     /**
-     * check downloaded task every minute,
-     * fetch anime info from trace.moe
+     * update task status InfoCompleted
      */
-    // schedule.scheduleJob('0 * * * * *', async () => {
-    //   logger.info('fetch anime info from trace.moe')
-    //   const automatorTasks = await AutomatorTaskModel.find({
-    //     status: AutomatorTaskStatus.Downloaded
-    //   })
-    //   for (const automatorTask of automatorTasks) {
-    //     await automatorTask.update({ $set: { status: AutomatorTaskStatus.FetchingInfo } })
-    //     this.traceMoeService.
-    //   }
-    // })
+    schedule.scheduleJob('6 * * * * *', async () => {
+      logger.info('ScheduleJob:update_task_status_infocomplete')
+
+      const automatorTasks = await AutomatorTaskModel.find({
+        status: AutomatorTaskStatus.InfoFetching
+      })
+
+      for (const automatorTask of automatorTasks) {
+        const animeloopTasks = await AnimeloopTaskModel.find({
+          automatorTask: automatorTask._id
+        })
+        const successTasks = animeloopTasks.filter(task => task.status === AnimeloopTaskStatus.InfoCompleted)
+        if (animeloopTasks.length > 0 && animeloopTasks.length === successTasks.length) {
+          await automatorTask.update({
+            $set: {
+              status: AutomatorTaskStatus.InfoCompleted
+            }
+          })
+        }
+      }
+    })
   }
 }

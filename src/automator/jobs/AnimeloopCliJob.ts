@@ -111,4 +111,5 @@ export async function AnimeloopCliJob(job: Queue.Job<any>) {
       output: output
     }
   })
+  job.progress(100)
 }
