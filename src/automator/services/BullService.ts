@@ -5,12 +5,14 @@ import { ConfigService } from '../../core/services/ConfigService'
 import Queue from 'bull'
 import { AnimeloopCliJob, AnimeloopCliJobData } from '../jobs/AnimeloopCliJob'
 import { FetchInfoJob, FetchInfoJobData } from '../jobs/FetchInfoJob'
+import { ConvertJob, ConvertJobData } from '../jobs/ConvertJob'
 
 const logger = log4js.getLogger('Automator:Service:BullService')
 
 export enum Jobs {
   AnimeloopCli = 'animeloop-cli',
-  FetchInfo = 'fetch-info'
+  FetchInfo = 'fetch-info',
+  Convert = 'convert'
 }
 
 /**
@@ -29,6 +31,7 @@ export class BullService {
     this.empty()
     this.queue.process(Jobs.AnimeloopCli, 1, AnimeloopCliJob)
     this.queue.process(Jobs.FetchInfo, FetchInfoJob)
+    this.queue.process(Jobs.Convert, ConvertJob)
   }
 
   async empty() {
@@ -49,5 +52,10 @@ export class BullService {
     return await this.queue.add(Jobs.FetchInfo, data)
   }
 
+  async addConvertJob(data: ConvertJobData) {
+    const { taskId } = data
+    logger.info(`convert job: ${taskId}`)
+    return await this.queue.add(Jobs.Convert, data)
+  }
 
 }

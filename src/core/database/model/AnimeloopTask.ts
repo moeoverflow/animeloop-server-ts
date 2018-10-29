@@ -10,6 +10,8 @@ export enum AnimeloopTaskStatus {
   InfoFetching = 'infofetching',
   InfoWait = 'waitinfo',
   InfoCompleted = 'infocompleted',
+  Converting = 'converting',
+  Converted = 'converted',
   Error = 'error',
   Done = 'done'
 }

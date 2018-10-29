@@ -17,7 +17,7 @@ export interface FetchInfoJobData {
 export interface IFetchInfoOutput {
 }
 
-export async function FetchInfoJob(job: Queue.Job<any>) {
+export async function FetchInfoJob(job: Queue.Job<FetchInfoJobData>) {
   const traceMoeService = Container.get(TraceMoeService)
   const { taskId } = job.data
 

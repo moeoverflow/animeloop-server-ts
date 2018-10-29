@@ -220,5 +220,55 @@ export default class AutomatorRunner {
         }
       }
     })
+
+
+    /**
+     * convert file
+     */
+    // schedule.scheduleJob('0 * * * * *', async () => {
+      logger.info('ScheduleJob:convert_file')
+
+      const automatorTasks = await AutomatorTaskModel.find({
+        status: AutomatorTaskStatus.InfoCompleted
+      })
+
+      for (const automatorTask of automatorTasks) {
+        const animeloopTasks = await AnimeloopTaskModel.find({
+          automatorTask: automatorTask._id
+        })
+        await automatorTask.update({ $set: { status: AutomatorTaskStatus.Converting }})
+        for (const animeloopTask of animeloopTasks) {
+          await this.bullService.addConvertJob({
+            taskId: animeloopTask._id
+          })
+        }
+      }
+    // })
+
+    /**
+     * update task status converted
+     */
+    schedule.scheduleJob('6 * * * * *', async () => {
+      logger.info('ScheduleJob:update_task_status_converted')
+
+      const automatorTasks = await AutomatorTaskModel.find({
+        status: AutomatorTaskStatus.Converting
+      })
+
+      for (const automatorTask of automatorTasks) {
+        const animeloopTasks = await AnimeloopTaskModel.find({
+          automatorTask: automatorTask._id
+        })
+        const successTasks = animeloopTasks.filter(task => task.status === AnimeloopTaskStatus.Converted)
+        if (animeloopTasks.length > 0 && animeloopTasks.length === successTasks.length) {
+          await automatorTask.update({
+            $set: {
+              status: AutomatorTaskStatus.Converted
+            }
+          })
+        }
+      }
+    })
+
   }
 }

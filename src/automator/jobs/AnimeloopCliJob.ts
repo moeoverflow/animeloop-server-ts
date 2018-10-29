@@ -31,7 +31,12 @@ export interface IAnimeloopCliOutputInfo {
     duration: number,
     files: {
       'jpg_1080p': string,
-      'mp4_1080p': string
+      'mp4_1080p': string,
+      'mp4_720p'?: string,
+      'mp4_360p'?: string,
+      'jpg_720p'?: string,
+      'jpg_360p'?: string,
+      'gif_360p'?: string
     },
     frame: {
       begin: string,
@@ -50,8 +55,8 @@ export interface IAnimeloopCliOutput {
   info: IAnimeloopCliOutputInfo
 }
 
-export async function AnimeloopCliJob(job: Queue.Job<any>) {
-  const { taskId, rawFile, tempDir, outputDir } = job.data as AnimeloopCliJobData
+export async function AnimeloopCliJob(job: Queue.Job<AnimeloopCliJobData>) {
+  const { taskId, rawFile, tempDir, outputDir } = job.data
   logger.info(`run animeloop-cli with ${path.basename(rawFile)}`)
 
   const animeloopTask = await AnimeloopTaskModel.findOneAndUpdate({

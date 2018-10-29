@@ -9,6 +9,7 @@ export enum AutomatorTaskStatus {
   Animelooped = 'animelooped',
   InfoFetching = 'infofetching',
   InfoCompleted = 'infocompleted',
+  Converting = 'converting',
   Converted = 'converted',
   Done = 'done'
 }
