@@ -43,6 +43,10 @@ const config = {
     url: '',
     token: ''
   },
+  anilist: {
+    id: '',
+    secret: '',
+  },
   transmission: {
     host: 'localhost',
     port: 9091,

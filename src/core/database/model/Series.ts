@@ -1,5 +1,7 @@
-import { prop, Typegoose } from 'typegoose'
+import { prop, Typegoose, plugin, InstanceType } from 'typegoose'
+import findOrCreate from 'mongoose-findorcreate'
 
+@plugin(findOrCreate)
 export class Series extends Typegoose {
   @prop()
   title: string
@@ -44,16 +46,18 @@ export class Series extends Typegoose {
   image_url_banner: string
 
   @prop()
-  anilist_updated_at: string
+  anilist_updated_at: Date
 
   @prop()
-  updated_at: string
+  updated_at: Date
 
   @prop()
   type: string
 
   @prop({ unique: true })
-  anilist_id: { type: Number, unique: true }
+  anilist_id: number
+
+  public static findOrCreate: (condition: Partial<InstanceType<Series>>) => Promise<{ doc: InstanceType<Series>, created: boolean }>
 }
 
 export const SeriesModel = new Series().getModelForClass(Series)

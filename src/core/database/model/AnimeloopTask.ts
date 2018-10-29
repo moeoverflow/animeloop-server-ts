@@ -1,4 +1,5 @@
-import { prop, Typegoose, Ref } from 'typegoose'
+import { prop, Typegoose, Ref, plugin, InstanceType } from 'typegoose'
+import findOrCreate from 'mongoose-findorcreate'
 import { ITraceMoeItem } from '../../../automator/services/TraceMoeService'
 import { IAnimeloopCliOutput } from '../../../automator/jobs/AnimeloopCliJob'
 import { AutomatorTask } from './AutomatorTask'
@@ -12,10 +13,11 @@ export enum AnimeloopTaskStatus {
   InfoCompleted = 'infocompleted',
   Converting = 'converting',
   Converted = 'converted',
-  Error = 'error',
+  Adding = 'adding',
   Done = 'done'
 }
 
+@plugin(findOrCreate)
 export class AnimeloopTask extends Typegoose {
   @prop({
     required: true,
@@ -46,6 +48,8 @@ export class AnimeloopTask extends Typegoose {
     ref: AutomatorTask
   })
   automatorTask: Ref<AutomatorTask>
+
+  public static findOrCreate: (condition: Partial<InstanceType<AnimeloopTask>>) => Promise<{ doc: InstanceType<AnimeloopTask>, created: boolean }>
 }
 
 export const AnimeloopTaskModel = new AnimeloopTask().getModelForClass(AnimeloopTask)

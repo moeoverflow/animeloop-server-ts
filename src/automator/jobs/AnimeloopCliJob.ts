@@ -12,7 +12,7 @@ import { readFileSync, existsSync } from 'fs'
 import { AnimeloopTaskModel, AnimeloopTaskStatus } from '../../core/database/model/AnimeloopTask'
 
 const logger = log4js.getLogger('Automator:Job:AnimeloopCliJob')
-
+logger.level = 'debug'
 export interface AnimeloopCliJobData {
   taskId: string
   rawFile: string
@@ -29,13 +29,14 @@ export interface IAnimeloopCliOutputInfo {
   loops: {
     duration: number,
     files: {
-      'jpg_1080p': string,
-      'mp4_1080p': string,
-      'mp4_720p'?: string,
-      'mp4_360p'?: string,
-      'jpg_720p'?: string,
-      'jpg_360p'?: string,
-      'gif_360p'?: string
+      [index: string]: string,
+      jpg_1080p: string,
+      mp4_1080p: string,
+      mp4_720p?: string,
+      mp4_360p?: string,
+      jpg_720p?: string,
+      jpg_360p?: string,
+      gif_360p?: string
     },
     frame: {
       begin: string,

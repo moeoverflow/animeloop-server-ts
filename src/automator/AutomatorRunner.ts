@@ -2,9 +2,11 @@ import schedule from 'node-schedule'
 import log4js from 'log4js'
 import path from 'path'
 
-import { Service } from 'typedi'
-import { AutomatorTaskService } from './services/AutomatorTaskService'
+// const Arena = require('bull-arena')
+// const express = require('express')
 
+import { Service } from 'typedi'
+import { AnimeloopTaskService } from './services/AnimeloopTaskService'
 import { HorribleSubsService } from './services/HorribleSubsService'
 import { TransmissionService } from './services/TransmissionService'
 import { AutomatorTaskModel, AutomatorTaskStatus } from '../core/database/model/AutomatorTask'
@@ -19,7 +21,7 @@ logger.level = 'debug'
 @Service()
 export default class AutomatorRunner {
   constructor(
-    protected automatorTaskService: AutomatorTaskService,
+    protected animeloopTaskService: AnimeloopTaskService,
     protected transmissionService: TransmissionService,
     protected bullService: BullService,
     protected horribleSubsService: HorribleSubsService,
@@ -33,21 +35,14 @@ export default class AutomatorRunner {
      * fetch anime source from HorribleSubs every day,
      * and add to AutomatorTask
      */
-    schedule.scheduleJob('0 0 * * * *', async () => {
+    schedule.scheduleJob('0 * * * * *', async () => {
       logger.info('ScheduleJob:fetch_HorribleSubs')
 
-      const items = await this.horribleSubsService.fetchRss()
+      const items = await this.horribleSubsService.fetchRss(4)
       for (const item of items) {
-        await AutomatorTaskModel.findOneAndUpdate({
+        await AutomatorTaskModel.findOrCreate({
           name: item.title,
-          magnetLink: item.link,
-        }, {
-          name: item.title,
-          magnetLink: item.link,
-          horribleSubsItem: item
-        }, {
-          new: true,
-          upsert: true
+          magnetLink: item.link
         })
       }
     })
@@ -130,15 +125,12 @@ export default class AutomatorRunner {
         for (const rawFile of automatorTask.rawFiles) {
           logger.info(`add animeloop cli jobs: ${rawFile}`)
 
-          const animeloopTask = await AnimeloopTaskModel.findOneAndUpdate({
-            rawFile
-          }, {
+          const { doc } = await AnimeloopTaskModel.findOrCreate({
             rawFile,
             automatorTask: automatorTask._id
-          }, {
-            new: true,
-            upsert: true
           })
+
+          const animeloopTask = doc
 
           await this.bullService.addAnimeloopCliJob({
             taskId: animeloopTask._id,
@@ -276,5 +268,70 @@ export default class AutomatorRunner {
       }
     })
 
+    /**
+     * add data to library
+     */
+    schedule.scheduleJob('9 * * * * *', async () => {
+      logger.info('ScheduleJob:add_data_to_library')
+
+      const automatorTasks = await AutomatorTaskModel.find({
+        status: AutomatorTaskStatus.Converted
+      })
+
+      for (const automatorTask of automatorTasks) {
+        const animeloopTasks = await AnimeloopTaskModel.find({
+          automatorTask: automatorTask._id
+        })
+
+        await automatorTask.update({ $set: { status: AutomatorTaskStatus.Adding }})
+        for (const animeloopTask of animeloopTasks) {
+          await this.animeloopTaskService.addDataToLibrary(animeloopTask._id)
+        }
+      }
+    })
+
+    /**
+     * update task status done
+     */
+    schedule.scheduleJob('10 * * * * *', async () => {
+      logger.info('ScheduleJob:update_task_status_converted')
+
+      const automatorTasks = await AutomatorTaskModel.find({
+        status: AutomatorTaskStatus.Adding
+      })
+
+      for (const automatorTask of automatorTasks) {
+        const animeloopTasks = await AnimeloopTaskModel.find({
+          automatorTask: automatorTask._id
+        })
+        const successTasks = animeloopTasks.filter(task => task.status === AnimeloopTaskStatus.Done)
+        if (animeloopTasks.length > 0 && animeloopTasks.length === successTasks.length) {
+          await automatorTask.update({
+            $set: {
+              status: AutomatorTaskStatus.Done
+            }
+          })
+          await this.transmissionService.remove([automatorTask.transmissionId], true)
+        }
+      }
+    })
+
+    // const arena = Arena({
+    //   queues: [{
+    //     name: 'animeloop',
+    //     port: 6379,
+    //     host: '127.0.0.1',
+    //     hostId: 'Local',
+    //     db: 10,
+    //   }],
+    // }, {
+    //   port: 9999,
+    //   basePath: '/',
+    //   disableListen: true,
+    // })
+
+    // const app = express()
+    // app.use('/', arena)
+    // app.listen(9999, '127.0.0.1')
   }
 }

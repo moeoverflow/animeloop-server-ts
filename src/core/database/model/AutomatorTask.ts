@@ -1,4 +1,5 @@
-import { prop, Typegoose } from 'typegoose'
+import { prop, Typegoose, plugin, InstanceType } from 'typegoose'
+import findOrCreate from 'mongoose-findorcreate'
 
 export enum AutomatorTaskStatus {
   Created = 'created',
@@ -10,11 +11,16 @@ export enum AutomatorTaskStatus {
   InfoCompleted = 'infocompleted',
   Converting = 'converting',
   Converted = 'converted',
+  Adding = 'adding',
   Done = 'done'
 }
 
+@plugin(findOrCreate)
 export class AutomatorTask extends Typegoose {
-  @prop({ required: true })
+  @prop({
+    required: true,
+    default: AutomatorTaskStatus.Created
+  })
   status: AutomatorTaskStatus
 
   @prop({
@@ -34,6 +40,8 @@ export class AutomatorTask extends Typegoose {
 
   @prop({ default: [] })
   rawFiles?: string[]
+
+  public static findOrCreate: (condition: Partial<InstanceType<AutomatorTask>>) => Promise<{ doc: InstanceType<AutomatorTask>, created: boolean }>
 }
 
 export const AutomatorTaskModel = new AutomatorTask().getModelForClass(AutomatorTask)

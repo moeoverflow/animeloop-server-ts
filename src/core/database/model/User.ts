@@ -3,9 +3,8 @@ import { index } from 'typegoose/lib/index'
 import autoIncrement from 'mongoose-auto-increment'
 
 @index({ uid: 1 })
-@plugin(autoIncrement, { model: 'User', field: 'uid' })
+@plugin(autoIncrement.plugin, { model: 'User', field: 'uid' })
 export class User extends Typegoose {
-
   @prop({
     required: true,
     unique: true

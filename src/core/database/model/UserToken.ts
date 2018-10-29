@@ -3,7 +3,7 @@ import { index } from 'typegoose/lib/index'
 import autoIncrement from 'mongoose-auto-increment'
 
 @index({ series: 1 })
-@plugin(autoIncrement, { model: 'UserToken', filed: 'tid' })
+@plugin(autoIncrement.plugin, { model: 'UserToken', filed: 'tid' })
 export class UserToken extends Typegoose {
 
   @prop({
