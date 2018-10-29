@@ -1,4 +1,3 @@
-import log4js from 'log4js'
 import { Service } from 'typedi'
 import { getBase64 } from '../utils/getBase64'
 import bluebird from 'bluebird'

@@ -1,5 +1,4 @@
-import { prop, Typegoose, Ref, plugin } from 'typegoose'
-import { AnimeloopTask } from './AnimeloopTask'
+import { prop, Typegoose } from 'typegoose'
 
 export enum AutomatorTaskStatus {
   Created = 'created',

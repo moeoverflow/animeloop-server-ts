@@ -3,7 +3,7 @@ import log4js from 'log4js'
 import { readFileSync } from 'fs'
 import { AnimeloopTaskModel, AnimeloopTaskStatus } from '../../core/database/model/AnimeloopTask'
 import { hmsToSeconds } from '../utils/hmsToSeconds'
-import { ITraceMoeItem, ITraceMoeDoc, TraceMoeService } from '../services/TraceMoeService'
+import { ITraceMoeDoc, TraceMoeService } from '../services/TraceMoeService'
 import { Container } from 'typedi'
 import { pad } from '../utils/pad'
 

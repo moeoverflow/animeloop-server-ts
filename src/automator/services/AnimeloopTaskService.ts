@@ -1,8 +1,5 @@
 import { Service } from 'typedi'
 import { AnimeloopTaskModel, AnimeloopTaskStatus } from '../../core/database/model/AnimeloopTask'
-import { TransmissionService } from './TransmissionService'
-import { IHorribleSubsItem } from './HorribleSubsService'
-import { ITraceMoeItem } from './TraceMoeService'
 
 @Service()
 export class AnimeloopTaskService {

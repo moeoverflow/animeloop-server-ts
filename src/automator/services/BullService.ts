@@ -1,5 +1,4 @@
 import log4js from 'log4js'
-import path from 'path'
 import { Service } from 'typedi'
 import { ConfigService } from '../../core/services/ConfigService'
 import Queue from 'bull'

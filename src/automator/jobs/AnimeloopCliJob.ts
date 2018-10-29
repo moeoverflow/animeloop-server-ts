@@ -7,9 +7,8 @@ import shellescape from 'shell-escape'
 import bluebird from 'bluebird'
 import { Container } from 'typedi'
 import { ConfigService } from '../../core/services/ConfigService'
-import { AutomatorTaskStatus } from '../../core/database/model/AutomatorTask'
 import { ChildProcess } from 'child_process'
-import { readFileSync, fstat, existsSync } from 'fs'
+import { readFileSync, existsSync } from 'fs'
 import { AnimeloopTaskModel, AnimeloopTaskStatus } from '../../core/database/model/AnimeloopTask'
 
 const logger = log4js.getLogger('Automator:Job:AnimeloopCliJob')

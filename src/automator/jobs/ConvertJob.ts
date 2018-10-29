@@ -1,13 +1,10 @@
 import Queue from 'bull'
-import log4js from 'log4js'
 import path from 'path'
 import { AnimeloopTaskModel, AnimeloopTaskStatus } from '../../core/database/model/AnimeloopTask'
 import { Container } from 'typedi'
 import { ConvertService, MediaType } from '../services/ConvertService'
 import { basename, extname } from 'path'
-import { existsSync } from 'fs';
-
-const logger = log4js.getLogger('Automator:Job:ConvertJob')
+import { existsSync } from 'fs'
 
 export interface ConvertJobData {
   taskId: string
