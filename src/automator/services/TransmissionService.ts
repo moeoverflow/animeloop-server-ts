@@ -24,8 +24,8 @@ export class TransmissionService {
   constructor(
     private configService: ConfigService
   ) {
-    const config = this.configService.config.transmission
-    this.transmission = new Transmission(config)
+    const { host, port, username, password, ssl, url } = this.configService.config.transmission
+    this.transmission = new Transmission({ host, port, username, password, ssl, url })
   }
 
   async findSeedingTasks(): Promise<any[]> {
@@ -35,14 +35,14 @@ export class TransmissionService {
     return tasks.torrents.filter((task: any) => task.status === TransmissionStatus.Seed)
   }
 
-  async addUrl(url: string, ) {
+  async addUrl(url: string) {
     logger.info('fetch HorribleSubs data')
     const downloadDir = this.configService.config.transmission
-    return await bluebird.fromCallback(callback => {
+    return (await bluebird.fromCallback(callback => {
       this.transmission.addUrl(url, {
         'download-dir': downloadDir
       }, callback)
-    })
+    })) as { hashString: string, id: number, name: string }
   }
 
   async remove(ids: number[], deleteFile: boolean = false) {

@@ -36,7 +36,12 @@ const config = {
   },
   horribleSubs: {
     blacklist: [],
-    rss: ''
+    rss: '',
+    delayDays: 2
+  },
+  traceMoe: {
+    url: '',
+    token: ''
   },
   transmission: {
     host: 'localhost',

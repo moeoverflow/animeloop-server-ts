@@ -4,11 +4,13 @@ import { Service } from 'typedi'
 import { ConfigService } from '../../core/services/ConfigService'
 import Queue from 'bull'
 import { AnimeloopCliJob, AnimeloopCliJobData } from '../jobs/AnimeloopCliJob'
+import { FetchInfoJob, FetchInfoJobData } from '../jobs/FetchInfoJob'
 
 const logger = log4js.getLogger('Automator:Service:BullService')
 
 export enum Jobs {
-  AnimeloopCli = 'animeloop-cli'
+  AnimeloopCli = 'animeloop-cli',
+  FetchInfo = 'fetch-info'
 }
 
 /**
@@ -24,8 +26,9 @@ export class BullService {
     const { host, port, db } = this.configService.config.redis
     this.queue = new Queue('animeloop', { redis: { host, port, db }})
 
-    this.queue.process(Jobs.AnimeloopCli, 1, AnimeloopCliJob)
     this.empty()
+    this.queue.process(Jobs.AnimeloopCli, 1, AnimeloopCliJob)
+    this.queue.process(Jobs.FetchInfo, FetchInfoJob)
   }
 
   async empty() {
@@ -33,11 +36,21 @@ export class BullService {
   }
 
   async addAnimeloopCliJob(data: AnimeloopCliJobData) {
-    const { filename } = data
-    logger.info(`add animeloop-cli job: ${path.basename(filename)}`)
+    const { taskId } = data
+    logger.info(`add animeloop-cli job: ${taskId}`)
     return await this.queue.add(Jobs.AnimeloopCli, data, {
-      jobId: `--ANIMELOOP-CLI--${path.basename(filename)}`.replace(/[^\w\s]/gi, '-'),
+      jobId: `--ANIMELOOP-CLI--${taskId}`,
       delay: 1 * 1000
     })
   }
+
+  async addFetchInfoJob(data: FetchInfoJobData) {
+    const { taskId } = data
+    logger.info(`fetch info job: ${taskId}`)
+    return await this.queue.add(Jobs.FetchInfo, data, {
+      jobId: `--FETCH-INFO--${taskId}`
+    })
+  }
+
+
 }

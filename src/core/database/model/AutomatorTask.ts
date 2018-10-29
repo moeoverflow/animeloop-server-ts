@@ -1,7 +1,5 @@
-import { prop, Typegoose } from 'typegoose'
-import { IHorribleSubsItem } from '../../../automator/services/HorribleSubsService'
-import { ITraceMoeItem } from '../../../automator/services/TraceMoeService'
-import { IAnimeloopCliOutput } from '../../../automator/jobs/AnimeloopCliJob'
+import { prop, Typegoose, Ref, plugin } from 'typegoose'
+import { AnimeloopTask } from './AnimeloopTask'
 
 export enum AutomatorTaskStatus {
   Created = 'created',
@@ -9,11 +7,10 @@ export enum AutomatorTaskStatus {
   Downloaded = 'downloaded',
   Animelooping = 'animelooping',
   Animelooped = 'animelooped',
-  FetchingInfo = 'fetchingInfo',
-  Fetched = 'fetched',
-  Converting = 'converting',
-  Success = 'success',
-  Error = 'error'
+  InfoFetching = 'infofetching',
+  InfoCompleted = 'infocompleted',
+  Converted = 'converted',
+  Done = 'done'
 }
 
 export class AutomatorTask extends Typegoose {
@@ -32,17 +29,11 @@ export class AutomatorTask extends Typegoose {
   })
   magnetLink: string
 
+  @prop()
+  transmissionId: number
+
   @prop({ default: [] })
   rawFiles?: string[]
-
-  @prop({ default: [] })
-  animeloopOutputs?: IAnimeloopCliOutput[]
-
-  @prop()
-  horribleSubsItem?: IHorribleSubsItem
-
-  @prop()
-  traceMoeItem?: ITraceMoeItem
 }
 
 export const AutomatorTaskModel = new AutomatorTask().getModelForClass(AutomatorTask)

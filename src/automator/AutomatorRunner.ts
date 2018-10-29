@@ -11,6 +11,7 @@ import { AutomatorTaskModel, AutomatorTaskStatus } from '../core/database/model/
 import { TraceMoeService } from './services/TraceMoeService'
 import { BullService } from './services/BullService'
 import { ConfigService } from '../core/services/ConfigService'
+import { AnimeloopTaskModel, AnimeloopTaskStatus } from '../core/database/model/AnimeloopTask'
 
 const logger = log4js.getLogger('Automator:main')
 logger.level = 'debug'
@@ -35,7 +36,7 @@ export default class AutomatorRunner {
     schedule.scheduleJob('0 * * * * *', async () => {
       logger.info('ScheduleJob:fetch_HorribleSubs')
 
-      const items = await this.horribleSubsService.fetchRss(4)
+      const items = await this.horribleSubsService.fetchRss()
       for (const item of items) {
         await this.automatorTaskService.findOrCreate({
           name: item.title,
@@ -59,10 +60,11 @@ export default class AutomatorRunner {
       for (const automatorTask of automatorTasks) {
         logger.info(`add url to transmission: ${automatorTask.name}`)
 
-        await this.transmissionService.addUrl(automatorTask.magnetLink)
+        const task = await this.transmissionService.addUrl(automatorTask.magnetLink)
         await automatorTask.update({
           $set: {
-            status: AutomatorTaskStatus.Downloading
+            status: AutomatorTaskStatus.Downloading,
+            transmissionId: task.id
           }
         })
       }
@@ -107,7 +109,7 @@ export default class AutomatorRunner {
      * check downloaded task every minute,
      * add animeloop-cli jobs
      */
-    // schedule.scheduleJob('3 * * * * *', async () => {
+    schedule.scheduleJob('3 * * * * *', async () => {
       logger.info('ScheduleJob:add_animeloop_cli_jobs')
 
       const automatorTasks = await AutomatorTaskModel.find({
@@ -117,17 +119,30 @@ export default class AutomatorRunner {
       const storage = this.configService.config.storage
 
       for (const automatorTask of automatorTasks) {
+        await automatorTask.update({ $set: { status: AutomatorTaskStatus.Animelooping }})
+
         for (const rawFile of automatorTask.rawFiles) {
           logger.info(`add animeloop cli jobs: ${rawFile}`)
+
+          const animeloopTask = await AnimeloopTaskModel.findOneAndUpdate({
+            rawFile
+          }, {
+            rawFile,
+            automatorTask: automatorTask._id
+          }, {
+            new: true,
+            upsert: true
+          })
+
           await this.bullService.addAnimeloopCliJob({
-            taskId: automatorTask.id,
-            filename: rawFile,
+            taskId: animeloopTask._id,
+            rawFile,
             tempDir: storage.dir.autogen,
             outputDir: storage.dir.upload
           })
         }
       }
-    // })
+    })
 
     /**
      * check if all video files animelooped in one task
@@ -140,10 +155,11 @@ export default class AutomatorRunner {
       })
 
       for (const automatorTask of automatorTasks) {
-        const { rawFiles, animeloopOutputs } = automatorTask
-        if (!rawFiles) continue
-        if (!animeloopOutputs) continue
-        if (rawFiles.length === animeloopOutputs.length) {
+        const animeloopTasks = await AnimeloopTaskModel.find({
+          automatorTask: automatorTask._id
+        })
+        const successTasks = animeloopTasks.filter(task => task.status === AnimeloopTaskStatus.Animelooped)
+        if (animeloopTasks.length > 0 && animeloopTasks.length === successTasks.length) {
           await automatorTask.update({
             $set: {
               status: AutomatorTaskStatus.Animelooped
@@ -152,6 +168,33 @@ export default class AutomatorRunner {
         }
       }
     })
+
+
+    /**
+     * check task which animelooped,
+     * fetch info from trace.moe
+     */
+    schedule.scheduleJob('6 * * * * *', async () => {
+      logger.info('ScheduleJob:fetch_info_from_trace.moe')
+      const automatorTasks  = await AutomatorTaskModel.find({
+        status: AutomatorTaskStatus.Animelooped
+      })
+
+
+      for (const automatorTask of automatorTasks) {
+        const animeloopTasks = await AnimeloopTaskModel.find({
+          automatorTask: automatorTask._id
+        })
+        await automatorTask.update({ $set: { status: AutomatorTaskStatus.InfoFetching }})
+        for (const animeloopTask of animeloopTasks) {
+          await animeloopTask.update({ $set: { status: AnimeloopTaskStatus.InfoFetching }})
+          this.bullService.addFetchInfoJob({
+            taskId: animeloopTask._id
+          })
+        }
+      }
+    })
+
 
     /**
      * check downloaded task every minute,

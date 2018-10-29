@@ -1,4 +1,5 @@
 import path from 'path'
+import mkdirp from 'mkdirp'
 import Queue from 'bull'
 import log4js from 'log4js'
 import shell from 'shelljs'
@@ -6,16 +7,16 @@ import shellescape from 'shell-escape'
 import bluebird from 'bluebird'
 import { Container } from 'typedi'
 import { ConfigService } from '../../core/services/ConfigService'
-import { AutomatorTaskModel, AutomatorTaskStatus } from '../../core/database/model/AutomatorTask'
+import { AutomatorTaskStatus } from '../../core/database/model/AutomatorTask'
 import { ChildProcess } from 'child_process'
-import { readFileSync } from 'fs'
-import { Schema } from 'mongoose'
+import { readFileSync, fstat, existsSync } from 'fs'
+import { AnimeloopTaskModel, AnimeloopTaskStatus } from '../../core/database/model/AnimeloopTask'
 
 const logger = log4js.getLogger('Automator:Job:AnimeloopCliJob')
 
 export interface AnimeloopCliJobData {
   taskId: string
-  filename: string
+  rawFile: string
   tempDir: string
   outputDir: string
 }
@@ -50,15 +51,27 @@ export interface IAnimeloopCliOutput {
 }
 
 export async function AnimeloopCliJob(job: Queue.Job<any>) {
-  const { taskId, filename, tempDir, outputDir } = job.data as AnimeloopCliJobData
-  logger.info(`run animeloop-cli with ${path.basename(filename)}`)
+  const { taskId, rawFile, tempDir, outputDir } = job.data as AnimeloopCliJobData
+  logger.info(`run animeloop-cli with ${path.basename(rawFile)}`)
 
-  await AutomatorTaskModel.updateOne({ _id: taskId }, { $set: { status: AutomatorTaskStatus.Animelooping }})
+  const animeloopTask = await AnimeloopTaskModel.findOneAndUpdate({
+    _id: taskId
+  }, {
+    $set: {
+      status: AnimeloopTaskStatus.Animelooping
+    }
+  }, {
+    new: true
+  })
+
+  if (!animeloopTask) {
+    throw new Error('animeloop_task_not_found')
+  }
 
   const configService = Container.get(ConfigService)
   const { animeloopCli } = configService.config
 
-  const args = [animeloopCli.bin, '-i', filename, '--cover', '-o', tempDir]
+  const args = [animeloopCli.bin, '-i', rawFile, '--cover', '-o', tempDir]
   const shellString = shellescape(args)
 
   logger.debug(`run command: ${shellString}`)
@@ -69,27 +82,33 @@ export async function AnimeloopCliJob(job: Queue.Job<any>) {
     throw new Error(`faied_to_run_command_animeloop-cli: ${error}`)
   }
 
-  const basename = path.basename(filename, path.extname(filename))
+  const basename = path.basename(rawFile, path.extname(rawFile))
   const tmpDir = path.join(tempDir, 'loops', basename)
   const targetDir = path.join(outputDir, basename)
 
   logger.debug(`move dir ${tmpDir} to ${targetDir}`)
+  if (!existsSync(outputDir)) {
+    mkdirp.sync(outputDir)
+  }
   shell.mv(tmpDir, targetDir)
 
   const infoString = readFileSync(path.join(targetDir, `${basename}.json`)).toString()
-  const info = JSON.parse(infoString)
-  const output = Object.assign(info, {
+  const info = JSON.parse(infoString) as IAnimeloopCliOutputInfo
+  info.loops = info.loops.map(loop => {
+    loop.files.jpg_1080p = path.join(targetDir, loop.files.jpg_1080p)
+    loop.files.mp4_1080p = path.join(targetDir, loop.files.mp4_1080p)
+    return loop
+  })
+  const output = {
     taskId,
-    rawFile: filename
-  }) as IAnimeloopCliOutput
+    rawFile,
+    info
+  } as IAnimeloopCliOutput
 
-  console.log('await AutomatorTaskModel.updateOne({ _id: taskId }, {')
-  await AutomatorTaskModel.updateOne({ _id: taskId }, {
+  await animeloopTask.update({
     $set: {
-      status: AutomatorTaskStatus.Animelooped
-    },
-    $push: {
-      animeloopOutputs: output
+      status: AnimeloopTaskStatus.Animelooped,
+      output: output
     }
   })
 }
