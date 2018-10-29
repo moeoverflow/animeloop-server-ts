@@ -33,7 +33,7 @@ export default class AutomatorRunner {
      * fetch anime source from HorribleSubs every day,
      * and add to AutomatorTask
      */
-    schedule.scheduleJob('0 * * * * *', async () => {
+    schedule.scheduleJob('0 0 * * * *', async () => {
       logger.info('ScheduleJob:fetch_HorribleSubs')
 
       const items = await this.horribleSubsService.fetchRss()
@@ -180,7 +180,7 @@ export default class AutomatorRunner {
      * check task which animelooped,
      * fetch info from trace.moe
      */
-    schedule.scheduleJob('6 * * * * *', async () => {
+    schedule.scheduleJob('5 * * * * *', async () => {
       logger.info('ScheduleJob:fetch_info_from_trace.moe')
       const automatorTasks  = await AutomatorTaskModel.find({
         status: AutomatorTaskStatus.Animelooped
@@ -231,7 +231,7 @@ export default class AutomatorRunner {
     /**
      * convert file
      */
-    // schedule.scheduleJob('0 * * * * *', async () => {
+    schedule.scheduleJob('7 * * * * *', async () => {
       logger.info('ScheduleJob:convert_file')
 
       const automatorTasks = await AutomatorTaskModel.find({
@@ -249,12 +249,12 @@ export default class AutomatorRunner {
           })
         }
       }
-    // })
+    })
 
     /**
      * update task status converted
      */
-    schedule.scheduleJob('6 * * * * *', async () => {
+    schedule.scheduleJob('8 * * * * *', async () => {
       logger.info('ScheduleJob:update_task_status_converted')
 
       const automatorTasks = await AutomatorTaskModel.find({
