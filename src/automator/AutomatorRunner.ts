@@ -38,10 +38,16 @@ export default class AutomatorRunner {
 
       const items = await this.horribleSubsService.fetchRss()
       for (const item of items) {
-        await this.automatorTaskService.findOrCreate({
+        await AutomatorTaskModel.findOneAndUpdate({
+          name: item.title,
+          magnetLink: item.link,
+        }, {
           name: item.title,
           magnetLink: item.link,
           horribleSubsItem: item
+        }, {
+          new: true,
+          upsert: true
         })
       }
     })
