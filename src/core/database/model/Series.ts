@@ -1,28 +1,59 @@
-import mongoose from 'mongoose'
-import findOrCreate from 'mongoose-findorcreate'
+import { prop, Typegoose } from 'typegoose'
 
-const Schema = mongoose.Schema
+export class Series extends Typegoose {
+  @prop()
+  title: string
 
-export const SeriesSchema = new Schema({
-  title: String,
-  title_t_chinese: String,
-  title_romaji: String,
-  title_english: String,
-  title_japanese: String,
-  start_date_fuzzy: Number,
-  description: String,
-  genres: [String],
-  total_episodes: Number,
-  adult: Boolean,
-  end_date_fuzzy: Number,
-  hashtag: String,
-  image_url_large: String,
-  image_url_banner: String,
-  anilist_updated_at: Date,
-  updated_at: Date,
-  type: String,
-  anilist_id: { type: Number, unique: true },
-})
-SeriesSchema.plugin(findOrCreate)
+  @prop()
+  title_t_chinese: string
 
-export const Series = mongoose.model('Series', SeriesSchema)
+  @prop()
+  title_romaji: string
+
+  @prop()
+  title_english: string
+
+  @prop()
+  title_japanese: string
+
+  @prop()
+  start_date_fuzzy: number
+
+  @prop()
+  description: string
+
+  @prop()
+  genres: string[]
+
+  @prop()
+  total_episodes: number
+
+  @prop()
+  adult: boolean
+
+  @prop()
+  end_date_fuzzy: number
+
+  @prop()
+  hashtag: string
+
+  @prop()
+  image_url_large: string
+
+  @prop()
+  image_url_banner: string
+
+  @prop()
+  anilist_updated_at: string
+
+  @prop()
+  updated_at: string
+
+  @prop()
+  type: string
+
+  @prop({ unique: true })
+  anilist_id: { type: Number, unique: true }
+}
+
+export const SeriesModel = new Series().getModelForClass(Series)

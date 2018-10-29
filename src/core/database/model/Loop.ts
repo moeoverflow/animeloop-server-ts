@@ -1,24 +1,43 @@
-import mongoose from 'mongoose'
+import { prop, Typegoose, Ref } from 'typegoose'
+import { index } from 'typegoose/lib/index'
+import { Series } from './Series'
+import { Episode } from './Episode'
 
-const Schema = mongoose.Schema
-const ObjectId = Schema.Types.ObjectId
+@index({ series: 1, episode: 1 })
+export class Loop extends Typegoose {
 
-export const LoopSchema = new Schema({
-  duration: Number,
+  @prop()
+  duration: number
+
+  @prop()
   period: {
     begin: String,
-    end: String,
-  },
+    end: String
+  }
+
+  @prop()
   frame: {
     begin: Number,
-    end: Number,
-  },
-  episode: { type: ObjectId, ref: 'Episode', require: true },
-  series: { type: ObjectId, ref: 'Series', require: true },
-  r18: { type: Boolean, default: false },
-  sourceFrom: String,
-  uploadDate: { type: Date, require: true },
-  likes: { type: Number, default: 0 },
-})
+    end: Number
+  }
 
-export const Loop = mongoose.model('Loop', LoopSchema)
+  @prop()
+  sourceFrom: string
+
+  @prop()
+  uploadDate: Date
+
+  @prop({
+    ref: Series,
+    required: true
+  })
+  series: Ref<Series>
+
+  @prop({
+    ref: Episode,
+    required: true
+  })
+  episode: Ref<Episode>
+}
+
+export const LoopModel = new Loop().getModelForClass(Loop)

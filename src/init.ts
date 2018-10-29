@@ -7,5 +7,6 @@ const configService = Container.get(ConfigService)
 
 // connect mongodb
 mongoose.set('useCreateIndex', true)
+mongoose.set('useFindAndModify', false)
 const { url } = configService.config.mongodb
 mongoose.connect(url, { useNewUrlParser: true })

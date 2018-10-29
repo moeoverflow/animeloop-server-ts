@@ -1,15 +1,28 @@
-import mongoose from 'mongoose'
+import { prop, Typegoose, Ref } from 'typegoose'
+import { Loop } from './Loop'
 
-const Schema = mongoose.Schema
-const ObjectId = Schema.Types.ObjectId
+export class Tag extends Typegoose {
 
-export const TagSchema = new Schema({
-  loopid: ObjectId,
-  type: String,
-  value: String,
-  confidence: Number,
-  source: String,
-  lang: Number,
-})
+  @prop()
+  type: string
 
-export const Tag = mongoose.model('Tag', TagSchema)
+  @prop()
+  value: string
+
+  @prop()
+  confidence: string
+
+  @prop()
+  source: string
+
+  @prop()
+  lang: string
+
+  @prop({
+    ref: Loop,
+    required: true
+  })
+  loopid: Ref<Loop>
+}
+
+export const EpisodeModel = new Tag().getModelForClass(Tag)

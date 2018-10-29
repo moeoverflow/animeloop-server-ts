@@ -72,7 +72,7 @@
     "shelljs": "^0.8.2",
     "transmission": "^0.4.9",
     "typedi": "^0.8.0",
-    "typegoose": "^5.4.0",
+    "typegoose": "^5.4.1",
     "types": "^0.1.1"
   }
 }

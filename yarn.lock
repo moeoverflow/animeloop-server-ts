@@ -1911,6 +1911,11 @@ kareem@2.2.1:
   resolved "https://registry.yarnpkg.com/kareem/-/kareem-2.2.1.tgz#9950809415aa3cde62ab43b4f7b919d99816e015"
   integrity sha512-xpDFy8OxkFM+vK6pXy6JmH92ibeEFUuDWzas5M9L7MzVmHW3jzwAHxodCPV/BYkf4A31bVDLyonrMfp9RXb/oA==
 
+kareem@2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/kareem/-/kareem-2.3.0.tgz#ef33c42e9024dce511eeaf440cd684f3af1fc769"
+  integrity sha512-6hHxsp9e6zQU8nXsP+02HGWXwTkOEw6IROhF2ZA28cYbUk4eJ6QbtZvdqZOdD9YPKghG3apk5eOCvs+tLl3lRg==
+
 kind-of@^3.0.2, kind-of@^3.0.3, kind-of@^3.2.0:
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/kind-of/-/kind-of-3.2.2.tgz#31ea21a734bab9bbb0f32466d893aea51e4a3c64"
@@ -2272,6 +2277,25 @@ mongoose-legacy-pluralize@1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/mongoose-legacy-pluralize/-/mongoose-legacy-pluralize-1.0.2.tgz#3ba9f91fa507b5186d399fb40854bff18fb563e4"
   integrity sha512-Yo/7qQU4/EyIS8YDFSeenIvXxZN+ld7YdV9LqFVQJzTLye8unujAWPZ4NWKfFA+RNjh+wvTWKY9Z3E5XM6ZZiQ==
+
+mongoose@^5.0.0:
+  version "5.3.7"
+  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-5.3.7.tgz#c95906d03879f3b78ec34b31c453daa18f3cede5"
+  integrity sha512-az9DtkYDuZFRpCa8aCnGHQP/up/P0fku8omtYxVwBAlQElO/yCJpKpIAR91szRbua6k9WNGpNde4KjdbA79Spg==
+  dependencies:
+    async "2.6.1"
+    bson "~1.0.5"
+    kareem "2.3.0"
+    lodash.get "4.4.2"
+    mongodb "3.1.6"
+    mongodb-core "3.1.5"
+    mongoose-legacy-pluralize "1.0.2"
+    mpath "0.5.1"
+    mquery "3.2.0"
+    ms "2.0.0"
+    regexp-clone "0.0.1"
+    safe-buffer "5.1.2"
+    sliced "1.0.1"
 
 mongoose@^5.2.17:
   version "5.2.17"
@@ -3503,12 +3527,14 @@ typedi@^0.8.0:
   resolved "https://registry.yarnpkg.com/typedi/-/typedi-0.8.0.tgz#d8e203bd1d41a96e2b0a5c6295147d74b2b2d03e"
   integrity sha512-/c7Bxnm6eh5kXx2I+mTuO+2OvoWni5+rXA3PhXwVWCtJRYmz3hMok5s1AKLzoDvNAZqj/Q/acGstN0ri5aQoOA==
 
-typegoose@^5.4.0:
-  version "5.4.0"
-  resolved "https://registry.yarnpkg.com/typegoose/-/typegoose-5.4.0.tgz#1a8e34235dfc9e6072a0dd47cc0ef706e2b69076"
-  integrity sha512-D43VzmQEkTVXzkWEAYrK86oHtAbQ0JJUWZ+rT4vF0+n3EVzm8zTxaRyT/1xqpNsiRw4QeOdh8MxVj2ikW8hR0w==
+typegoose@^5.4.1:
+  version "5.4.1"
+  resolved "https://registry.yarnpkg.com/typegoose/-/typegoose-5.4.1.tgz#1c79170776df10ee4e7b7a04831976c0f315c5a1"
+  integrity sha512-z4ZgALqV/RKIMhnfflsOyrTSyazMDM7qFqv5lvFmrMaDhMiUfdkHwCd4dv/vAosXJ14B9tncyda9EUt4Rtf70Q==
   dependencies:
     lodash "4.17.10"
+    mongoose "^5.0.0"
+    reflect-metadata "^0.1.12"
 
 types@^0.1.1:
   version "0.1.1"

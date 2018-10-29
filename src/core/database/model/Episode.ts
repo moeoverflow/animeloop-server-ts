@@ -1,14 +1,21 @@
-import mongoose from 'mongoose'
-import findOrCreate from 'mongoose-findorcreate'
+import { prop, Typegoose, Ref } from 'typegoose'
+import { index } from 'typegoose/lib/index'
+import { Series } from './Series'
 
-const Schema = mongoose.Schema
-const ObjectId = Schema.Types.ObjectId
+@index({ series: 1 })
+export class Episode extends Typegoose {
 
-export const EpisodeSchema = new Schema({
-  title: String,
-  series: { type: ObjectId, ref: 'Series', require: true },
-  no: String,
-})
-EpisodeSchema.plugin(findOrCreate)
+  @prop({
+    required: true
+  })
+  no: string
 
-export const Episode = mongoose.model('Episode', EpisodeSchema)
+
+  @prop({
+    ref: Series,
+    required: true
+  })
+  series: Ref<Series>
+}
+
+export const EpisodeModel = new Episode().getModelForClass(Episode)

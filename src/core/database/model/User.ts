@@ -1,17 +1,46 @@
-import mongoose from 'mongoose'
+import { prop, Typegoose, plugin } from 'typegoose'
+import { index } from 'typegoose/lib/index'
 import autoIncrement from 'mongoose-auto-increment'
 
-const Schema = mongoose.Schema
+@index({ uid: 1 })
+@plugin(autoIncrement, { model: 'User', field: 'uid' })
+export class User extends Typegoose {
 
-export const UserSchema = new Schema({
-  uid: { type: Number, require: true, unique: true },
-  username: { type: String, require: true },
-  email: { type: String, require: true },
-  avatar: { type: String, require: false },
-  password: { type: String, require: true },
-  admin: { type: Boolean, default: false },
-  verified: { type: Boolean, default: false },
-})
-UserSchema.plugin(autoIncrement.plugin, { model: 'User', field: 'uid' })
+  @prop({
+    required: true,
+    unique: true
+  })
+  uid: number
 
-export const User = mongoose.model('User', UserSchema)
+  @prop({
+    unique: true,
+    required: true
+  })
+  username: string
+
+  @prop({
+    unique: true,
+    required: true
+  })
+  email: string
+
+  @prop()
+  avatar: string
+
+  @prop({ required: true })
+  password: string
+
+  @prop({
+    required: true,
+    default: false
+  })
+  admin: boolean
+
+  @prop({
+    required: true,
+    default: false
+  })
+  verified: boolean
+}
+
+export const UserModel = new User().getModelForClass(User)
