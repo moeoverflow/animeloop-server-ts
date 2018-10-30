@@ -4,6 +4,7 @@ import { readFileSync } from 'fs'
 import { AnimeloopTaskModel, AnimeloopTaskStatus } from '../../core/database/model/AnimeloopTask'
 import { hmsToSeconds } from '../utils/hmsToSeconds'
 import { ITraceMoeDoc, TraceMoeService } from '../services/TraceMoeService'
+import { AnilistService } from '../services/AnilistService'
 import { Container } from 'typedi'
 import { pad } from '../utils/pad'
 
@@ -19,6 +20,8 @@ export interface IFetchInfoOutput {
 
 export async function FetchInfoJob(job: Queue.Job<FetchInfoJobData>) {
   const traceMoeService = Container.get(TraceMoeService)
+  const anilistService = Container.get(AnilistService)
+
   const { taskId } = job.data
 
   const animeloopTask = await AnimeloopTaskModel.findById(taskId)
@@ -82,6 +85,26 @@ export async function FetchInfoJob(job: Queue.Job<FetchInfoJobData>) {
       anilistId
     }
   })
+
+  job.progress(70)
+
+  try {
+    if (!anilistId) {
+      throw new Error('anilistId_not_found')
+    }
+    const anilistItem = await anilistService.getInfo(anilistId)
+    await animeloopTask.update({
+      anilistItem
+    })
+  } catch (error) {
+    logger.warn('fetch anilist data failed.')
+    await animeloopTask.update({
+      $set: {
+        status: AnimeloopTaskStatus.InfoWait
+      }
+    })
+  }
+
   job.progress(100)
 }
 

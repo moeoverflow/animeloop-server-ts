@@ -38,7 +38,7 @@ export default class AutomatorRunner {
     schedule.scheduleJob('0 * * * * *', async () => {
       logger.info('ScheduleJob:fetch_HorribleSubs')
 
-      const items = await this.horribleSubsService.fetchRss(4)
+      const items = await this.horribleSubsService.fetchRss()
       for (const item of items) {
         await AutomatorTaskModel.findOrCreate({
           name: item.title,

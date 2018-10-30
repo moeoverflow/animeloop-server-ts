@@ -3,6 +3,7 @@ import findOrCreate from 'mongoose-findorcreate'
 import { ITraceMoeItem } from '../../../automator/services/TraceMoeService'
 import { IAnimeloopCliOutput } from '../../../automator/jobs/AnimeloopCliJob'
 import { AutomatorTask } from './AutomatorTask'
+import { IAnilistItem } from '../../../automator/services/AnilistService'
 
 export enum AnimeloopTaskStatus {
   Created = 'created',
@@ -42,6 +43,9 @@ export class AnimeloopTask extends Typegoose {
 
   @prop()
   episodeNo?: string
+
+  @prop()
+  anilistItem?: IAnilistItem
 
   @prop({
     required: true,

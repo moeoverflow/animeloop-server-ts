@@ -2,8 +2,6 @@ import { Service } from 'typedi'
 import { AnimeloopTaskModel, AnimeloopTaskStatus } from '../../core/database/model/AnimeloopTask'
 import { SeriesModel } from '../../core/database/model/Series'
 import { EpisodeModel } from '../../core/database/model/Episode'
-import { AnilistService } from './AnilistService'
-import { compareAsc, addMonths } from 'date-fns'
 import { pick } from 'lodash'
 import log4js from 'log4js'
 import shell from 'shelljs'
@@ -19,7 +17,6 @@ logger.level = 'debug'
 @Service()
 export class AnimeloopTaskService {
   constructor(
-    protected anilistService: AnilistService,
     private configService: ConfigService
   ) {
   }
@@ -32,13 +29,7 @@ export class AnimeloopTaskService {
       anilist_id: animeloopTask.anilistId
     })).doc
 
-    if (
-      !series.anilist_updated_at ||
-      compareAsc(addMonths(series.anilist_updated_at, 1), new Date()) > 0
-    ) {
-      const info = await this.anilistService.getInfo(series.anilist_id)
-      await series.update(info)
-    }
+    await series.update(animeloopTask.anilistItem)
 
     const episode = (await EpisodeModel.findOrCreate({
       no: animeloopTask.episodeNo,
