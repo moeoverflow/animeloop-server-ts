@@ -19,28 +19,34 @@ export enum Jobs {
  */
 @Service()
 export class BullService {
-  private queue: Queue.Queue
+  private animeloopCliQueue: Queue.Queue
+  private fetchInfoQueue: Queue.Queue
+  private convertQueue: Queue.Queue
 
   constructor (
     private configService: ConfigService
   ) {
     const { host, port, db } = this.configService.config.redis
-    this.queue = new Queue('animeloop', { redis: { host, port, db }})
+    this.animeloopCliQueue = new Queue(`Animeloop-${Jobs.AnimeloopCli}`, { redis: { host, port, db }})
+    this.fetchInfoQueue = new Queue(`Animeloop-${Jobs.FetchInfo}`, { redis: { host, port, db }})
+    this.convertQueue = new Queue(`Animeloop-${Jobs.Convert}`, { redis: { host, port, db }})
 
     this.empty()
-    this.queue.process(Jobs.AnimeloopCli, 1, AnimeloopCliJob)
-    this.queue.process(Jobs.FetchInfo, FetchInfoJob)
-    this.queue.process(Jobs.Convert, ConvertJob)
+    this.animeloopCliQueue.process(Jobs.AnimeloopCli, 1, AnimeloopCliJob)
+    this.fetchInfoQueue.process(Jobs.FetchInfo, 1, FetchInfoJob)
+    this.convertQueue.process(Jobs.Convert, 1, ConvertJob)
   }
 
   async empty() {
-    return await this.queue.empty()
+    await this.animeloopCliQueue.empty()
+    await this.fetchInfoQueue.empty()
+    await this.convertQueue.empty()
   }
 
   async addAnimeloopCliJob(data: AnimeloopCliJobData) {
     const { taskId } = data
     logger.info(`add animeloop-cli job: ${taskId}`)
-    return await this.queue.add(Jobs.AnimeloopCli, data, {
+    return await this.animeloopCliQueue.add(Jobs.AnimeloopCli, data, {
       delay: 1 * 1000
     })
   }
@@ -48,13 +54,13 @@ export class BullService {
   async addFetchInfoJob(data: FetchInfoJobData) {
     const { taskId } = data
     logger.info(`fetch info job: ${taskId}`)
-    return await this.queue.add(Jobs.FetchInfo, data)
+    return await this.fetchInfoQueue.add(Jobs.FetchInfo, data)
   }
 
   async addConvertJob(data: ConvertJobData) {
     const { taskId } = data
     logger.info(`convert job: ${taskId}`)
-    return await this.queue.add(Jobs.Convert, data)
+    return await this.convertQueue.add(Jobs.Convert, data)
   }
 
 }
