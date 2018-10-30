@@ -6,6 +6,7 @@ import { ConfigService } from '../../core/services/ConfigService'
 import { AutomatorTaskService } from './AutomatorTaskService'
 
 const logger = log4js.getLogger('Automator:Service:HorribleSubsService')
+logger.level = 'debug'
 
 export interface IHorribleSubsItem {
   title: string
@@ -29,15 +30,21 @@ export class HorribleSubsService {
     logger.info('fetch HorribleSubs data')
     const { blacklist, rss, delayDays } = this.configService.config.horribleSubs
     const parser = new Parser()
-    const feed = await parser.parseURL(rss) as { items: IHorribleSubsItem[] }
-    if (!feed) {
-      throw new Error('HorribleSubs_rss_feed_return_nothing')
+    try {
+      const feed = await parser.parseURL(rss) as { items: IHorribleSubsItem[] }
+      if (!feed) {
+        logger.error(new Error('HorribleSubs_rss_feed_return_nothing'))
+        return []
+      }
+      return (feed.items as IHorribleSubsItem[])
+      .filter(item =>
+        blacklist.findIndex((re: RegExp) => re.test(item.title)) === -1
+      )
+      .filter(item => compareAsc(new Date(), addDays(item.pubDate, delayDays)) > 0)
+      .slice(0, limit)
+    } catch (error) {
+      logger.error(new Error('HorribleSubs_rss_feed_fetch_error'))
+      return []
     }
-    return (feed.items as IHorribleSubsItem[])
-    .filter(item => {
-      return blacklist.findIndex((re: RegExp) => re.test(item.title)) === -1
-    })
-    .filter(item => compareAsc(new Date(), addDays(item.pubDate, delayDays)) > 0)
-    .slice(0, limit)
   }
 }
