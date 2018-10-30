@@ -4,7 +4,7 @@ import { readFileSync } from 'fs'
 import { AnimeloopTaskModel, AnimeloopTaskStatus } from '../../core/database/model/AnimeloopTask'
 import { hmsToSeconds } from '../utils/hmsToSeconds'
 import { ITraceMoeDoc, TraceMoeService } from '../services/TraceMoeService'
-import { AnilistService } from '../services/AnilistService'
+import { AnilistService, IAnilistItem } from '../services/AnilistService'
 import { Container } from 'typedi'
 import { pad } from '../utils/pad'
 
@@ -13,7 +13,6 @@ const logger = log4js.getLogger('Automator:Job:FetchInfoJob')
 export interface FetchInfoJobData {
   taskId: string
 }
-
 
 export interface IFetchInfoOutput {
 }
@@ -42,10 +41,19 @@ export async function FetchInfoJob(job: Queue.Job<FetchInfoJobData>) {
   }).slice(0).sort(() => 0.5 - Math.random()).slice(0, 5)
 
   const results: (ITraceMoeDoc)[] = []
-  for (const loop of randomLoops) {
-    const file = readFileSync(loop.files.jpg_1080p)
-    const result = await traceMoeService.searchImage(file)
-    results.push(result.docs.sort((prev, next) => prev.similarity - next.similarity)[0])
+  try {
+    for (const loop of randomLoops) {
+      const file = readFileSync(loop.files.jpg_1080p)
+      const result = await traceMoeService.searchImage(file)
+      results.push(result.docs.sort((prev, next) => prev.similarity - next.similarity)[0])
+    }
+  } catch (error) {
+    logger.warn('fetch trace.moe data failed.')
+    await animeloopTask.update({
+      $set: {
+        status: AnimeloopTaskStatus.InfoWait
+      }
+    })
   }
 
   const counts: any = {}
@@ -77,25 +85,14 @@ export async function FetchInfoJob(job: Queue.Job<FetchInfoJobData>) {
 
   const { seriesTitle, episodeNo, anilistId } = parseResult(result)
 
-  await animeloopTask.update({
-    $set: {
-      status: AnimeloopTaskStatus.InfoCompleted,
-      seriesTitle,
-      episodeNo,
-      anilistId
-    }
-  })
-
   job.progress(70)
 
+  let anilistItem: IAnilistItem = undefined
   try {
     if (!anilistId) {
       throw new Error('anilistId_not_found')
     }
-    const anilistItem = await anilistService.getInfo(anilistId)
-    await animeloopTask.update({
-      anilistItem
-    })
+    anilistItem = await anilistService.getInfo(anilistId)
   } catch (error) {
     logger.warn('fetch anilist data failed.')
     await animeloopTask.update({
@@ -104,6 +101,16 @@ export async function FetchInfoJob(job: Queue.Job<FetchInfoJobData>) {
       }
     })
   }
+
+  await animeloopTask.update({
+    $set: {
+      status: AnimeloopTaskStatus.InfoCompleted,
+      seriesTitle,
+      episodeNo,
+      anilistId,
+      anilistItem
+    }
+  })
 
   job.progress(100)
 }
