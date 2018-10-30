@@ -31,6 +31,33 @@ export default class AutomatorRunner {
   }
 
   public async run() {
+
+    /**
+     * rollback task doing status before run
+     */
+    const rollbackStatus = [
+      // AnimeloopTask
+      [AnimeloopTaskModel, AnimeloopTaskStatus.Animelooping, AnimeloopTaskStatus.Created],
+      [AnimeloopTaskModel, AnimeloopTaskStatus.InfoFetching, AnimeloopTaskStatus.Animelooped],
+      [AnimeloopTaskModel, AnimeloopTaskStatus.Converting, AnimeloopTaskStatus.InfoCompleted],
+      [AnimeloopTaskModel, AnimeloopTaskStatus.Adding, AnimeloopTaskStatus.Converted],
+      // AutomatorTask
+      [AutomatorTaskModel, AutomatorTaskStatus.Animelooping, AutomatorTaskStatus.Downloaded],
+      [AutomatorTaskModel, AutomatorTaskStatus.InfoFetching, AutomatorTaskStatus.Animelooped],
+      [AutomatorTaskModel, AutomatorTaskStatus.Converting, AutomatorTaskStatus.InfoCompleted],
+      [AutomatorTaskModel, AutomatorTaskStatus.Adding, AutomatorTaskStatus.Converted]
+    ]
+    for (const rollback of rollbackStatus) {
+      const Model = rollback[0] as typeof AnimeloopTaskModel | typeof AutomatorTaskModel
+      await Model.updateMany({
+        status: rollback[1]
+      }, {
+        $set: {
+          status: rollback[2]
+        }
+      })
+    }
+
     /**
      * fetch anime source from HorribleSubs every day,
      * and add to AutomatorTask
@@ -181,7 +208,8 @@ export default class AutomatorRunner {
 
       for (const automatorTask of automatorTasks) {
         const animeloopTasks = await AnimeloopTaskModel.find({
-          automatorTask: automatorTask._id
+          automatorTask: automatorTask._id,
+          status: AnimeloopTaskStatus.Animelooped
         })
         await automatorTask.update({ $set: { status: AutomatorTaskStatus.InfoFetching }})
         for (const animeloopTask of animeloopTasks) {
@@ -232,7 +260,8 @@ export default class AutomatorRunner {
 
       for (const automatorTask of automatorTasks) {
         const animeloopTasks = await AnimeloopTaskModel.find({
-          automatorTask: automatorTask._id
+          automatorTask: automatorTask._id,
+          status: AutomatorTaskStatus.InfoCompleted
         })
         await automatorTask.update({ $set: { status: AutomatorTaskStatus.Converting }})
         for (const animeloopTask of animeloopTasks) {
@@ -280,7 +309,8 @@ export default class AutomatorRunner {
 
       for (const automatorTask of automatorTasks) {
         const animeloopTasks = await AnimeloopTaskModel.find({
-          automatorTask: automatorTask._id
+          automatorTask: automatorTask._id,
+          status: AnimeloopTaskStatus.Converted
         })
 
         await automatorTask.update({ $set: { status: AutomatorTaskStatus.Adding }})
