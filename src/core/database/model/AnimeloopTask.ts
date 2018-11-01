@@ -10,12 +10,13 @@ export enum AnimeloopTaskStatus {
   Animelooping = 'animelooping',
   Animelooped = 'animelooped',
   InfoFetching = 'infofetching',
-  InfoWait = 'waitinfo',
+  InfoWait = 'infowait',
   InfoCompleted = 'infocompleted',
   Converting = 'converting',
   Converted = 'converted',
   Adding = 'adding',
-  Done = 'done'
+  Done = 'done',
+  Error = 'error'
 }
 
 @plugin(findOrCreate)
@@ -52,6 +53,9 @@ export class AnimeloopTask extends Typegoose {
     ref: AutomatorTask
   })
   automatorTask: Ref<AutomatorTask>
+
+  @prop()
+  errorMessage: any
 
   public static findOrCreate: (condition: Partial<InstanceType<AnimeloopTask>>) => Promise<{ doc: InstanceType<AnimeloopTask>, created: boolean }>
 }

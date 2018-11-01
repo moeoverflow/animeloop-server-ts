@@ -99,6 +99,15 @@ export async function AnimeloopCliJob(job: Queue.Job<AnimeloopCliJobData>) {
 
   const infoString = readFileSync(path.join(targetDir, `${basename}.json`)).toString()
   const info = JSON.parse(infoString) as IAnimeloopCliOutputInfo
+  if (!info.loops || info.loops.length === 0) {
+    await animeloopTask.update({
+      $set: {
+        status: AnimeloopTaskStatus.Error,
+        errorMessage: new Error('animeloop_output_loops_is_empty')
+      }
+    })
+    return
+  }
   info.loops = info.loops.map(loop => {
     loop.files.jpg_1080p = path.join(targetDir, loop.files.jpg_1080p)
     loop.files.mp4_1080p = path.join(targetDir, loop.files.mp4_1080p)

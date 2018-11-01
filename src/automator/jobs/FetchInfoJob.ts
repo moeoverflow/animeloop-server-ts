@@ -102,6 +102,12 @@ export async function FetchInfoJob(job: Queue.Job<FetchInfoJobData>) {
     })
   }
 
+  /**
+   * Important: MongoDB Error: The dotted field '1.5' in 'anilistItem.airing_stats.1.5' is not valid for storage.
+   * temp fix: remove airing_stats field
+   */
+  delete anilistItem.airing_stats
+
   await animeloopTask.update({
     $set: {
       status: AnimeloopTaskStatus.InfoCompleted,
