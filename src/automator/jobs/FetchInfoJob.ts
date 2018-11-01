@@ -1,5 +1,6 @@
 import Queue from 'bull'
 import log4js from 'log4js'
+import bluebird from 'bluebird'
 import { readFileSync } from 'fs'
 import { AnimeloopTaskModel, AnimeloopTaskStatus } from '../../core/database/model/AnimeloopTask'
 import { hmsToSeconds } from '../utils/hmsToSeconds'
@@ -45,6 +46,13 @@ export async function FetchInfoJob(job: Queue.Job<FetchInfoJobData>) {
     for (const loop of randomLoops) {
       const file = readFileSync(loop.files.jpg_1080p)
       const result = await traceMoeService.searchImage(file)
+
+      /**
+       * trace.moe search api ratelimit
+       * wait 10s for every search request
+       */
+      await bluebird.fromCallback(callback => setTimeout(callback, 10000))
+
       results.push(result.docs.sort((prev, next) => prev.similarity - next.similarity)[0])
     }
   } catch (error) {
