@@ -41,15 +41,13 @@ export interface IAnilistItem {
  */
 @Service()
 export class AnilistService {
-  private nani: any
-
   constructor (
     private configService: ConfigService
   ) {
   }
 
 
-  async getInfo(id: number) {
+  async getInfo(id: number): Promise<IAnilistItem> {
     const query = `
     query ($id: Int) {
       Media (id: $id, type: ANIME) {
@@ -87,7 +85,7 @@ export class AnilistService {
         id
     }
 
-    const result: IAnilistItem = await request.post({
+    const response = await request.post({
       url: 'https://graphql.anilist.co',
       headers: {
         'Content-Type': 'application/json',
@@ -98,6 +96,8 @@ export class AnilistService {
         variables
       }
     })
+
+    const result = JSON.parse(response).data.Media as IAnilistItem
 
     const dataDir = this.configService.config.storage.dir.data
     const dir = path.join(dataDir, 'anilist', `${id}`)

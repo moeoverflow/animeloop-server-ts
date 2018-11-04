@@ -10,6 +10,7 @@ import fs from 'fs'
 import mkdirp from 'mkdirp'
 import { LoopModel } from '../../core/database/model/Loop'
 import { ConfigService } from '../../core/services/ConfigService'
+import { pad } from '../utils/pad'
 
 const logger = log4js.getLogger('Automator:Service:AnimeloopTask')
 logger.level = 'debug'
@@ -30,12 +31,16 @@ export class AnimeloopTaskService {
     })).doc
 
     const { anilistItem } = animeloopTask
+
+    const start_date_fuzzy = anilistItem.startDate && anilistItem.startDate.year ? `${anilistItem.startDate.year}${pad(anilistItem.startDate.month.toString(), 2)}${pad(anilistItem.startDate.day.toString(), 2)}` : undefined
+    const end_date_fuzzy = anilistItem.endDate && anilistItem.endDate.year ? `${anilistItem.endDate.year}${pad(anilistItem.endDate.month.toString(), 2)}${pad(anilistItem.endDate.day.toString(), 2)}` : undefined
     await series.update({
       title_romaji: anilistItem.title.romaji,
       title_english: anilistItem.title.english,
       title_japanese: anilistItem.title.native,
-      start_date_fuzzy: `${anilistItem.startDate.year}${anilistItem.startDate.month}${anilistItem.startDate.day}`,
-      end_date_fuzzy: `${anilistItem.endDate.year}${anilistItem.endDate.month}${anilistItem.endDate.day}`,
+      description: anilistItem.description,
+      start_date_fuzzy,
+      end_date_fuzzy,
       genres: anilistItem.genres,
       adult: anilistItem.isAdult,
       image_url_large: anilistItem.coverImage.large,
