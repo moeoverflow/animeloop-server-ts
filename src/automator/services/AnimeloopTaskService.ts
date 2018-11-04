@@ -29,7 +29,18 @@ export class AnimeloopTaskService {
       anilist_id: animeloopTask.anilistId
     })).doc
 
-    await series.update(animeloopTask.anilistItem)
+    const { anilistItem } = animeloopTask
+    await series.update({
+      title_romaji: anilistItem.title.romaji,
+      title_english: anilistItem.title.english,
+      title_japanese: anilistItem.title.native,
+      start_date_fuzzy: `${anilistItem.startDate.year}${anilistItem.startDate.month}${anilistItem.startDate.day}`,
+      end_date_fuzzy: `${anilistItem.endDate.year}${anilistItem.endDate.month}${anilistItem.endDate.day}`,
+      genres: anilistItem.genres,
+      adult: anilistItem.isAdult,
+      image_url_large: anilistItem.coverImage.large,
+      image_url_banner: anilistItem.bannerImage
+    })
 
     const episode = (await EpisodeModel.findOrCreate({
       no: animeloopTask.episodeNo,

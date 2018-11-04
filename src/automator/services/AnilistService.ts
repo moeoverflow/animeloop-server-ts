@@ -2,74 +2,38 @@ import { Service } from 'typedi'
 import path from 'path'
 import fs from 'fs'
 import mkdirp from 'mkdirp'
-import Nani from 'nani'
 import { ConfigService } from '../../core/services/ConfigService'
+import request = require('request-promise-native')
+import { imageDownloader } from '../utils/imageDownloader'
 
 export interface IAnilistItem {
   id: number
-  title_romaji: string
-  title_english: string
-  title_japanese: string
-  type: string
-  series_type: string
-  start_date: string
-  end_date: number
-  start_date_fuzzy: number
-  end_date_fuzzy: number
-  season: number
+  title: {
+    romaji: string
+    english: string
+    native: string
+  }
   description: string
-  adult: false
-  average_score: number
-  mean_score: number
-  popularity: number
-  favourite: false
-  image_url_sml: string
-  image_url_med: string
-  image_url_lge: string
-  image_url_banner: string
+  type: string
+  startDate: {
+    year: number
+    month: number
+    day: number
+  }
+  endDate: {
+    year: number
+    month: number
+    day: number
+  }
+  season: string
+  episodes: number
   genres: string[]
-  synonyms: []
-  youtube_id: string
-  hashtag: string
-  updated_at: number
-  score_distribution: {
-    '10': number
-    '20': number
-    '30': number
-    '40': number
-    '50': number
-    '60': number
-    '70': number
-    '80': number
-    '90': number
-    '100': number
+  isAdult: boolean
+  siteUrl: string
+  coverImage: {
+    large: string
   }
-  list_stats: {
-    completed: number
-    on_hold: number
-    dropped: number
-    plan_to_watch: number
-    watching: number
-  }
-  total_episodes: number
-  duration: number
-  airing_status: string
-  source: string
-  classification: ''
-  airing_stats: {
-    '1': { score: number, watching: number }
-    '2': { score: number, watching: number }
-    '3': { score: number, watching: number }
-    '4': { score: number, watching: number }
-    '1.5': { score: number, watching: number }
-    '2.5': { score: number, watching: number }
-    '3.5': { score: number, watching: number }
-  }
-  airing: {
-    time: string
-    countdown: number
-    next_episode: number
-  }
+  bannerImage: string
 }
 
 /**
@@ -82,19 +46,71 @@ export class AnilistService {
   constructor (
     private configService: ConfigService
   ) {
-    const { id, secret } = configService.config.anilist
-    this.nani = Nani.init(id, secret)
   }
 
 
-  async getInfo(id: number): Promise<IAnilistItem> {
+  async getInfo(id: number) {
+    const query = `
+    query ($id: Int) {
+      Media (id: $id, type: ANIME) {
+        id
+        title {
+          romaji
+          english
+          native
+        }
+        description
+        type
+        startDate {
+          year
+          month
+          day
+        }
+        endDate {
+          year
+          month
+          day
+        }
+        season
+        episodes
+        genres
+        isAdult
+        siteUrl
+        coverImage {
+          large
+        }
+        bannerImage
+      }
+    }
+    `
+    const variables = {
+        id
+    }
+
+    const result: IAnilistItem = await request.post({
+      url: 'https://graphql.anilist.co',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      form: {
+        query,
+        variables
+      }
+    })
+
     const dataDir = this.configService.config.storage.dir.data
     const dir = path.join(dataDir, 'anilist', `${id}`)
     if (!fs.existsSync(dir)) {
       mkdirp.sync(dir)
     }
 
-    const result = await this.nani.get(`anime/${id}`)
+    const coverExtname = path.extname(result.coverImage.large)
+    imageDownloader(result.coverImage.large, path.join(dir, `image_large${coverExtname}`))
+    result.coverImage.large = `https://animeloop.org/files/anilist/${id}/image_large${coverExtname}`
+    const bannerExtname = path.extname(result.bannerImage)
+    imageDownloader(result.bannerImage, path.join(dir, `image_banner${bannerExtname}`))
+    result.bannerImage = `https://animeloop.org/files/anilist/${id}/image_large${bannerExtname}`
 
     return result
   }
