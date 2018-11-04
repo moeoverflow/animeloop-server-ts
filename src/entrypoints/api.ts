@@ -1,7 +1,7 @@
 import '../init'
 import app from '../api/app'
 import { Container } from 'typedi'
-import { ConfigService } from '../core/service/ConfigService'
+import { ConfigService } from '../core/services/ConfigService'
 
 const configService = Container.get(ConfigService)
 /**
