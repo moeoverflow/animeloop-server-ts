@@ -190,6 +190,7 @@ export default class AutomatorRunner {
               status: AutomatorTaskStatus.Animelooped
             }
           })
+          await this.transmissionService.remove([automatorTask.transmissionId], true)
         }
       }
     })
@@ -341,7 +342,6 @@ export default class AutomatorRunner {
               status: AutomatorTaskStatus.Done
             }
           })
-          await this.transmissionService.remove([automatorTask.transmissionId], true)
         }
       }
     })
