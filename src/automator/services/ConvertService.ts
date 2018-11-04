@@ -35,11 +35,12 @@ export class ConvertService {
 
   async convert(src: string, dst: string, from: MediaType, to: MediaType) {
     const srcExtname = extname(src)
+    const dstExtname = extname(dst)
 
     const srcFilename = basename(src, srcExtname)
     const srcDir = dirname(src)
 
-    const tmpfile = join(srcDir, `${srcFilename}.tmp${srcExtname}`)
+    const tmpfile = join(srcDir, `${srcFilename}.tmp${dstExtname}`)
     const palette = join(srcDir, `${srcFilename}.palette.png`)
 
     await bluebird.fromCallback(callback => {
