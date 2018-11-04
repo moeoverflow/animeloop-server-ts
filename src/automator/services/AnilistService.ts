@@ -100,7 +100,6 @@ export class AnilistService {
     const result = JSON.parse(response).data.Media as IAnilistItem
 
     if (!result) {
-      console.log('error anilistItem_not_found')
       throw new Error('anilistItem_not_found')
     }
 
@@ -122,7 +121,6 @@ export class AnilistService {
       result.bannerImage = `https://animeloop.org/files/anilist/${id}/image_large${bannerExtname}`
     }
 
-    console.log(result)
     return result
   }
 }
