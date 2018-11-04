@@ -2,9 +2,6 @@ import schedule from 'node-schedule'
 import log4js from 'log4js'
 import path from 'path'
 
-// const Arena = require('bull-arena')
-// const express = require('express')
-
 import { Service } from 'typedi'
 import { AnimeloopTaskService } from './services/AnimeloopTaskService'
 import { HorribleSubsService } from './services/HorribleSubsService'
@@ -345,23 +342,5 @@ export default class AutomatorRunner {
         }
       }
     })
-
-    // const arena = Arena({
-    //   queues: [{
-    //     name: 'animeloop',
-    //     port: 6379,
-    //     host: '127.0.0.1',
-    //     hostId: 'Local',
-    //     db: 10,
-    //   }],
-    // }, {
-    //   port: 9999,
-    //   basePath: '/',
-    //   disableListen: true,
-    // })
-
-    // const app = express()
-    // app.use('/', arena)
-    // app.listen(9999, '127.0.0.1')
   }
 }
