@@ -55,6 +55,9 @@ const config = {
     ssl: false,
     url: '/transmission/rpc',
     downloadDir: ''
+  },
+  sentry: {
+    automator: ''
   }
 }
 

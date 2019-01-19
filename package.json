@@ -22,11 +22,9 @@
     "@types/chai-as-promised": "^7.1.0",
     "@types/connect-redis": "^0.0.7",
     "@types/cors": "^2.8.4",
-    "@types/date-fns": "^2.6.0",
     "@types/express": "^4.16.0",
     "@types/express-session": "^1.15.11",
     "@types/lodash": "^4.14.117",
-    "@types/log4js": "^2.3.5",
     "@types/mocha": "^5.2.5",
     "@types/mongodb": "^3.1.14",
     "@types/mongoose": "^5.2.20",
@@ -45,6 +43,7 @@
     "typescript": "^3.1.4"
   },
   "dependencies": {
+    "@sentry/node": "4.5.2",
     "@types/bull": "^3.4.0",
     "@types/mkdirp": "^0.5.2",
     "@types/shell-escape": "^0.2.0",
