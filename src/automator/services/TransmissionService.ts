@@ -29,7 +29,7 @@ export class TransmissionService {
   }
 
   async findSeedingTasks(): Promise<any[]> {
-    const tasks = (await bluebird.fromCallback(callback => {
+    const tasks = (await bluebird.fromCallback((callback: any) => {
       this.transmission.get(callback)
     })) as any
     return tasks.torrents.filter((task: any) => task.status === TransmissionStatus.Seed)
@@ -38,7 +38,7 @@ export class TransmissionService {
   async addUrl(url: string) {
     logger.info('fetch HorribleSubs data')
     const downloadDir = this.configService.config.transmission
-    return (await bluebird.fromCallback(callback => {
+    return (await bluebird.fromCallback((callback: any) => {
       this.transmission.addUrl(url, {
         'download-dir': downloadDir
       }, callback)
@@ -46,7 +46,7 @@ export class TransmissionService {
   }
 
   async remove(ids: number[], deleteFile: boolean = false) {
-    return await bluebird.fromCallback(callback => {
+    return await bluebird.fromCallback((callback: any) => {
       this.transmission.remove(ids, deleteFile, callback)
     })
   }

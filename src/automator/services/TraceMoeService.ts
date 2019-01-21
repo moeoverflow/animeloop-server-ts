@@ -47,7 +47,7 @@ export class TraceMoeService {
   async searchImage(file: Buffer): Promise<ITraceMoeItem> {
     const { url, token } = this.configService.config.traceMoe
     const base64image = await getBase64(file)
-    const result: any = await bluebird.fromCallback(callback => {
+    const result: any = await bluebird.fromCallback((callback: any) => {
       request.post({
         url: `${url}?token=${token}`,
         form: {

@@ -51,7 +51,7 @@ export async function FetchInfoJob(job: Queue.Job<FetchInfoJobData>) {
        * trace.moe search api ratelimit
        * wait 10s for every search request
        */
-      await bluebird.fromCallback(callback => setTimeout(callback, 10000))
+      await bluebird.fromCallback((callback: any) => setTimeout(callback, 10000))
 
       results.push(result.docs.sort((prev, next) => prev.similarity - next.similarity)[0])
     }

@@ -43,7 +43,7 @@ export class ConvertService {
     const tmpfile = join(srcDir, `${srcFilename}.tmp${dstExtname}`)
     const palette = join(srcDir, `${srcFilename}.palette.png`)
 
-    await bluebird.fromCallback(callback => {
+    await bluebird.fromCallback((callback: any) => {
       if (from === MediaType.MP4_1080P && to === MediaType.MP4_360P) {
         shell.exec(`ffmpeg -y -loglevel panic -i "${src}" -vf scale=-1:360 "${tmpfile}"`, callback)
       } else if (from === MediaType.MP4_1080P && to === MediaType.MP4_720P) {
