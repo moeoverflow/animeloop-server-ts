@@ -2,7 +2,7 @@ import '../init'
 import AutomatorRunner from '../automator/AutomatorRunner'
 import { Container } from 'typedi'
 import { ConfigService } from '../core/services/ConfigService'
-import Sentry from '@sentry/node'
+import * as Sentry from '@sentry/node'
 
 
 const configService: ConfigService = Container.get(ConfigService)
