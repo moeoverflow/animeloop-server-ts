@@ -41,6 +41,7 @@ export class AnimeloopTaskService {
       description: anilistItem.description,
       start_date_fuzzy,
       end_date_fuzzy,
+      type: anilistItem.format,
       genres: anilistItem.genres,
       adult: anilistItem.isAdult,
       image_url_large: anilistItem.coverImage.large,

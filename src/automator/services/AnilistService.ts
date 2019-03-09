@@ -27,6 +27,7 @@ export interface IAnilistItem {
   }
   season?: string
   episodes?: number
+  format?: string
   genres?: string[]
   isAdult?: boolean
   siteUrl?: string
@@ -71,6 +72,7 @@ export class AnilistService {
         }
         season
         episodes
+        format
         genres
         isAdult
         siteUrl
