@@ -32,21 +32,28 @@ export class AnimeloopTaskService {
 
     const { anilistItem } = animeloopTask
 
-    const start_date_fuzzy = anilistItem.startDate && anilistItem.startDate.year ? `${anilistItem.startDate.year}${pad(anilistItem.startDate.month.toString(), 2)}${pad(anilistItem.startDate.day.toString(), 2)}` : undefined
-    const end_date_fuzzy = anilistItem.endDate && anilistItem.endDate.year ? `${anilistItem.endDate.year}${pad(anilistItem.endDate.month.toString(), 2)}${pad(anilistItem.endDate.day.toString(), 2)}` : undefined
-    await series.update({
-      title_romaji: anilistItem.title.romaji,
-      title_english: anilistItem.title.english,
-      title_japanese: anilistItem.title.native,
-      description: anilistItem.description,
-      start_date_fuzzy,
-      end_date_fuzzy,
-      type: anilistItem.format,
-      genres: anilistItem.genres,
-      adult: anilistItem.isAdult,
-      image_url_large: anilistItem.coverImage.large,
-      image_url_banner: anilistItem.bannerImage
-    })
+    if (anilistItem) {
+      const start_date_fuzzy = anilistItem.startDate &&
+      anilistItem.startDate.year && anilistItem.startDate.month && anilistItem.startDate.day
+      ? `${anilistItem.startDate.year}${pad(anilistItem.startDate.month.toString(), 2)}${pad(anilistItem.startDate.day.toString(), 2)}` : undefined
+      const end_date_fuzzy = anilistItem.endDate
+      && anilistItem.endDate.year && anilistItem.endDate.month && anilistItem.endDate.day
+      ? `${anilistItem.endDate.year}${pad(anilistItem.endDate.month.toString(), 2)}${pad(anilistItem.endDate.day.toString(), 2)}` : undefined
+
+      await SeriesModel.updateOne({ id: series.id }, {
+        title_romaji: anilistItem.title.romaji,
+        title_english: anilistItem.title.english,
+        title_japanese: anilistItem.title.native,
+        description: anilistItem.description,
+        start_date_fuzzy,
+        end_date_fuzzy,
+        type: anilistItem.format,
+        genres: anilistItem.genres,
+        adult: anilistItem.isAdult,
+        image_url_large: anilistItem.coverImage.large,
+        image_url_banner: anilistItem.bannerImage
+      })
+    }
 
     const episode = (await EpisodeModel.findOrCreate({
       no: animeloopTask.episodeNo,
