@@ -112,15 +112,30 @@ export class AnilistService {
     }
 
     if (result.coverImage && result.coverImage.large) {
-      const coverExtname = path.extname(result.coverImage.large)
-      imageDownloader(result.coverImage.large, path.join(dir, `image_large${coverExtname}`))
-      result.coverImage.large = `https://animeloop.org/files/anilist/${id}/image_large${coverExtname}`
+      try {
+        const coverExtname = path.extname(result.coverImage.large)
+        const filename = path.join(dir, `image_large${coverExtname}`)
+        if (!fs.existsSync(filename)) {
+          await imageDownloader(result.coverImage.large, path.join(dir, `image_large${coverExtname}`))
+        }
+        result.coverImage.large = `https://animeloop.org/files/anilist/${id}/image_large${coverExtname}`
+      } catch (error) {
+        result.coverImage.large = null
+      }
+
     }
 
     if (result.bannerImage) {
-      const bannerExtname = path.extname(result.bannerImage)
-      imageDownloader(result.bannerImage, path.join(dir, `image_banner${bannerExtname}`))
-      result.bannerImage = `https://animeloop.org/files/anilist/${id}/image_large${bannerExtname}`
+      try {
+        const bannerExtname = path.extname(result.bannerImage)
+        const filename = path.join(dir, `image_banner${bannerExtname}`)
+        if (!fs.existsSync(filename)) {
+          await imageDownloader(result.bannerImage, filename)
+        }
+        result.bannerImage = `https://animeloop.org/files/anilist/${id}/image_large${bannerExtname}`
+      } catch (error) {
+        result.bannerImage = null
+      }
     }
 
     return result
