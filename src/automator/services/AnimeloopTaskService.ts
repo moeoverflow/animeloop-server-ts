@@ -42,7 +42,7 @@ export class AnimeloopTaskService {
 
       await SeriesModel.updateOne({ id: series.id }, {
         title_romaji: anilistItem.title.romaji,
-        title_english: anilistItem.title.english,
+        title_english: anilistItem.title.english || anilistItem.title.romaji,
         title_japanese: anilistItem.title.native,
         description: anilistItem.description,
         start_date_fuzzy,
