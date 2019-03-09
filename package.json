@@ -10,10 +10,11 @@
     "test": "node_modules/.bin/mocha",
     "build": "node_modules/.bin/tsc",
     "watch": "node_modules/.bin/tsc -w",
-    "dev-api": "NODE_ENV=development node_modules/.bin/nodemon --stack_trace_limit=100 dist/entrypoints/api.js",
-    "dev-automator": "NODE_ENV=development node_modules/.bin/nodemon --stack_trace_limit=100 dist/entrypoints/automator.js",
-    "start-api": "NODE_ENV=production node dist/entrypoints/api.js",
-    "start-automator": "NODE_ENV=production node dist/entrypoints/automator.js"
+    "dev:api": "NODE_ENV=development node_modules/.bin/nodemon --stack_trace_limit=100 dist/entrypoints/api.js",
+    "dev:automator": "NODE_ENV=development node_modules/.bin/nodemon --stack_trace_limit=100 dist/entrypoints/automator.js",
+    "start:api": "NODE_ENV=production node dist/entrypoints/api.js",
+    "start:automator": "NODE_ENV=production node dist/entrypoints/automator.js",
+    "maintain:update-series-info": "node dist/scripts/updateSeriesInfo.js"
   },
   "devDependencies": {
     "@types/async": "^2.0.50",

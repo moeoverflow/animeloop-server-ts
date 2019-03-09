@@ -10,7 +10,7 @@ import fs from 'fs'
 import mkdirp from 'mkdirp'
 import { LoopModel } from '../../core/database/model/Loop'
 import { ConfigService } from '../../core/services/ConfigService'
-import { pad } from '../utils/pad'
+import { SeriesService } from './SeriesService'
 
 const logger = log4js.getLogger('Automator:Service:AnimeloopTask')
 logger.level = 'debug'
@@ -18,7 +18,8 @@ logger.level = 'debug'
 @Service()
 export class AnimeloopTaskService {
   constructor(
-    private configService: ConfigService
+    private configService: ConfigService,
+    private seriesService: SeriesService
   ) {
   }
 
@@ -33,26 +34,7 @@ export class AnimeloopTaskService {
     const { anilistItem } = animeloopTask
 
     if (anilistItem) {
-      const start_date_fuzzy = anilistItem.startDate &&
-      anilistItem.startDate.year && anilistItem.startDate.month && anilistItem.startDate.day
-      ? `${anilistItem.startDate.year}${pad(anilistItem.startDate.month.toString(), 2)}${pad(anilistItem.startDate.day.toString(), 2)}` : undefined
-      const end_date_fuzzy = anilistItem.endDate
-      && anilistItem.endDate.year && anilistItem.endDate.month && anilistItem.endDate.day
-      ? `${anilistItem.endDate.year}${pad(anilistItem.endDate.month.toString(), 2)}${pad(anilistItem.endDate.day.toString(), 2)}` : undefined
-
-      await SeriesModel.updateOne({ id: series.id }, {
-        title_romaji: anilistItem.title.romaji,
-        title_english: anilistItem.title.english || anilistItem.title.romaji,
-        title_japanese: anilistItem.title.native,
-        description: anilistItem.description,
-        start_date_fuzzy,
-        end_date_fuzzy,
-        type: anilistItem.format,
-        genres: anilistItem.genres,
-        adult: anilistItem.isAdult,
-        image_url_large: anilistItem.coverImage.large,
-        image_url_banner: anilistItem.bannerImage
-      })
+      await this.seriesService.updateInfoFromAnilistItem(series._id, anilistItem)
     }
 
     const episode = (await EpisodeModel.findOrCreate({
