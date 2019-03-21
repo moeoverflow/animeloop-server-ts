@@ -1,6 +1,6 @@
 import { Service } from 'typedi'
 import { IAnilistItem } from './AnilistService'
-import { pad } from 'lodash'
+import { padStart } from 'lodash'
 import { SeriesModel } from '../../core/database/model/Series'
 
 @Service()
@@ -12,10 +12,10 @@ export class SeriesService {
   public async updateInfoFromAnilistItem(seriesId: string, anilistItem: IAnilistItem) {
     const start_date_fuzzy = anilistItem.startDate &&
     anilistItem.startDate.year && anilistItem.startDate.month && anilistItem.startDate.day
-    ? `${anilistItem.startDate.year}${pad(anilistItem.startDate.month.toString(), 2, '0')}${pad(anilistItem.startDate.day.toString(), 2, '0')}` : undefined
+    ? `${anilistItem.startDate.year}${padStart(anilistItem.startDate.month.toString(), 2, '0')}${padStart(anilistItem.startDate.day.toString(), 2, '0')}` : undefined
     const end_date_fuzzy = anilistItem.endDate
     && anilistItem.endDate.year && anilistItem.endDate.month && anilistItem.endDate.day
-    ? `${anilistItem.endDate.year}${pad(anilistItem.endDate.month.toString(), 2, '0')}${pad(anilistItem.endDate.day.toString(), 2, '0')}` : undefined
+    ? `${anilistItem.endDate.year}${padStart(anilistItem.endDate.month.toString(), 2, '0')}${padStart(anilistItem.endDate.day.toString(), 2, '0')}` : undefined
     await SeriesModel.updateOne({ _id: seriesId }, {
       title_romaji: anilistItem.title.romaji,
       title_english: anilistItem.title.english || anilistItem.title.romaji,

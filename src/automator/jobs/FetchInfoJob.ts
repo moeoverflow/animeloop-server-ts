@@ -7,7 +7,7 @@ import { hmsToSeconds } from '../utils/hmsToSeconds'
 import { ITraceMoeDoc, TraceMoeService } from '../services/TraceMoeService'
 import { AnilistService, IAnilistItem } from '../services/AnilistService'
 import { Container } from 'typedi'
-import { pad } from '../utils/pad'
+import { padStart } from 'lodash'
 
 const logger = log4js.getLogger('Automator:Job:FetchInfoJob')
 
@@ -129,7 +129,7 @@ function parseResult(doc: ITraceMoeDoc) {
   if (doc.episode === '' || doc.episode === 'OVA/OAD') {
     episodeNo = 'OVA'
   } else {
-    episodeNo = `${pad(doc.episode, 2)}`
+    episodeNo = `${padStart(doc.episode, 2, '0')}`
   }
   const anilistId = doc.anilist_id
 
