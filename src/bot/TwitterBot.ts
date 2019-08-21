@@ -2,7 +2,7 @@ import log4js from 'log4js'
 import schedule from 'node-schedule'
 
 import { Service } from 'typedi'
-import { TwitterService } from './services/TwitterService';
+import { TwitterService } from './services/TwitterService'
 
 const logger = log4js.getLogger('Bot:twitterbot')
 logger.level = 'debug'
