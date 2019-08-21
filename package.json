@@ -12,8 +12,10 @@
     "watch": "node_modules/.bin/tsc -w",
     "dev:api": "NODE_ENV=development node_modules/.bin/nodemon --stack_trace_limit=100 dist/entrypoints/api.js",
     "dev:automator": "NODE_ENV=development node_modules/.bin/nodemon --stack_trace_limit=100 dist/entrypoints/automator.js",
+    "dev:twitterbot": "NODE_ENV=development node_modules/.bin/nodemon --stack_trace_limit=100 dist/entrypoints/twitterbot.js",
     "start:api": "NODE_ENV=production node dist/entrypoints/api.js",
     "start:automator": "NODE_ENV=production node dist/entrypoints/automator.js",
+    "start:twitterbot": "NODE_ENV=production node dist/entrypoints/twitterbot.js",
     "maintain:update-series-info": "node dist/scripts/updateSeriesInfo.js"
   },
   "devDependencies": {
@@ -36,6 +38,7 @@
     "@types/request": "^2.48.0",
     "@types/request-promise-native": "^1.0.15",
     "@types/sharp": "^0.21.0",
+    "@types/twit": "^2.2.22",
     "@types/xml2js": "^0.4.3",
     "chai": "^4.2.0",
     "mocha": "^5.2.0",
@@ -77,6 +80,7 @@
     "shell-escape": "^0.2.0",
     "shelljs": "^0.8.2",
     "transmission": "^0.4.9",
+    "twit": "^2.2.11",
     "typedi": "^0.8.0",
     "typegoose": "^5.4.1",
     "types": "^0.1.1"
