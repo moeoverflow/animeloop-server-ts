@@ -1,6 +1,7 @@
 import '../init'
 import { GroupModel } from '../core/database/model/Group'
 import { GroupLoopModel } from '../core/database/model/GroupLoop'
+import { LoopModel } from '../core/database/model/Loop';
 
 async function uploadLoopsFromTelegramData() {
   const group = await GroupModel.findOne({
@@ -22,11 +23,15 @@ async function uploadLoopsFromTelegramData() {
     }
   }).filter((i: any) => i !== undefined)
 
+  const loops = await LoopModel.find({ _id: loopIds })
   for (const loopId of loopIds) {
-    await GroupLoopModel.findOrCreate({
-      loop: loopId,
-      group: group._id,
-    })
+    const loop = loops.find((i: any) => i._id == loopId)
+    if (loop) {
+      await GroupLoopModel.findOrCreate({
+        loop: loopId,
+        group: group._id,
+      })
+    }
   }
 }
 

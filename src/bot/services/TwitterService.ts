@@ -36,7 +36,7 @@ export class TwitterService {
     if (!loop) throw new Error('random_loop_not_found')
 
     const media: any = await Bluebird.fromCallback((callback) => {
-      const filepath = path.join(this.configService.config.storage.dir.data, 'mp4_1080p', `${loop._id}.mp4`)
+      const filepath = path.join(this.configService.config.storage.dir.data, 'mp4_720p', `${loop._id}.mp4`)
       this.twit.postMediaChunked({ file_path: filepath }, callback)
     })
 
