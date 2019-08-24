@@ -52,7 +52,7 @@ export default class TwitterBot {
   }
 
   run() {
-    schedule.scheduleJob('0 */4 * * * *', async () => {
+    schedule.scheduleJob('0 */4 * * *', async () => {
       let retry = 3
 
       while (retry > 0) {
