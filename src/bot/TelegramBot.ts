@@ -1,6 +1,9 @@
 import { Service } from 'typedi'
 import { TelegramService } from './services/TelegramService'
 import { BotService } from './services/BotService'
+import { LoopModel } from '../core/database/model/Loop'
+import { GroupLoopModel } from '../core/database/model/GroupLoop'
+import { GroupModel } from '../core/database/model/Group'
 
 @Service()
 export default class TelegramBot {
@@ -11,6 +14,7 @@ export default class TelegramBot {
   }
 
   run() {
+    // Telegram Bot commands
     this.telegramService.tg.command('randloop', async (ctx) => {
       const { loopUrl } = await this.botService.getRandomLoopData()
       ctx.reply(loopUrl, {
@@ -22,6 +26,29 @@ export default class TelegramBot {
       ctx.reply(loopUrl, {
         reply_to_message_id: ctx.message.message_id,
       })
+    })
+
+    // Telegram Channel updates
+    this.telegramService.tg.on('channel_post', async (ctx) => {
+      const channelUsername = ctx.update.channel_post.chat.username
+      if (channelUsername !== 'the_best_animeloop') return
+
+      const postContent = ctx.update.channel_post.text
+
+      if (!postContent.startsWith('https://animeloop.org/loop')) return
+      const splited = postContent.split('/')
+      const loopId = splited[splited.length - 1].slice(0, 24)
+      const loop = await LoopModel.findOne({ _id: loopId })
+      if (loop) {
+        const group = await GroupModel.findOne({
+          id: 'telegram-channel-the-best-animeloop'
+        })
+        if (!group) throw new Error('group_not_found')
+        await GroupLoopModel.findOrCreate({
+          loop: loopId as any,
+          group: group._id,
+        })
+      }
     })
     this.telegramService.tg.launch()
   }
