@@ -105,15 +105,14 @@ export default class AutomatorRunner {
       const videoExtRegex = new RegExp(`.*\.(mp4|mkv)$`)
 
       const seedingTasks = await this.transmissionService.findSeedingTasks()
-      const horribleSubsTasks = seedingTasks.filter(task => task.name.includes('[HorribleSubs]'))
       const automatorTasks = await AutomatorTaskModel.find({
-        name: {
-          $in: horribleSubsTasks.map(task => task.name)
+        transmissionId: {
+          $in: seedingTasks.map(task => task.id)
         },
         status: AutomatorTaskStatus.Downloading
       })
       for (const automatorTask of automatorTasks) {
-        const transmissionTask = horribleSubsTasks.find(task => task.name === automatorTask.name)
+        const transmissionTask = seedingTasks.find(task => task.id === automatorTask.transmissionId)
         const { downloadDir } = transmissionTask
 
         const rawFiles = transmissionTask.files
