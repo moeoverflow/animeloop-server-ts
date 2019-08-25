@@ -23,7 +23,7 @@ export class BotService {
     const loops = await LoopModel.aggregate([
       { $sample: { size: 1 } },
     ])
-    const loopId = loops.length > 0 ? loops[0].loop as ObjectId : undefined
+    const loopId = loops.length > 0 ? loops[0]._id as ObjectId : undefined
     const loop = await LoopModel.findOne({ _id: loopId }).populate('series').populate('episode').exec()
     if (!loop) throw new Error('random_loop_not_found')
 
@@ -50,15 +50,17 @@ export class BotService {
     const series = loop.series as InstanceType<Series>
     const episode = loop.episode as InstanceType<Episode>
 
+    const loopUrl = `https://animeloop.org/loop/${loop.id}`
     const statusMessage = `${series.title_japanese} ${episode.no}\n` +
     `${series.title} ${episode.no}\n` +
     `${series.title_english} ${episode.no}\n` +
     `${loop.period.begin.slice(0, 11)}~${loop.period.end.slice(0, 11)}\n` +
     '#Animeloop\n' +
-    `https://animeloop.org/loop/${loop.id}`
+    loopUrl
     const filepath = path.join(this.configService.config.storage.dir.data, 'mp4_720p', `${loop._id}.mp4`)
 
     return {
+      loopUrl,
       statusMessage,
       filepath,
     }

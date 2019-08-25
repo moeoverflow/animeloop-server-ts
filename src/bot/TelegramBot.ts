@@ -12,18 +12,14 @@ export default class TelegramBot {
 
   run() {
     this.telegramService.tg.command('randloop', async (ctx) => {
-      const { filepath } = await this.botService.getRandomLoopData()
-      ctx.replyWithVideo({
-        source: filepath,
-      }, {
+      const { loopUrl } = await this.botService.getRandomLoopData()
+      ctx.reply(loopUrl, {
         reply_to_message_id: ctx.message.message_id,
       })
     })
     this.telegramService.tg.command('randfavloop', async (ctx) => {
-      const { filepath } = await this.botService.getRandomFavLoopData()
-      ctx.replyWithVideo({
-        source: filepath,
-      }, {
+      const { loopUrl } = await this.botService.getRandomFavLoopData()
+      ctx.reply(loopUrl, {
         reply_to_message_id: ctx.message.message_id,
       })
     })
