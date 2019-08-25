@@ -13,9 +13,11 @@
     "dev:api": "NODE_ENV=development node_modules/.bin/nodemon --stack_trace_limit=100 dist/entrypoints/api.js",
     "dev:automator": "NODE_ENV=development node_modules/.bin/nodemon --stack_trace_limit=100 dist/entrypoints/automator.js",
     "dev:twitterbot": "NODE_ENV=development node_modules/.bin/nodemon --stack_trace_limit=100 dist/entrypoints/twitterbot.js",
+    "dev:telegrambot": "NODE_ENV=development node_modules/.bin/nodemon --stack_trace_limit=100 dist/entrypoints/telegrambot.js",
     "start:api": "NODE_ENV=production node dist/entrypoints/api.js",
     "start:automator": "NODE_ENV=production node dist/entrypoints/automator.js",
     "start:twitterbot": "NODE_ENV=production node dist/entrypoints/twitterbot.js",
+    "start:telegrambot": "NODE_ENV=production node dist/entrypoints/telegrambot.js",
     "maintain:update-series-info": "node dist/scripts/updateSeriesInfo.js"
   },
   "devDependencies": {
@@ -79,6 +81,7 @@
     "sharp": "^0.21.0",
     "shell-escape": "^0.2.0",
     "shelljs": "^0.8.2",
+    "telegraf": "^3.32.0",
     "transmission": "^0.4.9",
     "twit": "^2.2.11",
     "typedi": "^0.8.0",
