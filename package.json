@@ -77,6 +77,7 @@
     "reflect-metadata": "^0.1.12",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.5",
+    "routing-controllers": "^0.7.7",
     "rss-parser": "^3.5.2",
     "sharp": "^0.21.0",
     "shell-escape": "^0.2.0",
