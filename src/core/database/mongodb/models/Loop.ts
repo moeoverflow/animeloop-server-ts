@@ -38,6 +38,12 @@ export class Loop extends Typegoose {
     required: true
   })
   episode: Ref<Episode>
+
+  @prop()
+  newId: string
+
+  @prop()
+  files: any
 }
 
 export const LoopModel = new Loop().getModelForClass(Loop)

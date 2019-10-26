@@ -33,6 +33,7 @@
     "@types/koa-bodyparser": "^4.3.0",
     "@types/koa-router": "^7.0.42",
     "@types/lodash": "^4.14.117",
+    "@types/luxon": "^1.15.2",
     "@types/minio": "^7.0.3",
     "@types/mkdirp": "^0.5.2",
     "@types/mocha": "^5.2.5",
@@ -47,6 +48,7 @@
     "@types/shell-escape": "^0.2.0",
     "@types/shelljs": "^0.8.0",
     "@types/twit": "^2.2.22",
+    "@types/uuid": "^3.4.5",
     "@types/validator": "^10.11.3",
     "@types/xml2js": "^0.4.3",
     "chai": "^4.2.0",
@@ -74,6 +76,7 @@
     "koa-router": "^7.4.0",
     "lodash": "^4.17.13",
     "log4js": "^3.0.6",
+    "luxon": "^1.19.3",
     "minio": "^7.0.12",
     "mkdirp": "^0.5.1",
     "mongoose": "^5.3.7",
@@ -97,6 +100,7 @@
     "twit": "^2.2.11",
     "typedi": "^0.8.0",
     "typegoose": "^5.4.1",
-    "types": "^0.1.1"
+    "types": "^0.1.1",
+    "uuid": "^3.3.3"
   }
 }
