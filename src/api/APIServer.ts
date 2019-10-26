@@ -1,5 +1,5 @@
 import '../init'
-import { createExpressServer } from 'routing-controllers'
+import { createKoaServer } from 'routing-controllers'
 import { Service } from 'typedi'
 import { PublicLoopController } from './controllers/PublicLoopController'
 
@@ -11,7 +11,7 @@ export default class APIServer {
   }
 
   run() {
-    const app = createExpressServer({
+    const app = createKoaServer({
       controllers: [
         PublicLoopController,
       ]
