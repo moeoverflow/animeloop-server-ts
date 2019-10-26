@@ -1,6 +1,9 @@
 const path = require('path')
 
 const config = {
+  /**
+   * Third-party Service
+   */
   mongodb: {
     url: 'mongodb://localhost:27017/animeloop-dev'
   },
@@ -10,6 +13,36 @@ const config = {
     auth: '',
     db: 10
   },
+  minio: {
+    endpoint: '127.0.0.1',
+    port: 9000,
+    useSSL: false,
+    accessKey: '',
+    secretKey: '',
+  },
+  transmission: {
+    host: 'localhost',
+    port: 9091,
+    username: '',
+    password: '',
+    ssl: false,
+    url: '/transmission/rpc',
+    downloadDir: ''
+  },
+  traceMoe: {
+    url: '',
+    token: ''
+  },
+  anilist: {
+    id: '',
+    secret: '',
+  },
+  sentry: {
+    automator: ''
+  },
+  /**
+   * Modules
+   */
   api: {
     host: '127.0.0.1',
     port: 7775,
@@ -23,6 +56,7 @@ const config = {
       }
     },
   },
+
   bot: {
     twitter: {
       consumer_key:         '',
@@ -51,26 +85,6 @@ const config = {
     rss: '',
     delayDays: 2
   },
-  traceMoe: {
-    url: '',
-    token: ''
-  },
-  anilist: {
-    id: '',
-    secret: '',
-  },
-  transmission: {
-    host: 'localhost',
-    port: 9091,
-    username: '',
-    password: '',
-    ssl: false,
-    url: '/transmission/rpc',
-    downloadDir: ''
-  },
-  sentry: {
-    automator: ''
-  }
 }
 
 module.exports = config;
