@@ -1,7 +1,7 @@
 import '../init'
 import { Container } from 'typedi'
 import { AnilistService } from '../automator/services/AnilistService'
-import { SeriesModel } from '../core/database/model/Series'
+import { SeriesModel } from '../core/database/mongodb/models/Series'
 import { SeriesService } from '../automator/services/SeriesService'
 import { delay } from 'bluebird'
 

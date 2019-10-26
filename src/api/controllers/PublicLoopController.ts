@@ -1,7 +1,7 @@
 import { Controller, Get, QueryParam } from 'routing-controllers'
-import { GroupModel } from '../../core/database/model/Group'
-import { GroupLoopModel } from '../../core/database/model/GroupLoop'
-import { LoopModel } from '../../core/database/model/Loop'
+import { GroupModel } from '../../core/database/mongodb/models/Group'
+import { GroupLoopModel } from '../../core/database/mongodb/models/GroupLoop'
+import { LoopModel } from '../../core/database/mongodb/models/Loop'
 import { ObjectId } from 'mongodb'
 
 @Controller('/loops')

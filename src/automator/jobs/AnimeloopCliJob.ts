@@ -9,7 +9,7 @@ import { Container } from 'typedi'
 import { ConfigService } from '../../core/services/ConfigService'
 import { ChildProcess } from 'child_process'
 import { readFileSync, existsSync } from 'fs'
-import { AnimeloopTaskModel, AnimeloopTaskStatus } from '../../core/database/model/AnimeloopTask'
+import { AnimeloopTaskModel, AnimeloopTaskStatus } from '../../core/database/mongodb/models/AnimeloopTask'
 
 const logger = log4js.getLogger('Automator:Job:AnimeloopCliJob')
 logger.level = 'debug'

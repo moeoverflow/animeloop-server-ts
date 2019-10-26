@@ -6,11 +6,11 @@ import { Service } from 'typedi'
 import { AnimeloopTaskService } from './services/AnimeloopTaskService'
 import { HorribleSubsService } from './services/HorribleSubsService'
 import { TransmissionService } from './services/TransmissionService'
-import { AutomatorTaskModel, AutomatorTaskStatus } from '../core/database/model/AutomatorTask'
+import { AutomatorTaskModel, AutomatorTaskStatus } from '../core/database/mongodb/models/AutomatorTask'
 import { TraceMoeService } from './services/TraceMoeService'
 import { BullService } from './services/BullService'
 import { ConfigService } from '../core/services/ConfigService'
-import { AnimeloopTaskModel, AnimeloopTaskStatus } from '../core/database/model/AnimeloopTask'
+import { AnimeloopTaskModel, AnimeloopTaskStatus } from '../core/database/mongodb/models/AnimeloopTask'
 
 const logger = log4js.getLogger('Automator:main')
 logger.level = 'debug'

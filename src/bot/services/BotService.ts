@@ -3,12 +3,12 @@ import { Service } from 'typedi'
 import { ConfigService } from '../../core/services/ConfigService'
 
 import { InstanceType } from 'typegoose'
-import { GroupLoopModel } from '../../core/database/model/GroupLoop'
-import { GroupModel } from '../../core/database/model/Group'
-import { LoopModel, Loop } from '../../core/database/model/Loop'
+import { GroupLoopModel } from '../../core/database/mongodb/models/GroupLoop'
+import { GroupModel } from '../../core/database/mongodb/models/Group'
+import { LoopModel, Loop } from '../../core/database/mongodb/models/Loop'
 import { ObjectId } from 'bson'
-import { Series } from '../../core/database/model/Series'
-import { Episode } from '../../core/database/model/Episode'
+import { Series } from '../../core/database/mongodb/models/Series'
+import { Episode } from '../../core/database/mongodb/models/Episode'
 
 
 @Service()

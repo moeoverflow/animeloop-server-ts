@@ -1,7 +1,7 @@
 import { Service } from 'typedi'
 import { IAnilistItem } from './AnilistService'
 import { padStart } from 'lodash'
-import { SeriesModel } from '../../core/database/model/Series'
+import { SeriesModel } from '../../core/database/mongodb/models/Series'
 
 @Service()
 export class SeriesService {

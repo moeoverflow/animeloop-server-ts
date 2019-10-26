@@ -1,6 +1,6 @@
 import Queue from 'bull'
 import path from 'path'
-import { AnimeloopTaskModel, AnimeloopTaskStatus } from '../../core/database/model/AnimeloopTask'
+import { AnimeloopTaskModel, AnimeloopTaskStatus } from '../../core/database/mongodb/models/AnimeloopTask'
 import { Container } from 'typedi'
 import { ConvertService, MediaType } from '../services/ConvertService'
 import { basename, extname } from 'path'

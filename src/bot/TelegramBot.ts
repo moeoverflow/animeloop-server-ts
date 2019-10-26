@@ -1,9 +1,9 @@
 import { Service } from 'typedi'
 import { TelegramService } from './services/TelegramService'
 import { BotService } from './services/BotService'
-import { LoopModel } from '../core/database/model/Loop'
-import { GroupLoopModel } from '../core/database/model/GroupLoop'
-import { GroupModel } from '../core/database/model/Group'
+import { LoopModel } from '../core/database/mongodb/models/Loop'
+import { GroupLoopModel } from '../core/database/mongodb/models/GroupLoop'
+import { GroupModel } from '../core/database/mongodb/models/Group'
 
 @Service()
 export default class TelegramBot {
