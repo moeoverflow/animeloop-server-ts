@@ -4,6 +4,12 @@ const config = {
   /**
    * Third-party Service
    */
+  mysql: {
+    database: 'animeloop_dev',
+    dialect: 'mysql',
+    username: 'root',
+    password: 'password',
+  },
   mongodb: {
     url: 'mongodb://localhost:27017/animeloop-dev'
   },

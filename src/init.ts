@@ -1,16 +1,7 @@
 import 'reflect-metadata'
-import mongoose from 'mongoose'
 import { Container } from 'typedi'
-import { ConfigService } from './core/services/ConfigService'
-import autoIncrement from 'mongoose-auto-increment'
+import { MysqlService } from './core/services/MysqlService'
+import { MongodbService } from './core/services/MongoDBService'
 
-mongoose.Promise = global.Promise
-
-const configService = Container.get(ConfigService)
-
-// connect mongodb
-mongoose.set('useCreateIndex', true)
-mongoose.set('useFindAndModify', false)
-const { url } = configService.config.mongodb
-mongoose.connect(url, { useNewUrlParser: true })
-autoIncrement.initialize(mongoose.connection)
+Container.get(MongodbService)
+Container.get(MysqlService)
