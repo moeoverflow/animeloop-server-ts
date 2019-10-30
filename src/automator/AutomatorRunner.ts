@@ -1,16 +1,16 @@
-import schedule from 'node-schedule'
 import log4js from 'log4js'
+import schedule from 'node-schedule'
 import path from 'path'
 
 import { Service } from 'typedi'
-import { AnimeloopTaskService } from './services/AnimeloopTaskService'
-import { HorribleSubsService } from './services/HorribleSubsService'
-import { TransmissionService } from './services/TransmissionService'
-import { AutomatorTaskModel, AutomatorTaskStatus } from '../core/database/mongodb/models/AutomatorTask'
-import { TraceMoeService } from './services/TraceMoeService'
-import { BullService } from './services/BullService'
-import { ConfigService } from '../core/services/ConfigService'
 import { AnimeloopTaskModel, AnimeloopTaskStatus } from '../core/database/mongodb/models/AnimeloopTask'
+import { AutomatorTaskModel, AutomatorTaskStatus } from '../core/database/mongodb/models/AutomatorTask'
+import { ConfigService } from '../core/services/ConfigService'
+import { AnimeloopTaskService } from './services/AnimeloopTaskService'
+import { BullService } from './services/BullService'
+import { HorribleSubsService } from './services/HorribleSubsService'
+import { TraceMoeService } from './services/TraceMoeService'
+import { TransmissionService } from './services/TransmissionService'
 
 const logger = log4js.getLogger('Automator:main')
 logger.level = 'debug'
@@ -107,12 +107,12 @@ export default class AutomatorRunner {
       const seedingTasks = await this.transmissionService.findSeedingTasks()
       const automatorTasks = await AutomatorTaskModel.find({
         transmissionId: {
-          $in: seedingTasks.map(task => task.id)
+          $in: seedingTasks.map((task) => task.id)
         },
         status: AutomatorTaskStatus.Downloading
       })
       for (const automatorTask of automatorTasks) {
-        const transmissionTask = seedingTasks.find(task => task.id === automatorTask.transmissionId)
+        const transmissionTask = seedingTasks.find((task) => task.id === automatorTask.transmissionId)
         const { downloadDir } = transmissionTask
 
         const rawFiles = transmissionTask.files
@@ -179,7 +179,7 @@ export default class AutomatorRunner {
         const animeloopTasks = await AnimeloopTaskModel.find({
           automatorTask: automatorTask._id
         })
-        const successTasks = animeloopTasks.filter(task => task.status === AnimeloopTaskStatus.Animelooped)
+        const successTasks = animeloopTasks.filter((task) => task.status === AnimeloopTaskStatus.Animelooped)
         if (animeloopTasks.length > 0 && animeloopTasks.length === successTasks.length) {
           await automatorTask.update({
             $set: {
@@ -211,7 +211,7 @@ export default class AutomatorRunner {
         await automatorTask.update({ $set: { status: AutomatorTaskStatus.InfoFetching }})
         for (const animeloopTask of animeloopTasks) {
           await animeloopTask.update({ $set: { status: AnimeloopTaskStatus.InfoFetching }})
-          this.bullService.addFetchInfoJob({
+          await this.bullService.addFetchInfoJob({
             taskId: animeloopTask._id
           })
         }
@@ -233,7 +233,7 @@ export default class AutomatorRunner {
         const animeloopTasks = await AnimeloopTaskModel.find({
           automatorTask: automatorTask._id
         })
-        const successTasks = animeloopTasks.filter(task => task.status === AnimeloopTaskStatus.InfoCompleted)
+        const successTasks = animeloopTasks.filter((task) => task.status === AnimeloopTaskStatus.InfoCompleted)
         if (animeloopTasks.length > 0 && animeloopTasks.length === successTasks.length) {
           await automatorTask.update({
             $set: {
@@ -283,7 +283,7 @@ export default class AutomatorRunner {
         const animeloopTasks = await AnimeloopTaskModel.find({
           automatorTask: automatorTask._id
         })
-        const successTasks = animeloopTasks.filter(task => task.status === AnimeloopTaskStatus.Converted)
+        const successTasks = animeloopTasks.filter((task) => task.status === AnimeloopTaskStatus.Converted)
         if (animeloopTasks.length > 0 && animeloopTasks.length === successTasks.length) {
           await automatorTask.update({
             $set: {
@@ -331,7 +331,7 @@ export default class AutomatorRunner {
         const animeloopTasks = await AnimeloopTaskModel.find({
           automatorTask: automatorTask._id
         })
-        const successTasks = animeloopTasks.filter(task => task.status === AnimeloopTaskStatus.Done)
+        const successTasks = animeloopTasks.filter((task) => task.status === AnimeloopTaskStatus.Done)
         if (animeloopTasks.length > 0 && animeloopTasks.length === successTasks.length) {
           await automatorTask.update({
             $set: {

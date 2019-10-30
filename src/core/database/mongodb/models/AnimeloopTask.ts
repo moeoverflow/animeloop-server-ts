@@ -1,9 +1,9 @@
-import { prop, Typegoose, Ref, plugin, InstanceType } from 'typegoose'
 import findOrCreate from 'mongoose-findorcreate'
-import { ITraceMoeItem } from '../../../../automator/services/TraceMoeService'
+import { InstanceType, plugin, prop, Ref, Typegoose } from 'typegoose'
 import { IAnimeloopCliOutput } from '../../../../automator/jobs/AnimeloopCliJob'
-import { AutomatorTask } from './AutomatorTask'
 import { IAnilistItem } from '../../../../automator/services/AnilistService'
+import { ITraceMoeItem } from '../../../../automator/services/TraceMoeService'
+import { AutomatorTask } from './AutomatorTask'
 
 export enum AnimeloopTaskStatus {
   Created = 'created',

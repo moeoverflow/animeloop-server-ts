@@ -1,10 +1,10 @@
+import Queue from 'bull'
 import log4js from 'log4js'
 import { Service } from 'typedi'
 import { ConfigService } from '../../core/services/ConfigService'
-import Queue from 'bull'
 import { AnimeloopCliJob, AnimeloopCliJobData } from '../jobs/AnimeloopCliJob'
-import { FetchInfoJob, FetchInfoJobData } from '../jobs/FetchInfoJob'
 import { ConvertJob, ConvertJobData } from '../jobs/ConvertJob'
+import { FetchInfoJob, FetchInfoJobData } from '../jobs/FetchInfoJob'
 
 const logger = log4js.getLogger('Automator:Service:BullService')
 
@@ -23,7 +23,7 @@ export class BullService {
   private fetchInfoQueue: Queue.Queue
   private convertQueue: Queue.Queue
 
-  constructor (
+  constructor(
     private configService: ConfigService
   ) {
     const { host, port, db } = this.configService.config.redis
@@ -31,10 +31,12 @@ export class BullService {
     this.fetchInfoQueue = new Queue(`Animeloop-${Jobs.FetchInfo}`, { redis: { host, port, db }})
     this.convertQueue = new Queue(`Animeloop-${Jobs.Convert}`, { redis: { host, port, db }})
 
-    this.empty()
-    this.animeloopCliQueue.process(Jobs.AnimeloopCli, 1, AnimeloopCliJob)
-    this.fetchInfoQueue.process(Jobs.FetchInfo, 1, FetchInfoJob)
-    this.convertQueue.process(Jobs.Convert, 1, ConvertJob)
+    Promise.all([
+      this.empty(),
+      this.animeloopCliQueue.process(Jobs.AnimeloopCli, 1, AnimeloopCliJob),
+      this.fetchInfoQueue.process(Jobs.FetchInfo, 1, FetchInfoJob),
+      this.convertQueue.process(Jobs.Convert, 1, ConvertJob),
+    ]).then().catch((err) => console.error(err))
   }
 
   async empty() {

@@ -1,6 +1,6 @@
-import { prop, Typegoose, Ref, plugin, InstanceType } from 'typegoose'
-import { index } from 'typegoose/lib/index'
 import findOrCreate from 'mongoose-findorcreate'
+import { InstanceType, plugin, prop, Ref, Typegoose } from 'typegoose'
+import { index } from 'typegoose/lib/index'
 import { Series } from './Series'
 
 @index({ series: 1 })

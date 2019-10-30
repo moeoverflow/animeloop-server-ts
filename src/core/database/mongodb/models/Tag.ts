@@ -1,4 +1,4 @@
-import { prop, Typegoose, Ref } from 'typegoose'
+import { prop, Ref, Typegoose } from 'typegoose'
 import { Loop } from './Loop'
 
 export class Tag extends Typegoose {

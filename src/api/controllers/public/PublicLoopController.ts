@@ -1,8 +1,8 @@
+import { ObjectId } from 'mongodb'
 import { Controller, Get, QueryParam } from 'routing-controllers'
 import { GroupModel } from '../../../core/database/mongodb/models/Group'
 import { GroupLoopModel } from '../../../core/database/mongodb/models/GroupLoop'
 import { LoopModel } from '../../../core/database/mongodb/models/Loop'
-import { ObjectId } from 'mongodb'
 
 @Controller('/loops')
 export class PublicLoopController {

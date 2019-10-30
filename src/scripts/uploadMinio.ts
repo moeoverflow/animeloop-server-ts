@@ -1,11 +1,11 @@
-import '../init'
+import { DateTime } from 'luxon'
 import path from 'path'
 import { Container } from 'typedi'
-import { MinioService } from '../core/services/MinioService'
-import { LoopModel } from '../core/database/mongodb/models/Loop'
-import { DateTime } from 'luxon'
 import uuid from 'uuid'
+import { LoopModel } from '../core/database/mongodb/models/Loop'
 import { ConfigService } from '../core/services/ConfigService'
+import { MinioService } from '../core/services/MinioService'
+import '../init'
 
 const minioService = Container.get(MinioService)
 const configService = Container.get(ConfigService)
@@ -60,4 +60,4 @@ async function uploadMinio() {
 
 uploadMinio().then(() => {
   console.log('done.')
-})
+}).catch(() => {})

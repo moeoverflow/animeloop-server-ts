@@ -1,10 +1,10 @@
 import Queue from 'bull'
-import path from 'path'
-import { AnimeloopTaskModel, AnimeloopTaskStatus } from '../../core/database/mongodb/models/AnimeloopTask'
-import { Container } from 'typedi'
-import { ConvertService, MediaType } from '../services/ConvertService'
-import { basename, extname } from 'path'
 import { existsSync } from 'fs'
+import path from 'path'
+import { basename, extname } from 'path'
+import { Container } from 'typedi'
+import { AnimeloopTaskModel, AnimeloopTaskStatus } from '../../core/database/mongodb/models/AnimeloopTask'
+import { ConvertService, MediaType } from '../services/ConvertService'
 
 export interface ConvertJobData {
   taskId: string
@@ -72,5 +72,5 @@ export async function ConvertJob(job: Queue.Job<ConvertJobData>) {
     }
   })
 
-  job.progress(100)
+  await job.progress(100)
 }

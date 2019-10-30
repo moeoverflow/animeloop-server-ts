@@ -1,6 +1,6 @@
-import { prop, Typegoose, plugin } from 'typegoose'
-import { index } from 'typegoose/lib/index'
 import autoIncrement from 'mongoose-auto-increment'
+import { plugin, prop, Typegoose } from 'typegoose'
+import { index } from 'typegoose/lib/index'
 
 @index({ series: 1 })
 @plugin(autoIncrement.plugin, { model: 'UserToken', filed: 'tid' })

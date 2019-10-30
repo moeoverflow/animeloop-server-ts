@@ -1,7 +1,7 @@
-import { prop, Typegoose, Ref } from 'typegoose'
+import { prop, Ref, Typegoose } from 'typegoose'
 import { index } from 'typegoose/lib/index'
-import { Series } from './Series'
 import { Episode } from './Episode'
+import { Series } from './Series'
 
 @index({ series: 1, episode: 1 })
 export class Loop extends Typegoose {

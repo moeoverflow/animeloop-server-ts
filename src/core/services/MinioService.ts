@@ -1,5 +1,5 @@
-import { Service } from 'typedi'
 import * as Minio from 'minio'
+import { Service } from 'typedi'
 import { ConfigService } from './ConfigService'
 
 @Service()

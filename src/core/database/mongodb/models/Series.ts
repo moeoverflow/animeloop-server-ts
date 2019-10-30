@@ -1,5 +1,5 @@
-import { prop, Typegoose, plugin, InstanceType } from 'typegoose'
 import findOrCreate from 'mongoose-findorcreate'
+import { InstanceType, plugin, prop, Typegoose } from 'typegoose'
 
 @plugin(findOrCreate)
 export class Series extends Typegoose {

@@ -1,9 +1,9 @@
-import { Service } from 'typedi'
-import path from 'path'
 import fs from 'fs'
 import mkdirp from 'mkdirp'
-import { ConfigService } from '../../core/services/ConfigService'
+import path from 'path'
 import request = require('request-promise-native')
+import { Service } from 'typedi'
+import { ConfigService } from '../../core/services/ConfigService'
 import { imageDownloader } from '../utils/imageDownloader'
 
 export interface IAnilistItem {
@@ -42,7 +42,7 @@ export interface IAnilistItem {
  */
 @Service()
 export class AnilistService {
-  constructor (
+  constructor(
     private configService: ConfigService
   ) {
   }

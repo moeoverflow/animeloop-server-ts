@@ -1,8 +1,8 @@
-import { prop, Typegoose, Ref, plugin, InstanceType } from 'typegoose'
-import { index } from 'typegoose/lib/index'
-import { Loop } from './Loop'
 import findOrCreate from 'mongoose-findorcreate'
+import { InstanceType, plugin, prop, Ref, Typegoose } from 'typegoose'
+import { index } from 'typegoose/lib/index'
 import { Group } from './Group'
+import { Loop } from './Loop'
 
 @index({ group: 1 })
 @plugin(findOrCreate)

@@ -1,8 +1,8 @@
 import schedule from 'node-schedule'
 
 import { Service } from 'typedi'
-import { TwitterService } from './services/TwitterService'
 import { BotService } from './services/BotService'
+import { TwitterService } from './services/TwitterService'
 
 @Service()
 export default class TwitterBot {

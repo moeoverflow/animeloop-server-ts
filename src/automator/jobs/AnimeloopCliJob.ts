@@ -1,15 +1,15 @@
-import path from 'path'
-import mkdirp from 'mkdirp'
-import Queue from 'bull'
-import log4js from 'log4js'
-import shell from 'shelljs'
-import shellescape from 'shell-escape'
 import bluebird from 'bluebird'
-import { Container } from 'typedi'
-import { ConfigService } from '../../core/services/ConfigService'
+import Queue from 'bull'
 import { ChildProcess } from 'child_process'
-import { readFileSync, existsSync } from 'fs'
+import { existsSync, readFileSync } from 'fs'
+import log4js from 'log4js'
+import mkdirp from 'mkdirp'
+import path from 'path'
+import shellescape from 'shell-escape'
+import shell from 'shelljs'
+import { Container } from 'typedi'
 import { AnimeloopTaskModel, AnimeloopTaskStatus } from '../../core/database/mongodb/models/AnimeloopTask'
+import { ConfigService } from '../../core/services/ConfigService'
 
 const logger = log4js.getLogger('Automator:Job:AnimeloopCliJob')
 logger.level = 'debug'
@@ -82,7 +82,7 @@ export async function AnimeloopCliJob(job: Queue.Job<AnimeloopCliJobData>) {
   logger.debug(`run command: ${shellString}`)
 
   const cli = shell.exec(shellString, { async: true, silent: true }) as ChildProcess
-  const error = await bluebird.fromCallback(callback => cli.on('exit', callback))
+  const error = await bluebird.fromCallback((callback) => cli.on('exit', callback))
   if (error) {
     throw new Error(`faied_to_run_command_animeloop-cli: ${error}`)
   }
@@ -108,7 +108,7 @@ export async function AnimeloopCliJob(job: Queue.Job<AnimeloopCliJobData>) {
     })
     return
   }
-  info.loops = info.loops.map(loop => {
+  info.loops = info.loops.map((loop) => {
     loop.files.jpg_1080p = path.join(targetDir, loop.files.jpg_1080p)
     loop.files.mp4_1080p = path.join(targetDir, loop.files.mp4_1080p)
     return loop
@@ -125,5 +125,5 @@ export async function AnimeloopCliJob(job: Queue.Job<AnimeloopCliJobData>) {
       output: output
     }
   })
-  job.progress(100)
+  await job.progress(100)
 }

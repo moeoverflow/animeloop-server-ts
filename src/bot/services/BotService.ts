@@ -1,20 +1,19 @@
+import { ObjectId } from 'mongodb';
 import path from 'path'
 import { Service } from 'typedi'
-import { ConfigService } from '../../core/services/ConfigService'
-
 import { InstanceType } from 'typegoose'
-import { GroupLoopModel } from '../../core/database/mongodb/models/GroupLoop'
-import { GroupModel } from '../../core/database/mongodb/models/Group'
-import { LoopModel, Loop } from '../../core/database/mongodb/models/Loop'
-import { ObjectId } from 'bson'
-import { Series } from '../../core/database/mongodb/models/Series'
 import { Episode } from '../../core/database/mongodb/models/Episode'
+import { GroupModel } from '../../core/database/mongodb/models/Group'
+import { GroupLoopModel } from '../../core/database/mongodb/models/GroupLoop'
+import { Loop, LoopModel } from '../../core/database/mongodb/models/Loop'
+import { Series } from '../../core/database/mongodb/models/Series'
+import { ConfigService } from '../../core/services/ConfigService'
 
 
 @Service()
 export class BotService {
 
-  constructor (
+  constructor(
     private configService: ConfigService
   ) {
   }
@@ -51,12 +50,12 @@ export class BotService {
     const episode = loop.episode as InstanceType<Episode>
 
     const loopUrl = `https://animeloop.org/loop/${loop.id}`
-    const statusMessage = `${series.title_japanese} ${episode.no}\n` +
-    `${series.title} ${episode.no}\n` +
-    `${series.title_english} ${episode.no}\n` +
-    `${loop.period.begin.slice(0, 11)}~${loop.period.end.slice(0, 11)}\n` +
-    '#Animeloop\n' +
-    loopUrl
+    const statusMessage = `${series.title_japanese} ${episode.no}\n\
+    ${series.title} ${episode.no}\n\
+    ${series.title_english} ${episode.no}\n\
+    ${loop.period.begin.slice(0, 11)}~${loop.period.end.slice(0, 11)}\n\
+    #Animeloop\n\
+    loopUrl`
     const filepath = path.join(this.configService.config.storage.dir.data, 'mp4_720p', `${loop._id}.mp4`)
 
     return {

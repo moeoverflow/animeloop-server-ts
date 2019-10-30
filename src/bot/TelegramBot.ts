@@ -1,9 +1,9 @@
 import { Service } from 'typedi'
-import { TelegramService } from './services/TelegramService'
-import { BotService } from './services/BotService'
-import { LoopModel } from '../core/database/mongodb/models/Loop'
-import { GroupLoopModel } from '../core/database/mongodb/models/GroupLoop'
 import { GroupModel } from '../core/database/mongodb/models/Group'
+import { GroupLoopModel } from '../core/database/mongodb/models/GroupLoop'
+import { LoopModel } from '../core/database/mongodb/models/Loop'
+import { BotService } from './services/BotService'
+import { TelegramService } from './services/TelegramService'
 
 @Service()
 export default class TelegramBot {
@@ -17,13 +17,13 @@ export default class TelegramBot {
     // Telegram Bot commands
     this.telegramService.tg.command('randloop', async (ctx) => {
       const { loopUrl } = await this.botService.getRandomLoopData()
-      ctx.reply(loopUrl, {
+      await ctx.reply(loopUrl, {
         reply_to_message_id: ctx.message.message_id,
       })
     })
     this.telegramService.tg.command('randfavloop', async (ctx) => {
       const { loopUrl } = await this.botService.getRandomFavLoopData()
-      ctx.reply(loopUrl, {
+      await ctx.reply(loopUrl, {
         reply_to_message_id: ctx.message.message_id,
       })
     })
@@ -50,6 +50,6 @@ export default class TelegramBot {
         })
       }
     })
-    this.telegramService.tg.launch()
+    this.telegramService.tg.launch().then().catch()
   }
 }

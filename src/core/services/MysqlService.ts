@@ -1,7 +1,7 @@
 import path from 'path'
+import { Sequelize } from 'sequelize-typescript'
 import { Service } from 'typedi'
 import { ConfigService } from './ConfigService'
-import { Sequelize } from 'sequelize-typescript'
 
 @Service()
 export class MysqlService {

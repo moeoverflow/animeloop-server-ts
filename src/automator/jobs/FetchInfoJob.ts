@@ -1,13 +1,13 @@
-import Queue from 'bull'
-import log4js from 'log4js'
 import bluebird from 'bluebird'
+import Queue from 'bull'
 import { readFileSync } from 'fs'
-import { AnimeloopTaskModel, AnimeloopTaskStatus } from '../../core/database/mongodb/models/AnimeloopTask'
-import { hmsToSeconds } from '../utils/hmsToSeconds'
-import { ITraceMoeDoc, TraceMoeService } from '../services/TraceMoeService'
-import { AnilistService, IAnilistItem } from '../services/AnilistService'
-import { Container } from 'typedi'
 import { padStart } from 'lodash'
+import log4js from 'log4js'
+import { Container } from 'typedi'
+import { AnimeloopTaskModel, AnimeloopTaskStatus } from '../../core/database/mongodb/models/AnimeloopTask'
+import { AnilistService, IAnilistItem } from '../services/AnilistService'
+import { ITraceMoeDoc, TraceMoeService } from '../services/TraceMoeService'
+import { hmsToSeconds } from '../utils/hmsToSeconds'
 
 const logger = log4js.getLogger('Automator:Job:FetchInfoJob')
 
@@ -76,7 +76,7 @@ export async function FetchInfoJob(job: Queue.Job<FetchInfoJobData>) {
   let result
   for (const key in counts) {
     if (counts[key] >= mid) {
-      result = results.filter(result => (result.anilist_id.toString() === key))[0]
+      result = results.filter((result) => (result.anilist_id.toString() === key))[0]
       break
     }
   }
@@ -93,9 +93,9 @@ export async function FetchInfoJob(job: Queue.Job<FetchInfoJobData>) {
 
   const { seriesTitle, episodeNo, anilistId } = parseResult(result)
 
-  job.progress(70)
+  await job.progress(70)
 
-  let anilistItem: IAnilistItem = undefined
+  let anilistItem: IAnilistItem
   try {
     if (!anilistId) {
       throw new Error('anilistId_not_found')
@@ -120,7 +120,7 @@ export async function FetchInfoJob(job: Queue.Job<FetchInfoJobData>) {
     }
   })
 
-  job.progress(100)
+  await job.progress(100)
 }
 
 function parseResult(doc: ITraceMoeDoc) {

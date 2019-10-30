@@ -1,8 +1,8 @@
-import { Service } from 'typedi'
-import { getBase64 } from '../utils/getBase64'
 import bluebird from 'bluebird'
 import request from 'request'
+import { Service } from 'typedi'
 import { ConfigService } from '../../core/services/ConfigService'
+import { getBase64 } from '../utils/getBase64'
 
 export interface ITraceMoeDoc {
   from: number
@@ -40,7 +40,7 @@ export interface ITraceMoeItem {
  */
 @Service()
 export class TraceMoeService {
-  constructor (
+  constructor(
     private configService: ConfigService
   ) {}
 

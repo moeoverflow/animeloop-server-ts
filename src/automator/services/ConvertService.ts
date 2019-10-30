@@ -1,8 +1,8 @@
-import log4js from 'log4js'
-import shell from 'shelljs'
 import bluebird from 'bluebird'
+import log4js from 'log4js'
+import { basename, dirname, extname, join } from 'path'
+import shell from 'shelljs'
 import { Service } from 'typedi'
-import { dirname, basename, extname, join } from 'path'
 
 const logger = log4js.getLogger('Automator:Service:ConvertService')
 logger.level = 'debug'
@@ -29,7 +29,7 @@ export enum MediaType {
 @Service()
 export class ConvertService {
 
-  constructor (
+  constructor(
   ) {
   }
 

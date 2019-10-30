@@ -1,59 +1,114 @@
 {
-    "rules": {
-        "class-name": true,
-        "comment-format": [
-            true,
-            "check-space"
-        ],
-        "indent": [
-            true,
-            "spaces"
-        ],
-        "one-line": [
-            true,
-            "check-open-brace",
-            "check-whitespace"
-        ],
-        "no-var-keyword": true,
-        "quotemark": [
-            true,
-            "single",
-            "avoid-escape"
-        ],
-        "semicolon": [
-            true,
-            "never"
-        ],
-        "whitespace": [
-            true,
-            "check-branch",
-            "check-decl",
-            "check-operator",
-            "check-module",
-            "check-separator",
-            "check-type"
-        ],
-        "typedef-whitespace": [
-            true,
-            {
-                "call-signature": "nospace",
-                "index-signature": "nospace",
-                "parameter": "nospace",
-                "property-declaration": "nospace",
-                "variable-declaration": "nospace"
-            },
-            {
-                "call-signature": "onespace",
-                "index-signature": "onespace",
-                "parameter": "onespace",
-                "property-declaration": "onespace",
-                "variable-declaration": "onespace"
-            }
-        ],
-        "no-internal-module": true,
-        "no-trailing-whitespace": true,
-        "no-null-keyword": false,
-        "prefer-const": true,
-        "jsdoc-format": true
-    }
+  "extends": "tslint:recommended",
+  "rules": {
+    "no-reference": false,
+    "max-line-length": false,
+    "no-arg": false,
+    "no-bitwise": false,
+    "no-conditional-assignment": false,
+    "no-consecutive-blank-lines": false,
+    "adjacent-overload-signatures": true,
+    "new-parens": true,
+    "no-unused-expression": true,
+    "curly": [
+      true,
+      "ignore-same-line"
+    ],
+    "no-floating-promises": [
+      true,
+      "Bluebird",
+      "Navybird"
+    ],
+    "quotemark": false,
+    "align": false,
+    "ordered-imports": [
+      true,
+      {
+        "import-sources-order": "case-insensitive",
+        "grouped-imports": false,
+        "named-imports-order": "case-insensitive",
+        "module-source-path": "full"
+      }
+    ],
+    "ban-types": false,
+    "no-var-requires": false,
+    "no-implicit-dependencies": [true, "dev"],
+    "no-angle-bracket-type-assertion": false,
+    "semicolon": false,
+    "whitespace": false,
+    "trailing-comma": false,
+    "object-literal-sort-keys": false,
+    "member-access": false,
+    "member-ordering": false,
+    "no-trailing-whitespace": true,
+    "max-classes-per-file": false,
+    "no-shadowed-variable": false,
+    "eofline": false,
+    "no-namespace": false,
+    "no-empty": false,
+    "object-literal-shorthand": false,
+    "no-string-literal": false,
+    "one-variable-per-declaration": false,
+    "array-type": false,
+    "no-empty-interface": false,
+    "unified-signatures": false,
+    "object-literal-key-quotes": false,
+    "space-before-function-paren": [
+      true,
+      {
+        "anonymous": "always",
+        "named": "never",
+        "asyncArrow": "always",
+        "method": "never",
+        "constructor": "never"
+      }
+    ],
+    "triple-equals": false,
+    "prefer-for-of": {
+      "severity": "warning"
+    },
+    "prefer-const": {
+      "severity": "warning",
+      "options": {
+        "destructuring": "all"
+      }
+    },
+    "no-console": {
+      "severity": "warning",
+      "options": [
+        "debug",
+        "info",
+        "log",
+        "time",
+        "timeEnd",
+        "trace"
+      ]
+    },
+    "variable-name": [
+      true,
+      "ban-keywords",
+      "check-format",
+      "allow-leading-underscore",
+      "allow-pascal-case",
+      "allow-snake-case"
+    ],
+    "no-duplicate-super": true,
+    "no-duplicate-switch-case": true,
+    "no-duplicate-variable": [
+      true,
+      "check-parameters"
+    ],
+    "no-invalid-template-strings": {
+      "severity": "warning"
+    },
+    "radix": true,
+    "prefer-template": {
+      "severity": "warning"
+    },
+    "cyclomatic-complexity": {
+      "severity": "warning",
+      "options": 20
+    },
+    "interface-name": false
+  }
 }

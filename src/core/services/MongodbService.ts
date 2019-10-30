@@ -13,7 +13,8 @@ export class MongodbService {
     mongoose.set('useCreateIndex', true)
     mongoose.set('useFindAndModify', false)
     const mongodbConfig = configService.config.mongodb
-    mongoose.connect(mongodbConfig.url, { useNewUrlParser: true })
-    autoIncrement.initialize(mongoose.connection)
+    mongoose.connect(mongodbConfig.url, { useNewUrlParser: true }).then(() => {
+      autoIncrement.initialize(mongoose.connection)
+    }).catch((err) => console.error(err))
   }
 }

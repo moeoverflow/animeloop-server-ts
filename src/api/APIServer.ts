@@ -1,7 +1,7 @@
-import '../init'
 import path from 'path'
 import { createKoaServer } from 'routing-controllers'
 import { Service } from 'typedi'
+import '../init'
 
 @Service()
 export default class APIServer {

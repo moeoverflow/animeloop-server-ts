@@ -1,9 +1,9 @@
-import '../init'
+import { delay } from 'bluebird'
 import { Container } from 'typedi'
 import { AnilistService } from '../automator/services/AnilistService'
-import { SeriesModel } from '../core/database/mongodb/models/Series'
 import { SeriesService } from '../automator/services/SeriesService'
-import { delay } from 'bluebird'
+import { SeriesModel } from '../core/database/mongodb/models/Series'
+import '../init'
 
 const anilistService = Container.get(AnilistService)
 const seriesService = Container.get(SeriesService)
@@ -22,4 +22,6 @@ async function updateSeriesInfo() {
 
 updateSeriesInfo().then(() => {
   console.log('done.')
+}).catch((err) => {
+  console.error(err)
 })
