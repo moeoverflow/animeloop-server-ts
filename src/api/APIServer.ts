@@ -1,8 +1,7 @@
 import '../init'
+import path from 'path'
 import { createKoaServer } from 'routing-controllers'
 import { Service } from 'typedi'
-import { PublicLoopController } from './controllers/PublicLoopController'
-
 
 @Service()
 export default class APIServer {
@@ -13,7 +12,7 @@ export default class APIServer {
   run() {
     const app = createKoaServer({
       controllers: [
-        PublicLoopController,
+        path.join(__dirname, '/controllers/**/*Controller.[tj]s'),
       ]
     })
     app.listen(8970)
