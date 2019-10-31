@@ -1,7 +1,7 @@
+require("../init")
 import { GroupModel } from '../core/database/mongodb/models/Group'
 import { GroupLoopModel } from '../core/database/mongodb/models/GroupLoop'
 import { LoopModel } from '../core/database/mongodb/models/Loop';
-import '../init'
 
 async function uploadLoopsFromTelegramData() {
   const group = await GroupModel.findOne({

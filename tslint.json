@@ -32,7 +32,7 @@
     ],
     "ban-types": false,
     "no-var-requires": false,
-    "no-implicit-dependencies": [true, "dev"],
+    "no-implicit-dependencies": [true, "dev", ["@jojo"]],
     "no-angle-bracket-type-assertion": false,
     "semicolon": false,
     "whitespace": false,

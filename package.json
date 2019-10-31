@@ -18,7 +18,10 @@
     "start:automator": "NODE_ENV=production node dist/entrypoints/automator.js",
     "start:twitterbot": "NODE_ENV=production node dist/entrypoints/twitterbot.js",
     "start:telegrambot": "NODE_ENV=production node dist/entrypoints/telegrambot.js",
-    "maintain:update-series-info": "node dist/scripts/updateSeriesInfo.js"
+    "db:sync": "node dist/entrypoints/mysqlsyncer.js"
+  },
+  "_moduleAliases": {
+    "@jojo/mysql": "dist/@jojo/mysql/index"
   },
   "devDependencies": {
     "@types/async": "^3.0.3",
@@ -54,6 +57,7 @@
     "chai": "^4.2.0",
     "mocha": "^6.2.2",
     "mocha-steps": "^1.1.0",
+    "module-alias": "^2.2.2",
     "nodemon": "^1.19.4",
     "ts-node": "^8.4.1",
     "tslint": "^5.20.0",
