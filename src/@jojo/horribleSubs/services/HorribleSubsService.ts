@@ -2,8 +2,7 @@ import { addDays, compareAsc } from 'date-fns'
 import log4js from 'log4js'
 import Parser from 'rss-parser'
 import { Service } from 'typedi'
-import { ConfigService } from '../../core/services/ConfigService'
-import { AutomatorTaskService } from './AutomatorTaskService'
+import { ConfigService } from '../../../core/services/ConfigService'
 
 const logger = log4js.getLogger('Automator:Service:HorribleSubsService')
 logger.level = 'debug'
@@ -22,7 +21,6 @@ export interface IHorribleSubsItem {
 @Service()
 export class HorribleSubsService {
   constructor(
-    protected automatorTaskService: AutomatorTaskService,
     private configService: ConfigService
   ) {}
 

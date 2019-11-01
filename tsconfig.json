@@ -21,6 +21,7 @@
       "@jojo/anilist": ["src/@jojo/anilist/index"],
       "@jojo/tracemoe": ["src/@jojo/tracemoe/index"],
       "@jojo/transmission": ["src/@jojo/transmission/index"],
+      "@jojo/horribleSubs": ["src/@jojo/horribleSubs/index"],
     },
     "lib": [
       "es5",

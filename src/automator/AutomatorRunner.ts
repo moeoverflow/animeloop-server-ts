@@ -1,3 +1,4 @@
+import { HorribleSubsService } from '@jojo/horribleSubs'
 import { TraceMoeService } from '@jojo/tracemoe'
 import { TransmissionService } from '@jojo/transmission'
 import log4js from 'log4js'
@@ -9,7 +10,6 @@ import { AutomatorTaskModel, AutomatorTaskStatus } from '../core/database/mongod
 import { ConfigService } from '../core/services/ConfigService'
 import { AnimeloopTaskService } from './services/AnimeloopTaskService'
 import { BullService } from './services/BullService'
-import { HorribleSubsService } from './services/HorribleSubsService'
 
 const logger = log4js.getLogger('Automator:main')
 logger.level = 'debug'
