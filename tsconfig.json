@@ -17,11 +17,7 @@
         "node_modules/*",
         "src/types/*"
       ],
-      "@jojo/mysql": ["src/@jojo/mysql/index"],
-      "@jojo/anilist": ["src/@jojo/anilist/index"],
-      "@jojo/tracemoe": ["src/@jojo/tracemoe/index"],
-      "@jojo/transmission": ["src/@jojo/transmission/index"],
-      "@jojo/horribleSubs": ["src/@jojo/horribleSubs/index"],
+      "@jojo/*": ["src/@jojo/*/index"],
     },
     "lib": [
       "es5",

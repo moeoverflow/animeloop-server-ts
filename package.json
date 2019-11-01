@@ -21,11 +21,7 @@
     "db:sync": "node dist/entrypoints/mysqlsyncer.js"
   },
   "_moduleAliases": {
-    "@jojo/mysql": "dist/@jojo/mysql/index",
-    "@jojo/anilist": "dist/@jojo/anilist/index",
-    "@jojo/tracemoe": "dist/@jojo/tracemoe/index",
-    "@jojo/transmission": "dist/@jojo/transmission/index",
-    "@jojo/horribleSubs": "dist/@jojo/horribleSubs/index"
+    "@jojo/*": "dist/@jojo/*/index"
   },
   "devDependencies": {
     "@types/async": "^3.0.3",
