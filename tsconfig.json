@@ -19,6 +19,7 @@
       ],
       "@jojo/mysql": ["src/@jojo/mysql/index"],
       "@jojo/anilist": ["src/@jojo/anilist/index"],
+      "@jojo/tracemoe": ["src/@jojo/tracemoe/index"],
     },
     "lib": [
       "es5",

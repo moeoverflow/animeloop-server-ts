@@ -22,7 +22,8 @@
   },
   "_moduleAliases": {
     "@jojo/mysql": "dist/@jojo/mysql/index",
-    "@jojo/anilist": "dist/@jojo/anilist/index"
+    "@jojo/anilist": "dist/@jojo/anilist/index",
+    "@jojo/tracemoe": "dist/@jojo/tracemoe/index"
   },
   "devDependencies": {
     "@types/async": "^3.0.3",

@@ -1,8 +1,8 @@
 import bluebird from 'bluebird'
 import request from 'request'
 import { Service } from 'typedi'
-import { ConfigService } from '../../core/services/ConfigService'
-import { getBase64 } from '../utils/getBase64'
+import { getBase64 } from '../../../automator/utils/getBase64'
+import { ConfigService } from '../../../core/services/ConfigService'
 
 export interface ITraceMoeDoc {
   from: number

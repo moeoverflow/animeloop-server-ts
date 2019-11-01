@@ -1,8 +1,8 @@
 import { IAnilistItem } from '@jojo/anilist'
+import { ITraceMoeItem } from '@jojo/tracemoe'
 import findOrCreate from 'mongoose-findorcreate'
 import { InstanceType, plugin, prop, Ref, Typegoose } from 'typegoose'
 import { IAnimeloopCliOutput } from '../../../../automator/jobs/AnimeloopCliJob'
-import { ITraceMoeItem } from '../../../../automator/services/TraceMoeService'
 import { AutomatorTask } from './AutomatorTask'
 
 export enum AnimeloopTaskStatus {
