@@ -21,7 +21,8 @@
     "db:sync": "node dist/entrypoints/mysqlsyncer.js"
   },
   "_moduleAliases": {
-    "@jojo/mysql": "dist/@jojo/mysql/index"
+    "@jojo/mysql": "dist/@jojo/mysql/index",
+    "@jojo/anilist": "dist/@jojo/anilist/index"
   },
   "devDependencies": {
     "@types/async": "^3.0.3",
