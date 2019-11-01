@@ -1,6 +1,6 @@
 import Telegraf, { ContextMessageUpdate } from 'telegraf'
 import { Service } from 'typedi'
-import { ConfigService } from '../../core/services/ConfigService'
+import { ConfigService } from '../../../core/services/ConfigService'
 
 @Service()
 export class TelegramService  {
