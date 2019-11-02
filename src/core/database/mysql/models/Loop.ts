@@ -28,7 +28,7 @@ export class Loop extends BaseParanoidModel<Loop> {
     type: Sequelize.BIGINT,
     allowNull: false,
   })
-  duration: string
+  duration: number
 
   @Column({
     type: Sequelize.ENUM(...enumWords(LoopSource)),

@@ -42,7 +42,7 @@ export class Series extends BaseParanoidModel<Series> {
     type: Sequelize.BIGINT,
     allowNull: true,
   })
-  anilistId: string
+  anilistId: number
 
   @Column({
     type: Sequelize.JSON,
