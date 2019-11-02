@@ -1,5 +1,5 @@
-import { addDays, compareAsc } from 'date-fns'
 import log4js from 'log4js'
+import { DateTime } from 'luxon'
 import Parser from 'rss-parser'
 import { Service } from 'typedi'
 import { ConfigService } from '../../../core/services/ConfigService'
@@ -38,7 +38,7 @@ export class HorribleSubsService {
       .filter((item) =>
         blacklist.findIndex((re: RegExp) => re.test(item.title)) === -1
       )
-      .filter((item) => compareAsc(new Date(), addDays(item.pubDate, delayDays)) > 0)
+      .filter((item) => DateTime.fromJSDate(item.pubDate).plus({ days: delayDays }).diffNow().milliseconds < 0)
       .slice(0, limit)
     } catch (error) {
       logger.error(new Error('HorribleSubs_rss_feed_fetch_error'))
