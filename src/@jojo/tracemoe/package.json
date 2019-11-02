@@ -1,0 +1,14 @@
+{
+  "name": "@jojo/tracemoe",
+  "version": "1.0.0",
+  "main": "index.js",
+  "private": true,
+  "dependencies": {
+    "request": "^2.88.0",
+    "typedi": "^0.8.0",
+    "bluebird": "^3.7.1"
+  },
+  "devDependencies": {
+    "@types/bluebird": "^3.5.28"
+  }
+}

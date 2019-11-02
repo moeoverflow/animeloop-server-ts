@@ -1,0 +1,14 @@
+{
+  "name": "@jojo/horrible-subs",
+  "version": "1.0.0",
+  "main": "index.js",
+  "private": true,
+  "dependencies": {
+    "rss-parser": "^3.7.3",
+    "typedi": "^0.8.0",
+    "date-fns": "^2.6.0",
+    "log4js": "^5.3.0"
+  },
+  "devDependencies": {
+  }
+}
