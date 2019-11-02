@@ -1,0 +1,14 @@
+{
+  "name": "@jojo/graphql",
+  "version": "1.0.0",
+  "main": "index.js",
+  "private": true,
+  "dependencies": {
+    "graphql": "^14.5.8",
+    "type-graphql": "^0.17.5",
+    "typedi": "^0.8.0"
+  },
+  "devDependencies": {
+    "@types/graphql": "^14.5.0"
+  }
+}

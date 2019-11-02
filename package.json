@@ -27,6 +27,7 @@
   "_moduleAliases": {
     "@jojo/mysql": "dist/@jojo/mysql/index",
     "@jojo/mongodb": "dist/@jojo/mongodb/index",
+    "@jojo/graphql": "dist/@jojo/graphql/index",
     "@jojo/anilist": "dist/@jojo/anilist/index",
     "@jojo/tracemoe": "dist/@jojo/tracemoe/index",
     "@jojo/transmission": "dist/@jojo/transmission/index",
