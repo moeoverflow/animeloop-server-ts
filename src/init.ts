@@ -1,9 +1,9 @@
 require('module-alias/register')
+import { MongodbService } from '@jojo/mongodb'
 import { MysqlService } from '@jojo/mysql'
 import path from 'path'
 import 'reflect-metadata'
 import { Container } from 'typedi'
-import { MongodbService } from './core/services/MongodbService'
 
 Container.get(MongodbService)
 const mysqlService = Container.get(MysqlService)

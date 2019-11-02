@@ -1,14 +1,15 @@
 import mongoose from 'mongoose'
 import autoIncrement from 'mongoose-auto-increment'
-import { Service } from 'typedi'
-import { ConfigService } from './ConfigService'
+import Container, { Service } from 'typedi'
+import { ConfigService } from '../../../core/services/ConfigService'
 
 mongoose.Promise = global.Promise
 
 @Service()
 export class MongodbService {
   public mongoose: typeof mongoose
-  constructor(configService: ConfigService) {
+  constructor() {
+    const configService = Container.get(ConfigService)
     this.mongoose = mongoose
     mongoose.set('useCreateIndex', true)
     mongoose.set('useFindAndModify', false)
