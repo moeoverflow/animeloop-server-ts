@@ -35,7 +35,7 @@
     "@jojo/twitter": "dist/@jojo/twitter/index",
     "@jojo/telegram": "dist/@jojo/telegram/index"
   },
-  "typings": "typings",
+  "typings": "types",
   "devDependencies": {
     "@types/async": "^3.0.3",
     "@types/body-parser": "^1.17.1",
