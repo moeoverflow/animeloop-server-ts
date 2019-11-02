@@ -1,3 +1,5 @@
+import { AnilistService, IAnilistItem } from '@jojo/anilist'
+import { ITraceMoeDoc, TraceMoeService } from '@jojo/tracemoe'
 import bluebird from 'bluebird'
 import Queue from 'bull'
 import { readFileSync } from 'fs'
@@ -5,8 +7,6 @@ import { padStart } from 'lodash'
 import log4js from 'log4js'
 import { Container } from 'typedi'
 import { AnimeloopTaskModel, AnimeloopTaskStatus } from '../../core/database/mongodb/models/AnimeloopTask'
-import { AnilistService, IAnilistItem } from '../services/AnilistService'
-import { ITraceMoeDoc, TraceMoeService } from '../services/TraceMoeService'
 import { hmsToSeconds } from '../utils/hmsToSeconds'
 
 const logger = log4js.getLogger('Automator:Job:FetchInfoJob')

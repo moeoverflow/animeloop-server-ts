@@ -1,9 +1,9 @@
+require("../init")
+import { AnilistService } from '@jojo/anilist'
 import { delay } from 'bluebird'
 import { Container } from 'typedi'
-import { AnilistService } from '../automator/services/AnilistService'
 import { SeriesService } from '../automator/services/SeriesService'
 import { SeriesModel } from '../core/database/mongodb/models/Series'
-import '../init'
 
 const anilistService = Container.get(AnilistService)
 const seriesService = Container.get(SeriesService)

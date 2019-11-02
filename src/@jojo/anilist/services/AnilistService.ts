@@ -3,8 +3,8 @@ import mkdirp from 'mkdirp'
 import path from 'path'
 import request = require('request-promise-native')
 import { Service } from 'typedi'
-import { ConfigService } from '../../core/services/ConfigService'
-import { imageDownloader } from '../utils/imageDownloader'
+import { imageDownloader } from '../../../automator/utils/imageDownloader'
+import { ConfigService } from '../../../core/services/ConfigService'
 
 export interface IAnilistItem {
   id: number

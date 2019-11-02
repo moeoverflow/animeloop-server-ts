@@ -1,16 +1,15 @@
+import { HorribleSubsService } from '@jojo/horribleSubs'
+import { TraceMoeService } from '@jojo/tracemoe'
+import { TransmissionService } from '@jojo/transmission'
 import log4js from 'log4js'
 import schedule from 'node-schedule'
 import path from 'path'
-
 import { Service } from 'typedi'
 import { AnimeloopTaskModel, AnimeloopTaskStatus } from '../core/database/mongodb/models/AnimeloopTask'
 import { AutomatorTaskModel, AutomatorTaskStatus } from '../core/database/mongodb/models/AutomatorTask'
 import { ConfigService } from '../core/services/ConfigService'
 import { AnimeloopTaskService } from './services/AnimeloopTaskService'
 import { BullService } from './services/BullService'
-import { HorribleSubsService } from './services/HorribleSubsService'
-import { TraceMoeService } from './services/TraceMoeService'
-import { TransmissionService } from './services/TransmissionService'
 
 const logger = log4js.getLogger('Automator:main')
 logger.level = 'debug'

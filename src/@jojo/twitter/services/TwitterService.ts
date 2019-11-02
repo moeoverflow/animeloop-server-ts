@@ -1,7 +1,7 @@
 import Bluebird from 'bluebird'
 import Twit from 'twit'
 import { Service } from 'typedi'
-import { ConfigService } from '../../core/services/ConfigService'
+import { ConfigService } from '../../../core/services/ConfigService'
 
 @Service()
 export class TwitterService {

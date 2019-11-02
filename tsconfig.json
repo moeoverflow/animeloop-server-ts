@@ -16,7 +16,8 @@
       "*": [
         "node_modules/*",
         "src/types/*"
-      ]
+      ],
+      "@jojo/*": ["src/@jojo/*/index"],
     },
     "lib": [
       "es5",
@@ -39,7 +40,8 @@
   },
   "include": [
     "src/**/*.ts",
-    "test/*.ts"
+    "test/*.ts",
+    "types/*.d.ts"
   ],
   "exclude": [
     "node_modules"

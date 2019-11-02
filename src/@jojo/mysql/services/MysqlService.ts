@@ -1,7 +1,6 @@
-import path from 'path'
 import { Sequelize } from 'sequelize-typescript'
 import { Service } from 'typedi'
-import { ConfigService } from './ConfigService'
+import { ConfigService } from '../../../core/services/ConfigService'
 
 @Service()
 export class MysqlService {
@@ -14,7 +13,7 @@ export class MysqlService {
       dialect: mysqlConfig.dialect,
       username: mysqlConfig.username,
       password: mysqlConfig.password,
-      models: [path.join(__dirname, '../database/mysql/models/*.[tj]s')],
+      models: [],
     })
   }
 }

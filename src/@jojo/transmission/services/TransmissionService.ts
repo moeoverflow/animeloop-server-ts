@@ -2,7 +2,7 @@ import bluebird from 'bluebird'
 import log4js from 'log4js'
 import Transmission from 'transmission'
 import { Service } from 'typedi'
-import { ConfigService } from '../../core/services/ConfigService'
+import { ConfigService } from '../../../core/services/ConfigService'
 
 const logger = log4js.getLogger('Automator:Service:TransmissionService')
 
