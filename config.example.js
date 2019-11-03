@@ -26,6 +26,10 @@ const config = {
     accessKey: '',
     secretKey: '',
   },
+  s3: {
+    bucketName: 'animeloop-dev',
+    bucketBaseUrl: 'http://127.0.0.1:9000',
+  },
   transmission: {
     host: 'localhost',
     port: 9091,
