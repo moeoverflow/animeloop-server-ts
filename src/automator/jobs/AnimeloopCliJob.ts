@@ -72,8 +72,25 @@ export async function AnimeloopCliJob(job: Queue.Job<AnimeloopCliJobData>) {
   const configService = Container.get(ConfigService)
   const { animeloopCli } = configService.config
 
-  const args = [animeloopCli.bin, '-i', rawFile, '--cover', '-o', tempDir]
-  const shellString = shellescape(args)
+  let shellString: string = ''
+  if (animeloopCli.bin.includes('docker run')) {
+    const ext = path.extname(rawFile)
+    const basename = path.basename(rawFile, ext)
+    const args = [
+      'docker run',
+      '-v', `\'${tempDir}:/data\'`,
+      '-v', `\'${rawFile}:/${basename}${ext}\'`,
+      '--rm',
+      'animeloop-cli',
+      '--cover',
+      '-i', `\'/${basename}${ext}\'`,
+      '-o', '/data',
+    ]
+    shellString = args.join(' ')
+  } else {
+    const args = [animeloopCli.bin, '-i', rawFile, '--cover', '-o', tempDir]
+    shellString = shellescape(args)
+  }
 
   logger.debug(`run command: ${shellString}`)
 
