@@ -7,7 +7,6 @@ export class MysqlSyncer {
 
   async run() {
     this.mysqlService.sequelize.addModels(['../core/database/mysql/models/*.[tj]s'])
-    console.log(this.mysqlService.sequelize.models)
     await this.mysqlService.sequelize.sync({ force: false })
   }
 }

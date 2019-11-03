@@ -9,6 +9,7 @@ export { Op }
  */
 export { BaseModel } from './models/BaseModel';
 export { BaseParanoidModel } from './models/BaseParanoidModel';
+export { StateMachineParanoidModel } from './models/StateMachineParanoidModel';
 
 /**
  * Services

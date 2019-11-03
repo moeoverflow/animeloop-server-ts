@@ -8,7 +8,7 @@ import path from 'path'
 import shellescape from 'shell-escape'
 import shell from 'shelljs'
 import { Container } from 'typedi'
-import { AnimeloopTaskModel, AnimeloopTaskStatus } from '../../core/database/mongodb/models/AnimeloopTask'
+import { AnimeloopTask, AnimeloopTaskStatus } from '../../core/database/mysql/models/AnimeloopTask'
 import { ConfigService } from '../../core/services/ConfigService'
 
 const logger = log4js.getLogger('Automator:Job:AnimeloopCliJob')
@@ -59,14 +59,10 @@ export async function AnimeloopCliJob(job: Queue.Job<AnimeloopCliJobData>) {
   const { taskId, rawFile, tempDir, outputDir } = job.data
   logger.info(`run animeloop-cli with ${path.basename(rawFile)}`)
 
-  const animeloopTask = await AnimeloopTaskModel.findOneAndUpdate({
-    _id: taskId
-  }, {
-    $set: {
-      status: AnimeloopTaskStatus.Animelooping
+  const animeloopTask = await AnimeloopTask.findOne({
+    where: {
+      id: taskId,
     }
-  }, {
-    new: true
   })
 
   if (!animeloopTask) {
@@ -99,31 +95,29 @@ export async function AnimeloopCliJob(job: Queue.Job<AnimeloopCliJobData>) {
 
   const infoString = readFileSync(path.join(targetDir, `${basename}.json`)).toString()
   const info = JSON.parse(infoString) as IAnimeloopCliOutputInfo
-  if (!info.loops || info.loops.length === 0) {
-    await animeloopTask.update({
-      $set: {
-        status: AnimeloopTaskStatus.Error,
-        errorMessage: new Error('animeloop_output_loops_is_empty')
-      }
+
+  if (info.loops) {
+    info.loops = info.loops.map((loop) => {
+      loop.files.jpg_1080p = path.join(targetDir, loop.files.jpg_1080p)
+      loop.files.mp4_1080p = path.join(targetDir, loop.files.mp4_1080p)
+      return loop
     })
-    return
   }
-  info.loops = info.loops.map((loop) => {
-    loop.files.jpg_1080p = path.join(targetDir, loop.files.jpg_1080p)
-    loop.files.mp4_1080p = path.join(targetDir, loop.files.mp4_1080p)
-    return loop
-  })
+
   const output = {
     taskId,
     rawFile,
     info
   } as IAnimeloopCliOutput
 
-  await animeloopTask.update({
-    $set: {
-      status: AnimeloopTaskStatus.Animelooped,
-      output: output
-    }
+  await animeloopTask.transit(
+    AnimeloopTaskStatus.Animelooping,
+    AnimeloopTaskStatus.Animelooped,
+    async (animeloopTask, transaction) => {
+      await animeloopTask.update({
+        output,
+      }, { transaction })
   })
+
   await job.progress(100)
 }

@@ -1,9 +1,8 @@
 import Queue from 'bull'
 import { existsSync } from 'fs'
-import path from 'path'
-import { basename, extname } from 'path'
+import path, { basename, extname } from 'path'
 import { Container } from 'typedi'
-import { AnimeloopTaskModel, AnimeloopTaskStatus } from '../../core/database/mongodb/models/AnimeloopTask'
+import { AnimeloopTask, AnimeloopTaskStatus } from '../../core/database/mysql/models/AnimeloopTask'
 import { ConvertService, MediaType } from '../services/ConvertService'
 
 export interface ConvertJobData {
@@ -14,13 +13,7 @@ export async function ConvertJob(job: Queue.Job<ConvertJobData>) {
   const convertService = Container.get(ConvertService)
 
   const { taskId } = job.data
-  const animeloopTask = await AnimeloopTaskModel.findOneAndUpdate({
-    _id: taskId
-  }, {
-    status: AnimeloopTaskStatus.Converting
-  }, {
-    new: true
-  })
+  const animeloopTask = await AnimeloopTask.findByPk(taskId)
   const output = Object.assign({}, animeloopTask.output)
   const { loops } = output.info
   for (const loop of loops) {
@@ -65,12 +58,15 @@ export async function ConvertJob(job: Queue.Job<ConvertJobData>) {
     }
   }
 
-  await animeloopTask.update({
-    $set: {
-      output,
-      status: AnimeloopTaskStatus.Converted
+  await animeloopTask.transit(
+    AnimeloopTaskStatus.Converting,
+    AnimeloopTaskStatus.Converted,
+    async (animeloopTask, transaction) => {
+      await animeloopTask.update({
+        output,
+      }, { transaction })
     }
-  })
+  )
 
   await job.progress(100)
 }

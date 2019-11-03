@@ -6,7 +6,7 @@ import { readFileSync } from 'fs'
 import { padStart } from 'lodash'
 import log4js from 'log4js'
 import { Container } from 'typedi'
-import { AnimeloopTaskModel, AnimeloopTaskStatus } from '../../core/database/mongodb/models/AnimeloopTask'
+import { AnimeloopTask, AnimeloopTaskStatus } from '../../core/database/mysql/models/AnimeloopTask'
 import { hmsToSeconds } from '../utils/hmsToSeconds'
 
 const logger = log4js.getLogger('Automator:Job:FetchInfoJob')
@@ -24,7 +24,7 @@ export async function FetchInfoJob(job: Queue.Job<FetchInfoJobData>) {
 
   const { taskId } = job.data
 
-  const animeloopTask = await AnimeloopTaskModel.findById(taskId)
+  const animeloopTask = await AnimeloopTask.findByPk(taskId)
 
   if (!animeloopTask.output) {
     throw new Error('animeloop_task_output_not_found')
@@ -91,7 +91,7 @@ export async function FetchInfoJob(job: Queue.Job<FetchInfoJobData>) {
     return
   }
 
-  const { seriesTitle, episodeNo, anilistId } = parseResult(result)
+  const { seriesTitle, episodeIndex, anilistId } = parseResult(result)
 
   await job.progress(70)
 
@@ -103,39 +103,41 @@ export async function FetchInfoJob(job: Queue.Job<FetchInfoJobData>) {
     anilistItem = await anilistService.getInfo(anilistId)
   } catch (error) {
     logger.warn('fetch anilist data failed.')
-    await animeloopTask.update({
-      $set: {
-        status: AnimeloopTaskStatus.InfoWait
-      }
-    })
+    await animeloopTask.transit(
+      AnimeloopTaskStatus.InfoFetching,
+      AnimeloopTaskStatus.InfoWait,
+    )
   }
 
-  await animeloopTask.update({
-    $set: {
-      status: AnimeloopTaskStatus.InfoCompleted,
-      seriesTitle,
-      episodeNo,
-      anilistId,
-      anilistItem
-    }
-  })
+  await animeloopTask.transit(
+    AnimeloopTaskStatus.InfoFetching,
+    AnimeloopTaskStatus.InfoCompleted,
+    async (animeloopTask, transaction) => {
+      await animeloopTask.update({
+        seriesTitle,
+        episodeIndex,
+        anilistId,
+        anilistItem
+      }, { transaction })
+    },
+  )
 
   await job.progress(100)
 }
 
 function parseResult(doc: ITraceMoeDoc) {
   const seriesTitle = doc.anime
-  let episodeNo = ''
+  let episodeIndex = ''
   if (doc.episode === '' || doc.episode === 'OVA/OAD') {
-    episodeNo = 'OVA'
+    episodeIndex = 'OVA'
   } else {
-    episodeNo = `${padStart(doc.episode, 2, '0')}`
+    episodeIndex = `${padStart(doc.episode, 2, '0')}`
   }
   const anilistId = doc.anilist_id
 
   return {
     seriesTitle,
-    episodeNo,
+    episodeIndex,
     anilistId
   }
 }

@@ -38,7 +38,7 @@ export class HorribleSubsService {
       .filter((item) =>
         blacklist.findIndex((re: RegExp) => re.test(item.title)) === -1
       )
-      .filter((item) => DateTime.fromJSDate(item.pubDate).plus({ days: delayDays }).diffNow().milliseconds < 0)
+      .filter((item) => DateTime.fromJSDate(new Date(item.pubDate)).plus({ days: delayDays }).diffNow().milliseconds < 0)
       .slice(0, limit)
     } catch (error) {
       logger.error(new Error('HorribleSubs_rss_feed_fetch_error'))

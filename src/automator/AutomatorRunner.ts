@@ -5,8 +5,8 @@ import log4js from 'log4js'
 import schedule from 'node-schedule'
 import path from 'path'
 import { Service } from 'typedi'
-import { AnimeloopTaskModel, AnimeloopTaskStatus } from '../core/database/mongodb/models/AnimeloopTask'
-import { AutomatorTaskModel, AutomatorTaskStatus } from '../core/database/mongodb/models/AutomatorTask'
+import { AnimeloopTask, AnimeloopTaskStatus } from '../core/database/mysql/models/AnimeloopTask'
+import { AutomatorTask, AutomatorTaskStatus } from '../core/database/mysql/models/AutomatorTask'
 import { ConfigService } from '../core/services/ConfigService'
 import { AnimeloopTaskService } from './services/AnimeloopTaskService'
 import { BullService } from './services/BullService'
@@ -33,26 +33,27 @@ export default class AutomatorRunner {
      */
     const rollbackStatus = [
       // AnimeloopTask
-      [AnimeloopTaskModel, AnimeloopTaskStatus.Animelooping, AnimeloopTaskStatus.Created],
-      [AnimeloopTaskModel, AnimeloopTaskStatus.InfoFetching, AnimeloopTaskStatus.Animelooped],
-      [AnimeloopTaskModel, AnimeloopTaskStatus.Converting, AnimeloopTaskStatus.InfoCompleted],
-      [AnimeloopTaskModel, AnimeloopTaskStatus.Adding, AnimeloopTaskStatus.Converted],
-      // AutomatorTask
-      [AutomatorTaskModel, AutomatorTaskStatus.Animelooping, AutomatorTaskStatus.Downloaded],
-      [AutomatorTaskModel, AutomatorTaskStatus.InfoFetching, AutomatorTaskStatus.Animelooped],
-      [AutomatorTaskModel, AutomatorTaskStatus.Converting, AutomatorTaskStatus.InfoCompleted],
-      [AutomatorTaskModel, AutomatorTaskStatus.Adding, AutomatorTaskStatus.Converted]
-    ]
-    for (const rollback of rollbackStatus) {
-      const Model = rollback[0] as typeof AnimeloopTaskModel | typeof AutomatorTaskModel
-      await Model.updateMany({
-        status: rollback[1]
-      }, {
-        $set: {
-          status: rollback[2]
+      [AnimeloopTask, AnimeloopTaskStatus.Animelooping, AnimeloopTaskStatus.Created],
+      [AnimeloopTask, AnimeloopTaskStatus.InfoFetching, AnimeloopTaskStatus.Animelooped],
+      [AnimeloopTask, AnimeloopTaskStatus.Converting, AnimeloopTaskStatus.InfoCompleted],
+      [AnimeloopTask, AnimeloopTaskStatus.Adding, AnimeloopTaskStatus.Converted],
+    ] as const
+
+    await AnimeloopTask.transaction(null, async (transaction) => {
+      for (const rollback of rollbackStatus) {
+        const fromStatus = rollback[1]
+        const toStatus = rollback[2]
+        const docs = await AnimeloopTask.findAll({
+          where: {
+            status: fromStatus,
+          },
+          transaction,
+        })
+        for (const doc of docs) {
+          await doc.transit(fromStatus, toStatus, null, transaction)
         }
-      })
-    }
+      }
+    })
 
     /**
      * fetch anime source from HorribleSubs every day,
@@ -62,12 +63,19 @@ export default class AutomatorRunner {
       logger.info('ScheduleJob:fetch_HorribleSubs')
 
       const items = await this.horribleSubsService.fetchRss()
-      for (const item of items) {
-        await AutomatorTaskModel.findOrCreate({
-          name: item.title,
-          magnetLink: item.link
-        })
-      }
+      await AutomatorTask.transaction(null, async (transaction) => {
+        for (const item of items) {
+          const doc = {
+            name: item.title,
+            magnetLink: item.link
+          }
+          await AutomatorTask.findOrCreate({
+            where: doc,
+            defaults: doc,
+            transaction,
+          })
+        }
+      })
     })
 
     /**
@@ -78,20 +86,29 @@ export default class AutomatorRunner {
     schedule.scheduleJob('1 * * * * *', async () => {
       logger.info('ScheduleJob:add_url_to_transmission')
 
-      const automatorTasks = await AutomatorTaskModel.find({
-        status: AutomatorTaskStatus.Created
-      })
-      for (const automatorTask of automatorTasks) {
-        logger.info(`add url to transmission: ${automatorTask.name}`)
-
-        const task = await this.transmissionService.addUrl(automatorTask.magnetLink)
-        await automatorTask.update({
-          $set: {
-            status: AutomatorTaskStatus.Downloading,
-            transmissionId: task.id
-          }
+      await AutomatorTask.transaction(null, async (transaction) => {
+        const automatorTasks = await AutomatorTask.findAll({
+          where: {
+            status: AutomatorTaskStatus.Created,
+          },
+          transaction,
         })
-      }
+        for (const automatorTask of automatorTasks) {
+          logger.info(`add url to transmission: ${automatorTask.name}`)
+
+          const task = await this.transmissionService.addUrl(automatorTask.magnetLink)
+          await automatorTask.transit(
+            AutomatorTaskStatus.Created,
+            AutomatorTaskStatus.Downloading,
+            async (automatorTask, transaction) => {
+              await automatorTask.update({
+                transmissionId: task.id,
+              }, { transaction })
+            },
+            transaction,
+          )
+        }
+      })
     })
 
     /**
@@ -104,28 +121,36 @@ export default class AutomatorRunner {
       const videoExtRegex = new RegExp(`.*\.(mp4|mkv)$`)
 
       const seedingTasks = await this.transmissionService.findSeedingTasks()
-      const automatorTasks = await AutomatorTaskModel.find({
-        transmissionId: {
-          $in: seedingTasks.map((task) => task.id)
-        },
-        status: AutomatorTaskStatus.Downloading
-      })
-      for (const automatorTask of automatorTasks) {
-        const transmissionTask = seedingTasks.find((task) => task.id === automatorTask.transmissionId)
-        const { downloadDir } = transmissionTask
-
-        const rawFiles = transmissionTask.files
-        .map((file: any) => path.join(downloadDir, file.name))
-        .filter((file: string) => videoExtRegex.test(file))
-
-        logger.info(`update task status downloaded: ${automatorTask.name}`)
-        await automatorTask.update({
-          $set: {
-            status: AutomatorTaskStatus.Downloaded,
-            rawFiles
-          }
+      await AutomatorTask.transaction(null, async (transaction) => {
+        const automatorTasks = await AutomatorTask.findAll({
+          where: {
+            status: AutomatorTaskStatus.Downloading,
+            transmissionId: seedingTasks.map((task) => task.id),
+          },
+          transaction
         })
-      }
+
+        for (const automatorTask of automatorTasks) {
+          const transmissionTask = seedingTasks.find((task) => task.id === automatorTask.transmissionId)
+          const { downloadDir } = transmissionTask
+
+          const files = transmissionTask.files
+          .map((file: any) => path.join(downloadDir, file.name))
+          .filter((file: string) => videoExtRegex.test(file))
+
+          logger.info(`update task status downloaded: ${automatorTask.name}`)
+          await automatorTask.transit(
+            AutomatorTaskStatus.Downloading,
+            AutomatorTaskStatus.Downloaded,
+            async (automatorTask, transaction) => {
+              await automatorTask.update({
+                files
+              }, { transaction })
+            },
+            transaction,
+          )
+        }
+      })
     })
 
     /**
@@ -135,59 +160,57 @@ export default class AutomatorRunner {
     schedule.scheduleJob('3 * * * * *', async () => {
       logger.info('ScheduleJob:add_animeloop_cli_jobs')
 
-      const automatorTasks = await AutomatorTaskModel.find({
-        status: AutomatorTaskStatus.Downloaded
-      })
-
       const storage = this.configService.config.storage
 
-      for (const automatorTask of automatorTasks) {
-        await automatorTask.update({ $set: { status: AutomatorTaskStatus.Animelooping }})
 
-        for (const rawFile of automatorTask.rawFiles) {
-          logger.info(`add animeloop cli jobs: ${rawFile}`)
-
-          const { doc } = await AnimeloopTaskModel.findOrCreate({
-            rawFile,
-            automatorTask: automatorTask._id
-          })
-
-          const animeloopTask = doc
-
-          await this.bullService.addAnimeloopCliJob({
-            taskId: animeloopTask._id,
-            rawFile,
-            tempDir: storage.dir.autogen,
-            outputDir: storage.dir.upload
-          })
-        }
-      }
-    })
-
-    /**
-     * check if all video files animelooped in one task
-     */
-    schedule.scheduleJob('4 * * * * *', async () => {
-      logger.info('ScheduleJob:update_task_status_animelooped')
-
-      const automatorTasks = await AutomatorTaskModel.find({
-        status: AutomatorTaskStatus.Animelooping
-      })
-
-      for (const automatorTask of automatorTasks) {
-        const animeloopTasks = await AnimeloopTaskModel.find({
-          automatorTask: automatorTask._id
+      await AutomatorTask.transaction(null, async (transaction) => {
+        const automatorTasks = await AutomatorTask.findAll({
+          where: {
+            status: AutomatorTaskStatus.Downloaded,
+          },
+          transaction,
         })
-        const successTasks = animeloopTasks.filter((task) => task.status === AnimeloopTaskStatus.Animelooped)
-        if (animeloopTasks.length > 0 && animeloopTasks.length === successTasks.length) {
-          await automatorTask.update({
-            $set: {
-              status: AutomatorTaskStatus.Animelooped
+
+        for (const automatorTask of automatorTasks) {
+          await automatorTask.update({ $set: { status: AutomatorTaskStatus.Animelooping }})
+
+          for (const file of automatorTask.files) {
+            logger.info(`add animeloop cli jobs: ${file}`)
+
+            const doc = {
+              file,
+              automatorTask: automatorTask.id,
             }
-          })
-          await this.transmissionService.remove([automatorTask.transmissionId], true)
+            await AnimeloopTask.findOrCreate({
+              where: doc,
+              defaults: doc,
+              transaction,
+            })
+          }
         }
-      }
+
+        const animeloopTasks = await AnimeloopTask.findAll({
+          where: {
+            status: AnimeloopTaskStatus.Created,
+          },
+          transaction,
+        })
+        for (const animeloopTask of animeloopTasks) {
+          await animeloopTask.transit(
+            AnimeloopTaskStatus.Created,
+            AnimeloopTaskStatus.Animelooping,
+            async (animeloopTask) => {
+              await this.bullService.addAnimeloopCliJob({
+                taskId: animeloopTask.id,
+                rawFile: animeloopTask.file,
+                tempDir: storage.dir.autogen,
+                outputDir: storage.dir.upload
+              })
+            },
+            transaction,
+          )
+        }
+      })
     })
 
 
@@ -197,50 +220,27 @@ export default class AutomatorRunner {
      */
     schedule.scheduleJob('5 * * * * *', async () => {
       logger.info('ScheduleJob:fetch_info_from_trace.moe')
-      const automatorTasks  = await AutomatorTaskModel.find({
-        status: AutomatorTaskStatus.Animelooped
-      })
 
-
-      for (const automatorTask of automatorTasks) {
-        const animeloopTasks = await AnimeloopTaskModel.find({
-          automatorTask: automatorTask._id,
-          status: AnimeloopTaskStatus.Animelooped
+      await AnimeloopTask.transaction(null, async (transaction) => {
+        const animeloopTasks = await AnimeloopTask.findAll({
+          where: {
+            status: AnimeloopTaskStatus.Animelooped,
+          },
+          transaction,
         })
-        await automatorTask.update({ $set: { status: AutomatorTaskStatus.InfoFetching }})
         for (const animeloopTask of animeloopTasks) {
-          await animeloopTask.update({ $set: { status: AnimeloopTaskStatus.InfoFetching }})
-          await this.bullService.addFetchInfoJob({
-            taskId: animeloopTask._id
-          })
+          await animeloopTask.transit(
+            AnimeloopTaskStatus.Animelooped,
+            AnimeloopTaskStatus.InfoFetching,
+            async (animeloopTask) => {
+              await this.bullService.addFetchInfoJob({
+                taskId: animeloopTask.id
+              })
+            },
+            transaction,
+          )
         }
-      }
-    })
-
-
-    /**
-     * update task status InfoCompleted
-     */
-    schedule.scheduleJob('6 * * * * *', async () => {
-      logger.info('ScheduleJob:update_task_status_infocomplete')
-
-      const automatorTasks = await AutomatorTaskModel.find({
-        status: AutomatorTaskStatus.InfoFetching
       })
-
-      for (const automatorTask of automatorTasks) {
-        const animeloopTasks = await AnimeloopTaskModel.find({
-          automatorTask: automatorTask._id
-        })
-        const successTasks = animeloopTasks.filter((task) => task.status === AnimeloopTaskStatus.InfoCompleted)
-        if (animeloopTasks.length > 0 && animeloopTasks.length === successTasks.length) {
-          await automatorTask.update({
-            $set: {
-              status: AutomatorTaskStatus.InfoCompleted
-            }
-          })
-        }
-      }
     })
 
 
@@ -250,45 +250,49 @@ export default class AutomatorRunner {
     schedule.scheduleJob('7 * * * * *', async () => {
       logger.info('ScheduleJob:convert_file')
 
-      const automatorTasks = await AutomatorTaskModel.find({
-        status: AutomatorTaskStatus.InfoCompleted
-      })
-
-      for (const automatorTask of automatorTasks) {
-        const animeloopTasks = await AnimeloopTaskModel.find({
-          automatorTask: automatorTask._id,
-          status: AutomatorTaskStatus.InfoCompleted
+      await AnimeloopTask.transaction(null, async (transaction) => {
+        const animeloopTasks = await AnimeloopTask.findAll({
+          where: {
+            status: AnimeloopTaskStatus.InfoCompleted,
+          },
+          transaction,
         })
-        await automatorTask.update({ $set: { status: AutomatorTaskStatus.Converting }})
         for (const animeloopTask of animeloopTasks) {
-          await this.bullService.addConvertJob({
-            taskId: animeloopTask._id
-          })
+          await animeloopTask.transit(
+            AnimeloopTaskStatus.InfoCompleted,
+            AnimeloopTaskStatus.Converting,
+            async (animeloopTask) => {
+              await this.bullService.addConvertJob({
+                taskId: animeloopTask.id,
+              })
+            },
+            transaction,
+          )
         }
-      }
+      })
     })
 
     /**
-     * update task status converted
+     * check if all video files animelooped in one task
      */
     schedule.scheduleJob('8 * * * * *', async () => {
       logger.info('ScheduleJob:update_task_status_converted')
 
-      const automatorTasks = await AutomatorTaskModel.find({
-        status: AutomatorTaskStatus.Converting
+      const automatorTasks = await AutomatorTask.findAll({
+        where: {
+          status: AutomatorTaskStatus.Animelooping
+        },
+        include: [AnimeloopTask],
       })
 
       for (const automatorTask of automatorTasks) {
-        const animeloopTasks = await AnimeloopTaskModel.find({
-          automatorTask: automatorTask._id
-        })
+        const animeloopTasks = automatorTask.animeloopTasks
         const successTasks = animeloopTasks.filter((task) => task.status === AnimeloopTaskStatus.Converted)
-        if (animeloopTasks.length > 0 && animeloopTasks.length === successTasks.length) {
-          await automatorTask.update({
-            $set: {
-              status: AutomatorTaskStatus.Converted
-            }
-          })
+        if (animeloopTasks.length === successTasks.length) {
+          await automatorTask.transit(
+            AutomatorTaskStatus.Animelooping,
+            AutomatorTaskStatus.Animelooped,
+          )
         }
       }
     })
@@ -299,20 +303,33 @@ export default class AutomatorRunner {
     schedule.scheduleJob('9 * * * * *', async () => {
       logger.info('ScheduleJob:add_data_to_library')
 
-      const automatorTasks = await AutomatorTaskModel.find({
-        status: AutomatorTaskStatus.Converted
+      const automatorTasks = await AutomatorTask.findAll({
+        where: {
+          status: AutomatorTaskStatus.Animelooped
+        },
+        include: [AnimeloopTask],
       })
 
       for (const automatorTask of automatorTasks) {
-        const animeloopTasks = await AnimeloopTaskModel.find({
-          automatorTask: automatorTask._id,
-          status: AnimeloopTaskStatus.Converted
-        })
+        const animeloopTasks = automatorTask.animeloopTasks
 
-        await automatorTask.update({ $set: { status: AutomatorTaskStatus.Adding }})
-        for (const animeloopTask of animeloopTasks) {
-          await this.animeloopTaskService.addDataToLibrary(animeloopTask._id)
-        }
+        await automatorTask.transit(
+          AutomatorTaskStatus.Animelooped,
+          AutomatorTaskStatus.Adding,
+          async (automatorTask, transaction) => {
+            for (const animeloopTask of animeloopTasks) {
+
+              await animeloopTask.transit(
+                AnimeloopTaskStatus.Converted,
+                AnimeloopTaskStatus.Adding,
+                async () => {
+                  await this.animeloopTaskService.addDataToLibrary(animeloopTask.id)
+                },
+                transaction,
+              )
+            }
+          }
+        )
       }
     })
 
@@ -322,23 +339,27 @@ export default class AutomatorRunner {
     schedule.scheduleJob('10 * * * * *', async () => {
       logger.info('ScheduleJob:update_task_status_converted')
 
-      const automatorTasks = await AutomatorTaskModel.find({
-        status: AutomatorTaskStatus.Adding
-      })
-
-      for (const automatorTask of automatorTasks) {
-        const animeloopTasks = await AnimeloopTaskModel.find({
-          automatorTask: automatorTask._id
+      await AutomatorTask.transaction(null, async (transaction) => {
+        const automatorTasks = await AutomatorTask.findAll({
+          where: {
+            status: AutomatorTaskStatus.Adding,
+          },
+          include: [AnimeloopTask],
         })
-        const successTasks = animeloopTasks.filter((task) => task.status === AnimeloopTaskStatus.Done)
-        if (animeloopTasks.length > 0 && animeloopTasks.length === successTasks.length) {
-          await automatorTask.update({
-            $set: {
-              status: AutomatorTaskStatus.Done
-            }
-          })
+
+        for (const automatorTask of automatorTasks) {
+          const animeloopTasks = automatorTask.animeloopTasks
+          const successTasks = animeloopTasks.filter((task) => task.status === AnimeloopTaskStatus.Done)
+          if (animeloopTasks.length === successTasks.length) {
+            await automatorTask.transit(
+              AutomatorTaskStatus.Adding,
+              AutomatorTaskStatus.Done,
+              null,
+              transaction,
+            )
+          }
         }
-      }
+      })
     })
   }
 }
