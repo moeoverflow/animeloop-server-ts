@@ -1,6 +1,6 @@
 export * from 'sequelize-typescript';
-import Sequelize from 'sequelize';
-export { Sequelize };
+import Sequelize, { Transaction } from 'sequelize';
+export { Sequelize, Transaction };
 const { Op } = Sequelize;
 export { Op }
 

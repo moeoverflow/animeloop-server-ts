@@ -59,24 +59,24 @@ export default class AutomatorRunner {
      * fetch anime source from HorribleSubs every day,
      * and add to AutomatorTask
      */
-    schedule.scheduleJob('0 * * * * *', async () => {
-      logger.info('ScheduleJob:fetch_HorribleSubs')
+    // schedule.scheduleJob('0 * * * * *', async () => {
+    //   logger.info('ScheduleJob:fetch_HorribleSubs')
 
-      const items = await this.horribleSubsService.fetchRss()
-      await AutomatorTask.transaction(null, async (transaction) => {
-        for (const item of items) {
-          const doc = {
-            name: item.title,
-            magnetLink: item.link
-          }
-          await AutomatorTask.findOrCreate({
-            where: doc,
-            defaults: doc,
-            transaction,
-          })
-        }
-      })
-    })
+    //   const items = await this.horribleSubsService.fetchRss()
+    //   await AutomatorTask.transaction(null, async (transaction) => {
+    //     for (const item of items) {
+    //       const doc = {
+    //         name: item.title,
+    //         magnetLink: item.link
+    //       }
+    //       await AutomatorTask.findOrCreate({
+    //         where: doc,
+    //         defaults: doc,
+    //         transaction,
+    //       })
+    //     }
+    //   })
+    // })
 
     /**
      * check new task every minute,
@@ -172,14 +172,13 @@ export default class AutomatorRunner {
         })
 
         for (const automatorTask of automatorTasks) {
-          await automatorTask.update({ $set: { status: AutomatorTaskStatus.Animelooping }})
 
           for (const file of automatorTask.files) {
             logger.info(`add animeloop cli jobs: ${file}`)
 
             const doc = {
               file,
-              automatorTask: automatorTask.id,
+              automatorTaskId: automatorTask.id,
             }
             await AnimeloopTask.findOrCreate({
               where: doc,
@@ -187,6 +186,13 @@ export default class AutomatorRunner {
               transaction,
             })
           }
+
+          await automatorTask.transit(
+            AutomatorTaskStatus.Downloaded,
+            AutomatorTaskStatus.Animelooping,
+            null,
+            transaction,
+          )
         }
 
         const animeloopTasks = await AnimeloopTask.findAll({
@@ -219,7 +225,7 @@ export default class AutomatorRunner {
      * fetch info from trace.moe
      */
     schedule.scheduleJob('5 * * * * *', async () => {
-      logger.info('ScheduleJob:fetch_info_from_trace.moe')
+      logger.info('ScheduleJob:fetch_info')
 
       await AnimeloopTask.transaction(null, async (transaction) => {
         const animeloopTasks = await AnimeloopTask.findAll({
@@ -313,23 +319,23 @@ export default class AutomatorRunner {
       for (const automatorTask of automatorTasks) {
         const animeloopTasks = automatorTask.animeloopTasks
 
-        await automatorTask.transit(
-          AutomatorTaskStatus.Animelooped,
-          AutomatorTaskStatus.Adding,
-          async (automatorTask, transaction) => {
-            for (const animeloopTask of animeloopTasks) {
-
-              await animeloopTask.transit(
-                AnimeloopTaskStatus.Converted,
-                AnimeloopTaskStatus.Adding,
-                async () => {
-                  await this.animeloopTaskService.addDataToLibrary(animeloopTask.id)
-                },
-                transaction,
-              )
-            }
+        await AutomatorTask.transaction(null, async (transaction) => {
+          await automatorTask.transit(
+            AutomatorTaskStatus.Animelooped,
+            AutomatorTaskStatus.Adding,
+            null,
+            transaction,
+          )
+          for (const animeloopTask of animeloopTasks) {
+            await animeloopTask.transit(
+              AnimeloopTaskStatus.Converted,
+              AnimeloopTaskStatus.Adding,
+              null,
+              transaction,
+            )
+            await this.animeloopTaskService.addDataToLibrary(animeloopTask.id, transaction)
           }
-        )
+        })
       }
     })
 
@@ -354,7 +360,9 @@ export default class AutomatorRunner {
             await automatorTask.transit(
               AutomatorTaskStatus.Adding,
               AutomatorTaskStatus.Done,
-              null,
+              async (automatorTask) => {
+                await this.transmissionService.remove([automatorTask.transmissionId], true)
+              },
               transaction,
             )
           }

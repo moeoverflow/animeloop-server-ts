@@ -27,6 +27,7 @@ export interface IAnimeloopCliOutputInfo {
     filename: string
   }
   loops: {
+    uuid?: string
     duration: number,
     files: {
       [index: string]: string,

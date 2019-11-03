@@ -6,6 +6,7 @@ import { readFileSync } from 'fs'
 import { padStart } from 'lodash'
 import log4js from 'log4js'
 import { Container } from 'typedi'
+import uuid from 'uuid'
 import { AnimeloopTask, AnimeloopTaskStatus } from '../../core/database/mysql/models/AnimeloopTask'
 import { hmsToSeconds } from '../utils/hmsToSeconds'
 
@@ -19,12 +20,74 @@ export interface IFetchInfoOutput {
 }
 
 export async function FetchInfoJob(job: Queue.Job<FetchInfoJobData>) {
-  const traceMoeService = Container.get(TraceMoeService)
   const anilistService = Container.get(AnilistService)
 
   const { taskId } = job.data
 
   const animeloopTask = await AnimeloopTask.findByPk(taskId)
+
+  animeloopTask.output.info.loops = animeloopTask.output.info.loops.map((i) => {
+    if (!i.uuid) i.uuid = uuid.v4()
+    return i
+  })
+  await animeloopTask.save()
+  await animeloopTask.update({
+    output: animeloopTask.output.info
+  })
+
+  if (!animeloopTask.anilistId || !animeloopTask.episodeIndex) {
+    try {
+      await getTraceMoeResult(animeloopTask)
+    } catch (error) {
+      logger.error(error)
+      await animeloopTask.transit(
+        AnimeloopTaskStatus.InfoFetching,
+        AnimeloopTaskStatus.InfoWait,
+      )
+      return
+    }
+  }
+
+  await job.progress(70)
+
+  const { seriesTitle, anilistId, episodeIndex } = animeloopTask
+
+  let anilistItem: IAnilistItem
+  try {
+    if (!anilistId) {
+      throw new Error('anilistId_not_found')
+    }
+    console.log('###### getInfo')
+
+    anilistItem = await anilistService.getInfo(anilistId)
+    console.log('anilistItem', anilistItem)
+  } catch (error) {
+    logger.warn('fetch anilist data failed.')
+    console.log('fetch anilist data failed.')
+    await animeloopTask.transit(
+      AnimeloopTaskStatus.InfoFetching,
+      AnimeloopTaskStatus.InfoWait,
+    )
+  }
+
+  await animeloopTask.transit(
+    AnimeloopTaskStatus.InfoFetching,
+    AnimeloopTaskStatus.InfoCompleted,
+    async (animeloopTask, transaction) => {
+      await animeloopTask.update({
+        seriesTitle,
+        episodeIndex,
+        anilistId,
+        anilistItem
+      }, { transaction })
+    },
+  )
+
+  await job.progress(100)
+}
+
+async function getTraceMoeResult(animeloopTask: AnimeloopTask) {
+  const traceMoeService = Container.get(TraceMoeService)
 
   if (!animeloopTask.output) {
     throw new Error('animeloop_task_output_not_found')
@@ -56,12 +119,7 @@ export async function FetchInfoJob(job: Queue.Job<FetchInfoJobData>) {
       results.push(result.docs.sort((prev, next) => prev.similarity - next.similarity)[0])
     }
   } catch (error) {
-    logger.warn('fetch trace.moe data failed.')
-    await animeloopTask.update({
-      $set: {
-        status: AnimeloopTaskStatus.InfoWait
-      }
-    })
+    throw new Error('fetch trace.moe data failed.')
   }
 
   const counts: any = {}
@@ -73,7 +131,7 @@ export async function FetchInfoJob(job: Queue.Job<FetchInfoJobData>) {
 
   const len = randomLoops.length
   const mid = Math.round(len / 2) + (len % 2 === 0 ? 1 : 0)
-  let result
+  let result: ITraceMoeDoc
   for (const key in counts) {
     if (counts[key] >= mid) {
       result = results.filter((result) => (result.anilist_id.toString() === key))[0]
@@ -82,47 +140,12 @@ export async function FetchInfoJob(job: Queue.Job<FetchInfoJobData>) {
   }
 
   if (!result) {
-    logger.warn('tracemoe has no matched info.')
-    await animeloopTask.update({
-      $set: {
-        status: AnimeloopTaskStatus.InfoWait
-      }
-    })
-    return
+    throw new Error('tracemoe has no matched info.')
   }
 
-  const { seriesTitle, episodeIndex, anilistId } = parseResult(result)
-
-  await job.progress(70)
-
-  let anilistItem: IAnilistItem
-  try {
-    if (!anilistId) {
-      throw new Error('anilistId_not_found')
-    }
-    anilistItem = await anilistService.getInfo(anilistId)
-  } catch (error) {
-    logger.warn('fetch anilist data failed.')
-    await animeloopTask.transit(
-      AnimeloopTaskStatus.InfoFetching,
-      AnimeloopTaskStatus.InfoWait,
-    )
-  }
-
-  await animeloopTask.transit(
-    AnimeloopTaskStatus.InfoFetching,
-    AnimeloopTaskStatus.InfoCompleted,
-    async (animeloopTask, transaction) => {
-      await animeloopTask.update({
-        seriesTitle,
-        episodeIndex,
-        anilistId,
-        anilistItem
-      }, { transaction })
-    },
-  )
-
-  await job.progress(100)
+  await animeloopTask.update({
+    ...parseResult(result),
+  })
 }
 
 function parseResult(doc: ITraceMoeDoc) {

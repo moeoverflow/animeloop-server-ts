@@ -30,7 +30,7 @@ export class Loop extends BaseParanoidModel<Loop> {
   uuid: string
 
   @Column({
-    type: Sequelize.BIGINT,
+    type: Sequelize.FLOAT,
     allowNull: false,
   })
   duration: number
