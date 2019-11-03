@@ -15,24 +15,21 @@ export class SeriesObjectType extends BaseParanoidObjectType {
   @Field()
   title: string;
 
-  @Field()
-  description: string;
-
-  @Field(() => SeriesType)
+  @Field(() => SeriesType, { nullable: true })
   type: SeriesType;
 
-  @Field()
+  @Field({ nullable: true })
   cover: string;
 
-  @Field()
+  @Field({ nullable: true })
   banner: string;
 
-  @Field()
+  @Field({ nullable: true })
   anilistId: number;
 
-  @Field(() => GraphQLJSON)
+  @Field(() => GraphQLJSON, { nullable: true })
   anilistData: any;
 
-  @Field()
+  @Field({ nullable: true })
   anilistUpdatedAt: Date;
 }

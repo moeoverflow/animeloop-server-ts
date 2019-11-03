@@ -1,5 +1,7 @@
 import { BaseParanoidObjectType, Field, GraphQLJSON, ID, ObjectType, registerEnumType } from "@jojo/graphql";
+import { Episode } from '../../database/mysql/models/Episode';
 import { LoopFiles, LoopSource } from '../../database/mysql/models/Loop';
+import { Series } from '../../database/mysql/models/Series';
 import { EpisodeObjectType } from './EpisodeObjectType';
 import { SeriesObjectType } from './SeriesObjectType';
 
@@ -14,19 +16,19 @@ export class LoopObjectType extends BaseParanoidObjectType {
   @Field(() => ID)
   readonly uuid: string;
 
-  @Field()
+  @Field({ nullable: true })
   duration: number;
 
-  @Field()
+  @Field({ nullable: true })
   periodBegin: string;
 
-  @Field()
+  @Field({ nullable: true })
   periodEnd: string;
 
-  @Field()
+  @Field({ nullable: true })
   frameBegin: number;
 
-  @Field()
+  @Field({ nullable: true })
   frameEnd: number;
 
   @Field(() => LoopSource)
@@ -35,15 +37,19 @@ export class LoopObjectType extends BaseParanoidObjectType {
   @Field(() => GraphQLJSON)
   files: LoopFiles
 
-  @Field(() => ID)
+  @Field()
   readonly episodeId: number;
 
   @Field(() => EpisodeObjectType, { nullable: true })
-  readonly episode: EpisodeObjectType
+  async episode() {
+    return await Episode.findByPk(this.seriesId)
+  }
 
-  @Field(() => ID)
+  @Field()
   readonly seriesId: number;
 
-  @Field(() => EpisodeObjectType, { nullable: true })
-  readonly series: SeriesObjectType
+  @Field(() => SeriesObjectType, { nullable: true })
+  async series() {
+    return await Series.findByPk(this.seriesId)
+  }
 }

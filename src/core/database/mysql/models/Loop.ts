@@ -31,31 +31,31 @@ export class Loop extends BaseParanoidModel<Loop> {
 
   @Column({
     type: Sequelize.FLOAT,
-    allowNull: false,
+    allowNull: true,
   })
   duration: number
 
   @Column({
     type: Sequelize.STRING(32),
-    allowNull: false,
+    allowNull: true,
   })
   periodBegin: string
 
   @Column({
     type: Sequelize.STRING(32),
-    allowNull: false,
+    allowNull: true,
   })
   periodEnd: string
 
   @Column({
     type: Sequelize.INTEGER,
-    allowNull: false,
+    allowNull: true,
   })
   frameBegin: number
 
   @Column({
     type: Sequelize.INTEGER,
-    allowNull: false,
+    allowNull: true,
   })
   frameEnd: number
 

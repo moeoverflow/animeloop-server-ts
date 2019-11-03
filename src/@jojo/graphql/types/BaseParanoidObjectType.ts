@@ -3,6 +3,6 @@ import { BaseObjectType } from './BaseObjectType';
 
 @ObjectType()
 export class BaseParanoidObjectType extends BaseObjectType {
-  @Field()
+  @Field({ nullable: true })
   deletedAt: Date
 }
