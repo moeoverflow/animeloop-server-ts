@@ -1,7 +1,15 @@
-import { Transaction, TransactionOptions } from 'sequelize';
-import { CreatedAt, Model, UpdatedAt } from 'sequelize-typescript';
+import { FindOptions, Transaction, TransactionOptions } from 'sequelize';
+import { Column, CreatedAt, Model, UpdatedAt } from 'sequelize-typescript';
+import { Sequelize } from '..';
+import { IPaginationResult } from '../utils/Pagination';
 
 export class BaseModel<T> extends Model<T> {
+
+  @Column({
+    type: Sequelize.STRING(64),
+    allowNull: true,
+  })
+  mongodbId: string
 
   @CreatedAt
   createdAt: Date
@@ -17,6 +25,25 @@ export class BaseModel<T> extends Model<T> {
       return callback(t as Transaction);
     } else {
       return await this.sequelize.transaction((t as TransactionOptions) || {}, callback)
+    }
+  }
+
+  public static async findAndCountAllWithPagination<T extends BaseModel<T>>(
+    this: (new () => T),
+    options?: FindOptions,
+    offset?: number,
+    limit?: number,
+  ): Promise<IPaginationResult<T>> {
+    const result = await (this as any).findAndCountAll({
+      ...options as any,
+      offset: offset,
+      limit: limit,
+    })
+    return {
+      rows: result.rows,
+      count: result.count,
+      offset: offset,
+      limit: limit,
     }
   }
 }

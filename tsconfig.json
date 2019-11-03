@@ -41,7 +41,6 @@
   "include": [
     "src/**/*.ts",
     "test/*.ts",
-    "types/*.d.ts"
   ],
   "exclude": [
     "node_modules"

@@ -15,12 +15,6 @@ export class Series extends BaseParanoidModel<Series> {
   title: string
 
   @Column({
-    type: Sequelize.TEXT,
-    allowNull: false,
-  })
-  description: string
-
-  @Column({
     type: Sequelize.ENUM(...enumWords(SeriesType)),
     allowNull: true,
   })

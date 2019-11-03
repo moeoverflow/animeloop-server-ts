@@ -1,6 +1,8 @@
 export * from 'sequelize-typescript';
 import Sequelize from 'sequelize';
 export { Sequelize };
+const { Op } = Sequelize;
+export { Op }
 
 /**
  * Models
