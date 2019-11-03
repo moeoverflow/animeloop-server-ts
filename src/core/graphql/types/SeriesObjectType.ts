@@ -32,4 +32,7 @@ export class SeriesObjectType extends BaseParanoidObjectType {
 
   @Field(() => GraphQLJSON)
   anilistData: any;
+
+  @Field()
+  anilistUpdatedAt: Date;
 }

@@ -10,7 +10,9 @@ export class LoopResolver {
   constructor() {}
 
   @Query(() => LoopObjectType, { nullable: true })
-  async series(@Arg("id") id: number) {
+  async loop(
+    @Arg("id") id: number,
+  ) {
     const series = await Loop.findByPk(id);
     if (series === undefined) {
       throw new Error('series_not_found');
@@ -19,7 +21,7 @@ export class LoopResolver {
   }
 
   @Query(() => [LoopObjectType])
-  async serieses(
+  async loops(
     @Args() pagination: PaginationArgs,
     @Args() args: GetLoopArgs,
   ) {

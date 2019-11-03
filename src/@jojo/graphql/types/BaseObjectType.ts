@@ -11,6 +11,4 @@ export class BaseObjectType {
   @Field()
   updatedAt: Date
 
-  @Field()
-  deletedAt: Date
 }

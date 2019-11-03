@@ -1,7 +1,11 @@
 import { BaseParanoidModel, BelongsTo, Column, ForeignKey, Sequelize, Table } from '@jojo/mysql';
 import { Series } from './Series';
 
-@Table
+@Table({
+  indexes: [
+    { unique: false, fields: ['seriesId'] },
+  ]
+})
 export class Episode extends BaseParanoidModel<Episode> {
   @Column({
     type: Sequelize.STRING(32),

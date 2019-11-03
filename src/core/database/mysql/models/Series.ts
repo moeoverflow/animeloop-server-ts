@@ -3,10 +3,17 @@ import { BaseParanoidModel, Column, enumWords, Sequelize, Table } from '@jojo/my
 export enum SeriesType {
   TV = 'tv',
   OVA = 'ova',
+  ONA = 'ona',
   Movie = 'movie',
+  Special = 'special',
+  Other = 'other'
 }
 
-@Table
+@Table({
+  indexes: [
+    { unique: true, fields: ['anilistId'] }
+  ]
+})
 export class Series extends BaseParanoidModel<Series> {
   @Column({
     type: Sequelize.STRING(128),
@@ -43,4 +50,10 @@ export class Series extends BaseParanoidModel<Series> {
     allowNull: true,
   })
   anilistData: any
+
+  @Column({
+    type: Sequelize.DATE,
+    allowNull: true,
+  })
+  anilistUpdatedAt: Date
 }

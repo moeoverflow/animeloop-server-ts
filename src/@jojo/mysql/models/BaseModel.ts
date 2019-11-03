@@ -1,8 +1,11 @@
 import { FindOptions, Transaction, TransactionOptions } from 'sequelize';
-import { Column, CreatedAt, Model, UpdatedAt } from 'sequelize-typescript';
+import { Column, CreatedAt, Model, Table, UpdatedAt } from 'sequelize-typescript';
 import { Sequelize } from '..';
 import { IPaginationResult } from '../utils/Pagination';
 
+@Table({
+  freezeTableName: true,
+})
 export class BaseModel<T> extends Model<T> {
 
   @Column({

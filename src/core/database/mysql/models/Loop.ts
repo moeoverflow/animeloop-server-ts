@@ -15,7 +15,12 @@ export interface LoopFiles {
   [key: string]: string
 }
 
-@Table
+@Table({
+  indexes: [
+    { unique: true, fields: ['uuid'] },
+    { unique: false, fields: ['seriesId', 'episodeId'] },
+  ]
+})
 export class Loop extends BaseParanoidModel<Loop> {
 
   @Column({
@@ -29,6 +34,30 @@ export class Loop extends BaseParanoidModel<Loop> {
     allowNull: false,
   })
   duration: number
+
+  @Column({
+    type: Sequelize.STRING(32),
+    allowNull: false,
+  })
+  periodBegin: string
+
+  @Column({
+    type: Sequelize.STRING(32),
+    allowNull: false,
+  })
+  periodEnd: string
+
+  @Column({
+    type: Sequelize.INTEGER,
+    allowNull: false,
+  })
+  frameBegin: number
+
+  @Column({
+    type: Sequelize.INTEGER,
+    allowNull: false,
+  })
+  frameEnd: number
 
   @Column({
     type: Sequelize.ENUM(...enumWords(LoopSource)),

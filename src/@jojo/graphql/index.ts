@@ -1,4 +1,5 @@
 export * from "type-graphql";
+export { GraphQLResolveInfo } from 'graphql';
 
 import graphqlHTTP from 'express-graphql';
 export { graphqlHTTP }
