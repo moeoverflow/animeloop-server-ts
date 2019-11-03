@@ -2,7 +2,11 @@ import { BaseParanoidModel, BelongsTo, Column, ForeignKey, Table } from '@jojo/m
 import { Collection } from './Collection';
 import { Loop } from './Loop';
 
-@Table
+@Table({
+  indexes: [
+    { unique: true, fields: ['collectionId', 'loopId'] },
+  ]
+})
 export class CollectionLoop extends BaseParanoidModel<CollectionLoop> {
 
   @ForeignKey(() => Collection)
