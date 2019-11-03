@@ -1,8 +1,11 @@
-import { ObjectId } from 'mongodb'
+import { Sequelize } from '@jojo/mysql'
 import { Controller, Get, QueryParam } from 'routing-controllers'
-import { GroupModel } from '../../../core/database/mongodb/models/Group'
-import { GroupLoopModel } from '../../../core/database/mongodb/models/GroupLoop'
-import { LoopModel } from '../../../core/database/mongodb/models/Loop'
+import { Collection } from '../../../core/database/mysql/models/Collection'
+import { CollectionLoop } from '../../../core/database/mysql/models/CollectionLoop'
+import { Episode } from '../../../core/database/mysql/models/Episode'
+import { Loop } from '../../../core/database/mysql/models/Loop'
+import { Series } from '../../../core/database/mysql/models/Series'
+import { injectLoopsFileUrl } from '../../../utils/injectLoopsFileUrl'
 
 @Controller('/loops')
 export class PublicLoopController {
@@ -11,26 +14,28 @@ export class PublicLoopController {
   async getLoops(
     @QueryParam('n') n: number
   ) {
-    const group = await GroupModel.findOne({
-      id: 'telegram-channel-the-best-animeloop'
+    const collection = await Collection.findOne({
+      where: {
+        slug: 'telegram-channel-the-best-animeloop',
+      }
     })
-    if (!group) throw new Error('group_not_found')
-    const GroupLoops = await GroupLoopModel.aggregate([
-      { $match: { group: group._id } },
-      { $sample: { size: Math.min(n || 10, 999) } },
-    ])
-    const loopIds = GroupLoops.map((i) => i.loop as ObjectId)
-
-    const loops = await LoopModel.find({ _id: loopIds })
-    return {
-      loops: loops.map((i) => {
-        return {
-          ...i.toJSON(),
-          _id: i._id.toString(),
-          series: (i.series as any).toString(),
-          episode: (i.episode as any).toString(),
-        }
-      })
-    }
+    if (!collection) throw new Error('collection_not_found')
+    const collectionLoops = await CollectionLoop.findAll({
+      where: {
+        collectionId: collection.id,
+      },
+      order: Sequelize.literal('rand()'),
+      limit: n ? Math.min(n, 100) : 100,
+      attributes: ['loopId'],
+      include: [Loop],
+    })
+    const loopIds = collectionLoops.map((i) => i.loopId)
+    const loops = await Loop.findAll({
+      where: {
+        id: loopIds,
+      },
+      include: [Series, Episode],
+    })
+    return injectLoopsFileUrl(loops)
   }
 }

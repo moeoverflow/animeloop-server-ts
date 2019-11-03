@@ -1,8 +1,7 @@
 import { Arg, Args, PaginationArgs, Query, Resolver } from "@jojo/graphql";
 import { pick } from 'lodash';
-import Container from 'typedi';
 import { Loop } from '../../../core/database/mysql/models/Loop';
-import { MinioS3Service } from '../../services/MinioS3Service';
+import { injectLoopsFileUrl } from '../../../utils/injectLoopsFileUrl';
 import { GetLoopArgs } from '../args/LoopArgs';
 import { LoopObjectType } from '../types/LoopObjectType';
 
@@ -27,19 +26,13 @@ export class LoopResolver {
     @Args() pagination: PaginationArgs,
     @Args() args: GetLoopArgs,
   ) {
-    const minioS3Service = Container.get(MinioS3Service)
     const loops = await Loop.findAll({
       where: {
         ...pick(args, 'episodeId', 'seriesId', 'source'),
       },
       ...pagination,
     })
-    return loops.map((i) => {
-      for (const key of Object.keys(i.files)) {
-        i.files[key] = minioS3Service.getPublicUrl(i.files[key])
-      }
-      return i.toJSON()
-    })
+    return injectLoopsFileUrl(loops)
   }
 
 }

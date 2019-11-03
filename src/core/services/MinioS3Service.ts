@@ -1,6 +1,6 @@
-import path from 'path'
-import { Inject, Service } from 'typedi'
-import { ConfigService } from './ConfigService'
+import { Inject, Service } from 'typedi';
+import url from 'url';
+import { ConfigService } from './ConfigService';
 
 @Service()
 export class MinioS3Service {
@@ -12,6 +12,6 @@ export class MinioS3Service {
 
   getPublicUrl(objectName: string) {
     const { bucketName, bucketBaseUrl } = this.configService.config.s3
-    return path.join(bucketBaseUrl, `/${bucketName}/`, objectName)
+    return url.resolve(bucketBaseUrl, `${bucketName}/${objectName}`)
   }
 }
