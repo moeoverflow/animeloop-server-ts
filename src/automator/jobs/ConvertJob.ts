@@ -2,7 +2,7 @@ import Queue from 'bull'
 import { existsSync } from 'fs'
 import path, { basename, extname } from 'path'
 import { Container } from 'typedi'
-import { AnimeloopTask, AnimeloopTaskStatus } from '../../core/database/mysql/models/AnimeloopTask'
+import { AnimeloopTask, AnimeloopTaskStatus } from '../../core/database/postgresql/models/AnimeloopTask'
 import { ConvertService, MediaType } from '../services/ConvertService'
 
 export interface ConvertJobData {

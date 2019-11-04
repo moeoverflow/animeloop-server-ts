@@ -1,4 +1,4 @@
-import { BaseParanoidModel, BelongsTo, Column, enumWords, ForeignKey, Sequelize, Table } from '@jojo/mysql';
+import { BaseParanoidModel, BelongsTo, Column, enumWords, ForeignKey, Sequelize, Table } from '@jojo/sequelize';
 import { Episode } from './Episode';
 import { Series } from './Series';
 
@@ -24,7 +24,7 @@ export interface LoopFiles {
 export class Loop extends BaseParanoidModel<Loop> {
 
   @Column({
-    type: Sequelize.STRING(128),
+    type: Sequelize.TEXT,
     allowNull: false,
   })
   uuid: string
@@ -36,13 +36,13 @@ export class Loop extends BaseParanoidModel<Loop> {
   duration: number
 
   @Column({
-    type: Sequelize.STRING(32),
+    type: Sequelize.TEXT,
     allowNull: true,
   })
   periodBegin: string
 
   @Column({
-    type: Sequelize.STRING(32),
+    type: Sequelize.TEXT,
     allowNull: true,
   })
   periodEnd: string

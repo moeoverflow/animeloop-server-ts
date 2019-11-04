@@ -7,7 +7,7 @@ import { padStart } from 'lodash'
 import log4js from 'log4js'
 import { Container } from 'typedi'
 import uuid from 'uuid'
-import { AnimeloopTask, AnimeloopTaskStatus } from '../../core/database/mysql/models/AnimeloopTask'
+import { AnimeloopTask, AnimeloopTaskStatus } from '../../core/database/postgresql/models/AnimeloopTask'
 import { hmsToSeconds } from '../utils/hmsToSeconds'
 
 const logger = log4js.getLogger('Automator:Job:FetchInfoJob')

@@ -1,4 +1,4 @@
-import { BaseParanoidModel, BelongsTo, Column, ForeignKey, Table } from '@jojo/mysql';
+import { BaseParanoidModel, BelongsTo, Column, ForeignKey, Table } from '@jojo/sequelize';
 import { Collection } from './Collection';
 import { Loop } from './Loop';
 

@@ -1,7 +1,7 @@
 import { Arg, Args, PaginationArgs, Query, Resolver } from "@jojo/graphql";
 import { pick } from 'lodash';
-import { Loop } from '../../../core/database/mysql/models/Loop';
 import { injectLoopsFileUrl } from '../../../utils/injectLoopsFileUrl';
+import { Loop } from '../../database/postgresql/models/Loop';
 import { GetLoopArgs } from '../args/LoopArgs';
 import { LoopObjectType } from '../types/LoopObjectType';
 

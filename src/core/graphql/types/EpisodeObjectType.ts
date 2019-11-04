@@ -1,5 +1,5 @@
 import { BaseParanoidObjectType, Field, ID, ObjectType } from "@jojo/graphql";
-import { Series } from '../../database/mysql/models/Series';
+import { Series } from '../../database/postgresql/models/Series';
 import { SeriesObjectType } from './SeriesObjectType';
 
 @ObjectType()

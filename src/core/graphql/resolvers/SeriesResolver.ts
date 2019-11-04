@@ -1,7 +1,7 @@
 import { Arg, Args, PaginationArgs, Query, Resolver } from "@jojo/graphql";
-import { Op } from "@jojo/mysql";
+import { Op } from "@jojo/sequelize";
 import Container from 'typedi';
-import { Series } from '../../../core/database/mysql/models/Series';
+import { Series } from '../../database/postgresql/models/Series';
 import { MinioS3Service } from '../../services/MinioS3Service';
 import { GetSeriesArgs } from '../args/SeriesArgs';
 import { SeriesObjectType } from '../types/SeriesObjectType';

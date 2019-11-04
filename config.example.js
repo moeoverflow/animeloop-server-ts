@@ -4,7 +4,7 @@ const config = {
   /**
    * Third-party Service
    */
-  mysql: {
+  sequelize: {
     database: 'animeloop_dev',
     dialect: 'mysql',
     username: 'root',

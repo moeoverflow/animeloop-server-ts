@@ -8,7 +8,7 @@ import path from 'path'
 import shellescape from 'shell-escape'
 import shell from 'shelljs'
 import { Container } from 'typedi'
-import { AnimeloopTask, AnimeloopTaskStatus } from '../../core/database/mysql/models/AnimeloopTask'
+import { AnimeloopTask, AnimeloopTaskStatus } from '../../core/database/postgresql/models/AnimeloopTask'
 import { ConfigService } from '../../core/services/ConfigService'
 
 const logger = log4js.getLogger('Automator:Job:AnimeloopCliJob')

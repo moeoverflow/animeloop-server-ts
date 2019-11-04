@@ -1,4 +1,4 @@
-import { BaseParanoidModel, Column, Sequelize, Table } from '@jojo/mysql';
+import { BaseParanoidModel, Column, Sequelize, Table } from '@jojo/sequelize';
 
 @Table({
   indexes: [
@@ -8,13 +8,13 @@ import { BaseParanoidModel, Column, Sequelize, Table } from '@jojo/mysql';
 export class Collection extends BaseParanoidModel<Collection> {
 
   @Column({
-    type: Sequelize.STRING(64),
+    type: Sequelize.TEXT,
     allowNull: false,
   })
   slug: string
 
   @Column({
-    type: Sequelize.STRING(64),
+    type: Sequelize.TEXT,
     allowNull: false,
   })
   name: string
@@ -26,7 +26,7 @@ export class Collection extends BaseParanoidModel<Collection> {
   description: string
 
   @Column({
-    type: Sequelize.STRING(256),
+    type: Sequelize.TEXT,
     allowNull: true,
   })
   cover: string

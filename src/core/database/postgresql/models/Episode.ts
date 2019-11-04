@@ -1,4 +1,4 @@
-import { BaseParanoidModel, BelongsTo, Column, ForeignKey, Sequelize, Table } from '@jojo/mysql';
+import { BaseParanoidModel, BelongsTo, Column, ForeignKey, Sequelize, Table } from '@jojo/sequelize';
 import { Series } from './Series';
 
 @Table({
@@ -8,7 +8,7 @@ import { Series } from './Series';
 })
 export class Episode extends BaseParanoidModel<Episode> {
   @Column({
-    type: Sequelize.STRING(32),
+    type: Sequelize.TEXT,
     allowNull: false,
   })
   index: string

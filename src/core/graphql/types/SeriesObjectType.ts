@@ -1,6 +1,6 @@
 import { BaseParanoidObjectType, Field, GraphQLJSON, ID, ObjectType, registerEnumType } from "@jojo/graphql";
-import { SeriesType } from '../../database/mysql/models/Series';
 import { IAnilistItem } from '../../../@jojo/anilist';
+import { SeriesType } from '../../database/postgresql/models/Series';
 
 registerEnumType(SeriesType, {
   name: "SeriesType",

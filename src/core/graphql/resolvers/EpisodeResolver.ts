@@ -1,5 +1,5 @@
 import { Arg, Args, PaginationArgs, Query, Resolver } from "@jojo/graphql";
-import { Episode } from '../../../core/database/mysql/models/Episode';
+import { Episode } from '../../database/postgresql/models/Episode';
 import { GetEpisodeArgs } from '../args/EpisodeArgs';
 import { EpisodeObjectType } from '../types/EpisodeObjectType';
 

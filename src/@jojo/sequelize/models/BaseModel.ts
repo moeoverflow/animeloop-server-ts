@@ -9,7 +9,7 @@ import { IPaginationResult } from '../utils/Pagination';
 export class BaseModel<T> extends Model<T> {
 
   @Column({
-    type: Sequelize.STRING(64),
+    type: Sequelize.TEXT,
     allowNull: true,
   })
   mongodbId: string

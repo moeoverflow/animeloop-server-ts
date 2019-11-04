@@ -25,7 +25,7 @@
     "src/@jojo/*"
   ],
   "_moduleAliases": {
-    "@jojo/mysql": "dist/@jojo/mysql/index",
+    "@jojo/sequelize": "dist/@jojo/sequelize/index",
     "@jojo/mongodb": "dist/@jojo/mongodb/index",
     "@jojo/graphql": "dist/@jojo/graphql/index",
     "@jojo/anilist": "dist/@jojo/anilist/index",

@@ -1,7 +1,7 @@
 import { BaseParanoidObjectType, Field, GraphQLJSON, ID, ObjectType, registerEnumType } from "@jojo/graphql";
-import { Episode } from '../../database/mysql/models/Episode';
-import { LoopFiles, LoopSource } from '../../database/mysql/models/Loop';
-import { Series } from '../../database/mysql/models/Series';
+import { Episode } from '../../database/postgresql/models/Episode';
+import { LoopFiles, LoopSource } from '../../database/postgresql/models/Loop';
+import { Series } from '../../database/postgresql/models/Series';
 import { EpisodeObjectType } from './EpisodeObjectType';
 import { SeriesObjectType } from './SeriesObjectType';
 

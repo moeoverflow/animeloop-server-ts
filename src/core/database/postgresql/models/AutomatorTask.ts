@@ -1,4 +1,4 @@
-import { Column, enumWords, HasMany, Sequelize, StateMachineParanoidModel, Table } from '@jojo/mysql';
+import { Column, enumWords, HasMany, Sequelize, StateMachineParanoidModel, Table } from '@jojo/sequelize';
 import { FindOptions } from 'sequelize';
 import { AnimeloopTask } from './AnimeloopTask';
 
@@ -22,7 +22,7 @@ export class AutomatorTask extends StateMachineParanoidModel<AutomatorTask, Auto
   readonly status: AutomatorTaskStatus
 
   @Column({
-    type: Sequelize.STRING(128),
+    type: Sequelize.TEXT,
     allowNull: true,
   })
   name: string

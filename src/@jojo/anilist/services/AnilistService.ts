@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon'
 import request = require('request-promise-native')
 import { Service } from 'typedi'
-import { SeriesType } from '../../../core/database/mysql/models/Series'
+import { SeriesType } from '../../../core/database/postgresql/models/Series'
 
 export interface IAnilistItem {
   id: number

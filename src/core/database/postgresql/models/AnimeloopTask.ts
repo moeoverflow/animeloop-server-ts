@@ -1,5 +1,5 @@
 import { IAnilistItem } from '@jojo/anilist';
-import { BelongsTo, Column, enumWords, ForeignKey, Sequelize, StateMachineParanoidModel, Table } from '@jojo/mysql';
+import { BelongsTo, Column, enumWords, ForeignKey, Sequelize, StateMachineParanoidModel, Table } from '@jojo/sequelize';
 import { ITraceMoeItem } from '@jojo/tracemoe';
 import { IAnimeloopCliOutput } from '../../../../automator/jobs/AnimeloopCliJob';
 import { AutomatorTask } from './AutomatorTask';
@@ -27,7 +27,7 @@ export class AnimeloopTask extends StateMachineParanoidModel<AnimeloopTask, Anim
   readonly status: AnimeloopTaskStatus
 
   @Column({
-    type: Sequelize.STRING(256),
+    type: Sequelize.TEXT,
     allowNull: true,
   })
   file: string
@@ -51,13 +51,13 @@ export class AnimeloopTask extends StateMachineParanoidModel<AnimeloopTask, Anim
   anilistId: number
 
   @Column({
-    type: Sequelize.STRING(256),
+    type: Sequelize.TEXT,
     allowNull: true,
   })
   seriesTitle: string
 
   @Column({
-    type: Sequelize.STRING(64),
+    type: Sequelize.TEXT,
     allowNull: true,
   })
   episodeIndex: string

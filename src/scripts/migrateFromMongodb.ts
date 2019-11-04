@@ -8,11 +8,11 @@ import { GroupModel } from '../core/database/mongodb/models/Group'
 import { GroupLoopModel } from '../core/database/mongodb/models/GroupLoop'
 import { LoopModel } from '../core/database/mongodb/models/Loop'
 import { SeriesModel } from '../core/database/mongodb/models/Series'
-import { Collection } from '../core/database/mysql/models/Collection'
-import { CollectionLoop } from '../core/database/mysql/models/CollectionLoop'
-import { Episode } from '../core/database/mysql/models/Episode'
-import { Loop } from '../core/database/mysql/models/Loop'
-import { Series } from '../core/database/mysql/models/Series'
+import { Collection } from '../core/database/postgresql/models/Collection'
+import { CollectionLoop } from '../core/database/postgresql/models/CollectionLoop'
+import { Episode } from '../core/database/postgresql/models/Episode'
+import { Loop } from '../core/database/postgresql/models/Loop'
+import { Series } from '../core/database/postgresql/models/Series'
 
 const anilistService = Container.get(AnilistService)
 

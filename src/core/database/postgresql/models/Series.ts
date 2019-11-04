@@ -1,4 +1,4 @@
-import { BaseParanoidModel, Column, enumWords, Sequelize, Table } from '@jojo/mysql';
+import { BaseParanoidModel, Column, enumWords, Sequelize, Table } from '@jojo/sequelize';
 import { IAnilistItem } from '../../../../@jojo/anilist';
 
 export enum SeriesType {
@@ -18,31 +18,31 @@ export enum SeriesType {
 export class Series extends BaseParanoidModel<Series> {
 
   @Column({
-    type: Sequelize.STRING(256),
+    type: Sequelize.TEXT,
     allowNull: true,
   })
   titleJA: string
 
   @Column({
-    type: Sequelize.STRING(256),
+    type: Sequelize.TEXT,
     allowNull: true,
   })
   titleROMAJI: string
 
   @Column({
-    type: Sequelize.STRING(256),
+    type: Sequelize.TEXT,
     allowNull: true,
   })
   titleCHS: string
 
   @Column({
-    type: Sequelize.STRING(256),
+    type: Sequelize.TEXT,
     allowNull: true,
   })
   titleCHT: string
 
   @Column({
-    type: Sequelize.STRING(256),
+    type: Sequelize.TEXT,
     allowNull: true,
   })
   titleEN: string
@@ -78,13 +78,13 @@ export class Series extends BaseParanoidModel<Series> {
   isAdult: boolean
 
   @Column({
-    type: Sequelize.STRING(256),
+    type: Sequelize.TEXT,
     allowNull: true,
   })
   cover: string
 
   @Column({
-    type: Sequelize.STRING(256),
+    type: Sequelize.TEXT,
     allowNull: true,
   })
   banner: string

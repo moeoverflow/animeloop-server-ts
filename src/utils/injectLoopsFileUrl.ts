@@ -1,5 +1,5 @@
 import Container from 'typedi'
-import { Loop } from '../core/database/mysql/models/Loop'
+import { Loop } from '../core/database/postgresql/models/Loop'
 import { MinioS3Service } from '../core/services/MinioS3Service'
 
 export function injectLoopsFileUrl(loops: Loop[]) {

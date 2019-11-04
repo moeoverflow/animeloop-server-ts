@@ -14,7 +14,7 @@ export { StateMachineParanoidModel } from './models/StateMachineParanoidModel';
 /**
  * Services
  */
-export { MysqlService } from './services/MysqlService';
+export { SequelizeService as MysqlService } from './services/MysqlService';
 
 /**
  * Utils

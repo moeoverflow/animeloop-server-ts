@@ -3,11 +3,11 @@ import { Service } from 'typedi'
 import { ConfigService } from '../../../core/services/ConfigService'
 
 @Service()
-export class MysqlService {
+export class SequelizeService {
   public sequelize: Sequelize
 
   constructor(configService: ConfigService) {
-    const mysqlConfig = configService.config.mysql
+    const mysqlConfig = configService.config.sequelize
     this.sequelize = new Sequelize({
       database: mysqlConfig.database,
       dialect: mysqlConfig.dialect,
