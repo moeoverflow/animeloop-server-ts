@@ -59,24 +59,24 @@ export default class AutomatorRunner {
      * fetch anime source from HorribleSubs every day,
      * and add to AutomatorTask
      */
-    // schedule.scheduleJob('0 * * * * *', async () => {
-    //   logger.info('ScheduleJob:fetch_HorribleSubs')
+    schedule.scheduleJob('0 * * * * *', async () => {
+      logger.info('ScheduleJob:fetch_HorribleSubs')
 
-    //   const items = await this.horribleSubsService.fetchRss()
-    //   await AutomatorTask.transaction(null, async (transaction) => {
-    //     for (const item of items) {
-    //       const doc = {
-    //         name: item.title,
-    //         magnetLink: item.link
-    //       }
-    //       await AutomatorTask.findOrCreate({
-    //         where: doc,
-    //         defaults: doc,
-    //         transaction,
-    //       })
-    //     }
-    //   })
-    // })
+      const items = await this.horribleSubsService.fetchRss()
+      await AutomatorTask.transaction(null, async (transaction) => {
+        for (const item of items) {
+          const doc = {
+            name: item.title,
+            magnetLink: item.link
+          }
+          await AutomatorTask.findOrCreate({
+            where: doc,
+            defaults: doc,
+            transaction,
+          })
+        }
+      })
+    })
 
     /**
      * check new task every minute,

@@ -24,7 +24,7 @@ export class PublicLoopController {
       where: {
         collectionId: collection.id,
       },
-      order: Sequelize.literal('rand()'),
+      order: Sequelize.literal('random()'),
       limit: n ? Math.min(n, 100) : 100,
       attributes: ['loopId'],
       include: [Loop],

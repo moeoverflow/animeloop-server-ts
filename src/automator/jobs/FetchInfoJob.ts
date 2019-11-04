@@ -3,7 +3,7 @@ import { ITraceMoeDoc, TraceMoeService } from '@jojo/tracemoe'
 import bluebird from 'bluebird'
 import Queue from 'bull'
 import { readFileSync } from 'fs'
-import { padStart } from 'lodash'
+import { maxBy, padStart } from 'lodash'
 import log4js from 'log4js'
 import { Container } from 'typedi'
 import uuid from 'uuid'
@@ -32,7 +32,7 @@ export async function FetchInfoJob(job: Queue.Job<FetchInfoJobData>) {
   })
   await animeloopTask.save()
   await animeloopTask.update({
-    output: animeloopTask.output.info
+    output: animeloopTask.output,
   })
 
   if (!animeloopTask.anilistId || !animeloopTask.episodeIndex) {
@@ -124,17 +124,8 @@ async function getTraceMoeResult(animeloopTask: AnimeloopTask) {
     // this line will convert {number} type id to {string} type key
     counts[id] = counts[id] ? counts[id] + 1 : 1
   })
-
-  const len = randomLoops.length
-  const mid = Math.round(len / 2) + (len % 2 === 0 ? 1 : 0)
-  let result: ITraceMoeDoc
-  for (const key in counts) {
-    if (counts[key] >= mid) {
-      result = results.filter((result) => (result.anilist_id.toString() === key))[0]
-      break
-    }
-  }
-
+  const maxCountId = maxBy(Object.entries(counts), (i) => i[1])[0] as string
+  const result = results.find((i) => String(i.anilist_id) === maxCountId)
   if (!result) {
     throw new Error('tracemoe has no matched info.')
   }
