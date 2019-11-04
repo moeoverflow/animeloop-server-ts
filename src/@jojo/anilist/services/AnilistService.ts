@@ -1,10 +1,7 @@
-import fs from 'fs'
-import mkdirp from 'mkdirp'
-import path from 'path'
+import { DateTime } from 'luxon'
 import request = require('request-promise-native')
 import { Service } from 'typedi'
-import { imageDownloader } from '../../../automator/utils/imageDownloader'
-import { ConfigService } from '../../../core/services/ConfigService'
+import { SeriesType } from '../../../core/database/mysql/models/Series'
 
 export interface IAnilistItem {
   id: number
@@ -32,6 +29,7 @@ export interface IAnilistItem {
   isAdult?: boolean
   siteUrl?: string
   coverImage?: {
+    extraLarge?: string
     large?: string
   }
   bannerImage?: string
@@ -43,7 +41,6 @@ export interface IAnilistItem {
 @Service()
 export class AnilistService {
   constructor(
-    private configService: ConfigService
   ) {
   }
 
@@ -77,6 +74,7 @@ export class AnilistService {
         isAdult
         siteUrl
         coverImage {
+          extraLarge
           large
         }
         bannerImage
@@ -105,39 +103,52 @@ export class AnilistService {
       throw new Error('anilistItem_not_found')
     }
 
-    const dataDir = this.configService.config.storage.dir.data
-    const dir = path.join(dataDir, 'anilist', `${id}`)
-    if (!fs.existsSync(dir)) {
-      mkdirp.sync(dir)
-    }
-
-    if (result.coverImage && result.coverImage.large) {
-      try {
-        const coverExtname = path.extname(result.coverImage.large)
-        const filename = path.join(dir, `image_large${coverExtname}`)
-        if (!fs.existsSync(filename)) {
-          await imageDownloader(result.coverImage.large, path.join(dir, `image_large${coverExtname}`))
-        }
-        result.coverImage.large = `https://animeloop.org/files/anilist/${id}/image_large${coverExtname}`
-      } catch (error) {
-        result.coverImage.large = null
-      }
-
-    }
-
-    if (result.bannerImage) {
-      try {
-        const bannerExtname = path.extname(result.bannerImage)
-        const filename = path.join(dir, `image_banner${bannerExtname}`)
-        if (!fs.existsSync(filename)) {
-          await imageDownloader(result.bannerImage, filename)
-        }
-        result.bannerImage = `https://animeloop.org/files/anilist/${id}/image_large${bannerExtname}`
-      } catch (error) {
-        result.bannerImage = null
-      }
-    }
-
     return result
+  }
+
+  getSeriesType(type?: string) {
+    if (!type) return null
+    switch (type) {
+      case 'TV':
+        return SeriesType.TV
+      case 'MOVIE':
+        return SeriesType.Movie
+      case 'TV_SHORT':
+        return SeriesType.TV
+      case 'SPECIAL':
+        return SeriesType.Special
+      case 'ONA':
+        return SeriesType.ONA
+      case 'OVA':
+        return SeriesType.OVA
+      default:
+        return SeriesType.Other
+    }
+  }
+
+  getNewSeriesInfo(anilistItem: IAnilistItem) {
+    const startDate = anilistItem.startDate && anilistItem.startDate.year && anilistItem.startDate.month && anilistItem.startDate.day
+      ? DateTime.local(anilistItem.startDate.year, anilistItem.startDate.month, anilistItem.startDate.day)
+      : null
+    const endDate = anilistItem.endDate && anilistItem.endDate.year && anilistItem.endDate.month && anilistItem.endDate.day
+      ? DateTime.local(anilistItem.endDate.year, anilistItem.endDate.month, anilistItem.endDate.day)
+      : null
+
+    const type = this.getSeriesType(anilistItem.format)
+
+    return {
+      titleJA: anilistItem.title.native || anilistItem.title.english,
+      titleROMAJI: anilistItem.title.romaji,
+      titleEN: anilistItem.title.english,
+      startDate,
+      endDate,
+      type,
+      genres: anilistItem.genres,
+      isAdult: anilistItem.isAdult,
+      cover: anilistItem.coverImage.extraLarge || anilistItem.coverImage.extraLarge || null,
+      banner: anilistItem.bannerImage || null,
+      anilistItem: anilistItem,
+      anilistUpdatedAt: new Date(),
+    }
   }
 }

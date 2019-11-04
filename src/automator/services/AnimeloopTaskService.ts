@@ -6,6 +6,7 @@ import path from 'path'
 import shell from 'shelljs'
 import { Inject, Service } from 'typedi'
 import uuid from 'uuid'
+import { AnilistService } from '../../@jojo/anilist'
 import { AnimeloopTask, AnimeloopTaskStatus } from '../../core/database/mysql/models/AnimeloopTask'
 import { Episode } from '../../core/database/mysql/models/Episode'
 import { Loop, LoopSource } from '../../core/database/mysql/models/Loop'
@@ -18,6 +19,7 @@ logger.level = 'debug'
 export class AnimeloopTaskService {
 
   @Inject(() => MinioService) minioService: MinioService
+  @Inject(() => AnilistService) anilistService: AnilistService
 
   constructor(
   ) {
@@ -37,6 +39,9 @@ export class AnimeloopTaskService {
         },
         transaction,
       })
+
+      const newSeriesInfo = this.anilistService.getNewSeriesInfo(animeloopTask.anilistItem)
+      await series.update(newSeriesInfo, { transaction })
 
       const [episode] = await Episode.findOrCreate({
         where: {

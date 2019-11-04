@@ -1,4 +1,8 @@
 require("../init")
+import { chunk } from 'lodash'
+import Container from 'typedi'
+import uuid from 'uuid'
+import { AnilistService } from '../@jojo/anilist'
 import { EpisodeModel } from '../core/database/mongodb/models/Episode'
 import { GroupModel } from '../core/database/mongodb/models/Group'
 import { GroupLoopModel } from '../core/database/mongodb/models/GroupLoop'
@@ -8,8 +12,11 @@ import { Collection } from '../core/database/mysql/models/Collection'
 import { CollectionLoop } from '../core/database/mysql/models/CollectionLoop'
 import { Episode } from '../core/database/mysql/models/Episode'
 import { Loop } from '../core/database/mysql/models/Loop'
-import { Series, SeriesType } from '../core/database/mysql/models/Series'
+import { Series } from '../core/database/mysql/models/Series'
 
+const anilistService = Container.get(AnilistService)
+
+// tslint:disable-next-line: cyclomatic-complexity
 async function migrateFromMongodb() {
   const oldSerieses = await SeriesModel.find({}, null, { $sort: { _id: 1 } })
 
@@ -21,28 +28,14 @@ async function migrateFromMongodb() {
       }
     })
     if (!series) {
-      const type = (() => {
-        if (!i.type) return null
-        switch (i.type) {
-          case 'TV':
-            return SeriesType.TV
-          case 'MOVIE':
-            return SeriesType.Movie
-          case 'TV_SHORT':
-            return SeriesType.TV
-          case 'SPECIAL':
-            return SeriesType.Special
-          case 'ONA':
-            return SeriesType.ONA
-          case 'OVA':
-            return SeriesType.OVA
-          default:
-            return SeriesType.Other
-        }
-      })()
+      const type = anilistService.getSeriesType(i.type)
       const doc = {
         type: type,
-        title: i.title || 'UNKNOWN',
+        titleCHS: i.title || '未知',
+        titleCHT: i.title || '未知',
+        titleJA: i.title_japanese || i.title_english,
+        titleROMAJI: i.title_romaji,
+        titleEN: i.title_english,
         anilistId: i.anilist_id || null,
         anilistUpdatedAt: i.anilist_updated_at || null,
         mongodbId: String(i._id),
@@ -72,18 +65,28 @@ async function migrateFromMongodb() {
     episodes.push(episode)
   }
 
-  const oldLoops = await LoopModel.find({}, null, { $sort: { _id: 1 } })
 
-  for (const i of oldLoops) {
-    let loop = await Loop.findOne({
-      where: {
-        mongodbId: String(i._id),
-      }
-    })
-    if (!loop) {
+  const lastNewLoop = await Loop.findOne({
+    order: [
+      ['id', 'DESC'],
+    ],
+  })
+
+  let oldLoops = await LoopModel.find({}, null, { $sort: { _id: 1 } })
+  if (lastNewLoop) {
+    const index = oldLoops.findIndex((i) => String(i._id) === lastNewLoop.mongodbId)
+    if (index > -1) {
+      oldLoops = oldLoops.slice(index+1)
+    }
+  }
+
+  const chunks = chunk(oldLoops, 1000)
+
+  for (const chunk of chunks) {
+    const docs = chunk.map((i) => {
       const series = serieses.find((j) => j.mongodbId === String(i.series))
       const episode = episodes.find((j) => j.mongodbId === String(i.episode))
-      if (!series || !episode) continue
+      if (!series || !episode) return null
       const files = i.files ? Object.assign({}, i.files) : null
       if (files) {
         const fileKeys = Object.keys(files)
@@ -91,8 +94,8 @@ async function migrateFromMongodb() {
           files[fileKey] = files[fileKey].replace('https://s3.moeoverflow.com/animeloop-production', '')
         }
       }
-      const doc = {
-        uuid: i.newId,
+      return {
+        uuid: i.newId || uuid.v4(),
         duration: i.duration || null,
         periodBegin: i.period.begin,
         periodEnd: i.period.end,
@@ -105,8 +108,9 @@ async function migrateFromMongodb() {
         files: files,
         mongodbId: String(i._id),
       }
-      loop = await Loop.create(doc)
-    }
+    }).filter((i) => !!i)
+
+    await Loop.bulkCreate(docs)
   }
 
   const oldGroups = await GroupModel.find({}, null, { $sort: { _id: 1 } })

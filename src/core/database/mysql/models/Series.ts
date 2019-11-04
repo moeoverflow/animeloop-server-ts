@@ -1,4 +1,5 @@
 import { BaseParanoidModel, Column, enumWords, Sequelize, Table } from '@jojo/mysql';
+import { IAnilistItem } from '../../../../@jojo/anilist';
 
 export enum SeriesType {
   TV = 'tv',
@@ -15,17 +16,66 @@ export enum SeriesType {
   ]
 })
 export class Series extends BaseParanoidModel<Series> {
+
   @Column({
-    type: Sequelize.STRING(128),
-    allowNull: false,
+    type: Sequelize.STRING(256),
+    allowNull: true,
   })
-  title: string
+  titleJA: string
+
+  @Column({
+    type: Sequelize.STRING(256),
+    allowNull: true,
+  })
+  titleROMAJI: string
+
+  @Column({
+    type: Sequelize.STRING(256),
+    allowNull: true,
+  })
+  titleCHS: string
+
+  @Column({
+    type: Sequelize.STRING(256),
+    allowNull: true,
+  })
+  titleCHT: string
+
+  @Column({
+    type: Sequelize.STRING(256),
+    allowNull: true,
+  })
+  titleEN: string
+
+  @Column({
+    type: Sequelize.DATE,
+    allowNull: true,
+  })
+  startDate: Date
+
+  @Column({
+    type: Sequelize.DATE,
+    allowNull: true,
+  })
+  endDate: Date
 
   @Column({
     type: Sequelize.ENUM(...enumWords(SeriesType)),
     allowNull: true,
   })
   type: SeriesType;
+
+  @Column({
+    type: Sequelize.JSON,
+    allowNull: true,
+  })
+  genres: string[]
+
+  @Column({
+    type: Sequelize.BOOLEAN,
+    allowNull: true,
+  })
+  isAdult: boolean
 
   @Column({
     type: Sequelize.STRING(256),
@@ -49,7 +99,7 @@ export class Series extends BaseParanoidModel<Series> {
     type: Sequelize.JSON,
     allowNull: true,
   })
-  anilistData: any
+  anilistItem: IAnilistItem
 
   @Column({
     type: Sequelize.DATE,

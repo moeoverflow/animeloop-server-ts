@@ -57,13 +57,9 @@ export async function FetchInfoJob(job: Queue.Job<FetchInfoJobData>) {
     if (!anilistId) {
       throw new Error('anilistId_not_found')
     }
-    console.log('###### getInfo')
-
     anilistItem = await anilistService.getInfo(anilistId)
-    console.log('anilistItem', anilistItem)
   } catch (error) {
     logger.warn('fetch anilist data failed.')
-    console.log('fetch anilist data failed.')
     await animeloopTask.transit(
       AnimeloopTaskStatus.InfoFetching,
       AnimeloopTaskStatus.InfoWait,

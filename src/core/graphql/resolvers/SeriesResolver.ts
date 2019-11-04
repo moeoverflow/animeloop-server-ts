@@ -1,6 +1,8 @@
 import { Arg, Args, PaginationArgs, Query, Resolver } from "@jojo/graphql";
 import { Op } from "@jojo/mysql";
+import Container from 'typedi';
 import { Series } from '../../../core/database/mysql/models/Series';
+import { MinioS3Service } from '../../services/MinioS3Service';
 import { GetSeriesArgs } from '../args/SeriesArgs';
 import { SeriesObjectType } from '../types/SeriesObjectType';
 
@@ -36,7 +38,12 @@ export class SeriesResolver {
       },
       ...pagination,
     })
-    return serieses.map((i) => i.toJSON())
+    const minioS3Service = Container.get(MinioS3Service)
+    return serieses.map((i) => {
+      if (i.cover) i.cover = minioS3Service.getPublicUrl(i.cover)
+      if (i.banner) i.banner = minioS3Service.getPublicUrl(i.banner)
+      return i.toJSON()
+    })
   }
 
 }
