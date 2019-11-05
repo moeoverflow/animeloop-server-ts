@@ -53,6 +53,9 @@ export class SeriesResolver {
           anilistId: args.anilistId,
         } : {}),
       },
+      order: [
+        ['startDate', 'DESC NULLS LAST'],
+      ],
     }, pagination.offset, pagination.limit)
     const minioS3Service = Container.get(MinioS3Service)
     return {

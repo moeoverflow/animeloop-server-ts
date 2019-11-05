@@ -29,6 +29,9 @@ export class EpisodeResolver {
         } : {}),
       },
       ...pagination,
+      order: [
+        ['index', 'ASC'],
+      ],
     })
     return episodes.map((i) => i.toJSON())
   }
