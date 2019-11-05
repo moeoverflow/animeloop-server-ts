@@ -1,4 +1,5 @@
 import { MinioService } from '@jojo/minio';
+import path from 'path';
 import internal from 'stream';
 import { Inject, Service } from 'typedi';
 import url from 'url';
@@ -20,6 +21,6 @@ export class MinioS3Service {
 
   getPublicUrl(objectName: string) {
     const { bucketName, bucketBaseUrl } = this.configService.config.s3
-    return url.resolve(bucketBaseUrl, `${bucketName}${objectName}`)
+    return url.resolve(bucketBaseUrl, path.join(bucketName, objectName))
   }
 }

@@ -34,13 +34,16 @@ async function updateSeriesInfo() {
     }
     if (newSeriesInfo.banner && !newSeriesInfo.banner.startsWith('/anilist')) {
       const extname = path.extname(newSeriesInfo.banner)
-      const buffer = await request({
-        url: newSeriesInfo.banner,
-        encoding: null
-      })
-      const objectName = `anilist/${series.anilistId}/banner${extname}`
-      await minioS3Service.uploadFile(objectName, buffer)
-      newSeriesInfo.banner = objectName
+      try {
+        const buffer = await request({
+          url: newSeriesInfo.banner,
+          encoding: null
+        })
+        const objectName = `anilist/${series.anilistId}/banner${extname}`
+        await minioS3Service.uploadFile(objectName, buffer)
+        newSeriesInfo.banner = objectName
+      } catch (error) {
+      }
     }
     await series.update(newSeriesInfo)
     await delay(1000)
