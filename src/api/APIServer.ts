@@ -5,6 +5,7 @@ import path from 'path'
 import { useExpressServer } from 'routing-controllers'
 import { Inject, Service } from 'typedi'
 import { GraphqlService } from '../core/graphql/services/GraphqlService'
+import cors from './middlewares/cors'
 
 @Service()
 export default class APIServer {
@@ -23,9 +24,17 @@ export default class APIServer {
         path.join(__dirname, '/controllers/**/*Controller.[tj]s'),
       ]
     })
+    app.use(cors)
     app.use('/rest', router)
 
     const schema = await this.graphqlService.getSchema()
+    app.use("/graphql", (req, res, next) => {
+      if (req.method === 'OPTIONS') {
+        res.sendStatus(200);
+      } else {
+        next();
+      }
+    })
     app.use(
       '/graphql',
       graphqlHTTP({

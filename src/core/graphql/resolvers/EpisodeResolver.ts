@@ -14,7 +14,7 @@ export class EpisodeResolver {
     if (episode === undefined) {
       throw new Error('episode_not_found');
     }
-    return episode;
+    return episode.toJSON();
   }
 
   @Query(() => [EpisodeObjectType])

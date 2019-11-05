@@ -1,8 +1,8 @@
 require("../init")
+import { AnilistService } from '@jojo/anilist'
 import { chunk } from 'lodash'
 import Container from 'typedi'
 import uuid from 'uuid'
-import { AnilistService } from '../@jojo/anilist'
 import { EpisodeModel } from '../core/database/mongodb/models/Episode'
 import { GroupModel } from '../core/database/mongodb/models/Group'
 import { GroupLoopModel } from '../core/database/mongodb/models/GroupLoop'

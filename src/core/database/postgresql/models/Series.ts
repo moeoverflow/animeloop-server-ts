@@ -1,5 +1,6 @@
+import { IAnilistItem } from '@jojo/anilist';
 import { BaseParanoidModel, Column, enumWords, Sequelize, Table } from '@jojo/sequelize';
-import { IAnilistItem } from '../../../../@jojo/anilist';
+import { DateTime } from 'luxon';
 
 export enum SeriesType {
   TV = 'tv',
@@ -106,4 +107,16 @@ export class Series extends BaseParanoidModel<Series> {
     allowNull: true,
   })
   anilistUpdatedAt: Date
+
+  @Column({
+    type: Sequelize.VIRTUAL,
+    get(this: Series) {
+      if (this.startDate) {
+        return DateTime.fromJSDate(this.startDate).toFormat('yyyy-MM')
+      } else {
+        return '1970-01'
+      }
+    }
+  })
+  season: string
 }
