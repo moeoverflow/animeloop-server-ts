@@ -10,3 +10,4 @@ export { BaseObjectType } from './types/BaseObjectType';
 export { BaseParanoidObjectType } from './types/BaseParanoidObjectType';
 export { PaginationArgs } from './args/PaginationArgs';
 export { Paginated } from './utils/Paginated';
+export { RequestFields, IRequestFields } from './decorators/RequestFields';
