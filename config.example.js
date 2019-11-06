@@ -6,7 +6,7 @@ const config = {
    */
   sequelize: {
     database: 'animeloop_dev',
-    dialect: 'mysql',
+    dialect: 'postgres',
     username: 'root',
     password: 'password',
   },

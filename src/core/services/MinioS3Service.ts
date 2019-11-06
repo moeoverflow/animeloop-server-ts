@@ -19,7 +19,8 @@ export class MinioS3Service {
     await this.minioService.minio.putObject(bucketName, objectName, stream)
   }
 
-  getPublicUrl(objectName: string) {
+  getPublicUrl(objectName: string | undefined | null) {
+    if (!objectName) return null
     const { bucketName, bucketBaseUrl } = this.configService.config.s3
     return url.resolve(bucketBaseUrl, path.join(bucketName, objectName))
   }

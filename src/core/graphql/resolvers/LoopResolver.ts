@@ -1,4 +1,4 @@
-import { Arg, Args, FieldResolver, IRequestFields, PaginationArgs, Query, RequestFields, Resolver, Root } from "@jojo/graphql";
+import { Arg, Args, FieldResolver, GraphQLJSON, IRequestFields, PaginationArgs, Query, RequestFields, Resolver, Root } from "@jojo/graphql";
 import { IncludeOptions, Sequelize } from '@jojo/sequelize';
 import { clone, pick } from 'lodash';
 import Container from 'typedi';
@@ -43,7 +43,7 @@ export class LoopResolver {
     if (loop === undefined) {
       throw new Error('loop_not_found');
     }
-    return loop.toJSON();
+    return loop
   }
 
   @Query(() => [LoopObjectType])
@@ -59,7 +59,7 @@ export class LoopResolver {
       include: includeHelper(requestFields.loops),
       ...pagination,
     })
-    return loops.map((i) => i.toJSON())
+    return loops
   }
 
   @Query(() => [LoopObjectType])
@@ -72,10 +72,10 @@ export class LoopResolver {
       limit: limit,
       include: includeHelper(requestFields.randomLoops),
     })
-    return loops.map((i) => i.toJSON())
+    return loops
   }
 
-  @FieldResolver()
+  @FieldResolver(() => GraphQLJSON)
   files(@Root() loop: Loop) {
     const minioS3Service = Container.get(MinioS3Service)
     const _files = clone(loop.files)

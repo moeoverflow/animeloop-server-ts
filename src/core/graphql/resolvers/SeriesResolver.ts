@@ -1,18 +1,19 @@
 import { Arg, Args, FieldResolver, Paginated, PaginationArgs, Query, Resolver, Root } from "@jojo/graphql";
 import { Op } from "@jojo/sequelize";
-import Container, { Service } from 'typedi';
+import { Inject, Service } from 'typedi';
 import { Series } from '../../database/postgresql/models/Series';
 import { MinioS3Service } from '../../services/MinioS3Service';
 import { GetSeriesArgs } from '../args/SeriesArgs';
 import { SeriesObjectType } from '../types/SeriesObjectType';
+import { GraphQLString } from 'graphql';
 
 const PaginatedSeriesObjectType = Paginated(SeriesObjectType)
-const minioS3Service = Container.get(MinioS3Service)
-
 
 @Resolver(SeriesObjectType)
 @Service()
 export class SeriesResolver {
+
+  @Inject(() => MinioS3Service) minioS3Service: MinioS3Service
 
   constructor() {}
 
@@ -22,7 +23,7 @@ export class SeriesResolver {
     if (series === undefined) {
       throw new Error('series_not_found');
     }
-    return series.toJSON();
+    return series;
   }
 
   @Query(() => [String], { nullable: true })
@@ -57,22 +58,17 @@ export class SeriesResolver {
         ['startDate', 'DESC NULLS LAST'],
       ],
     }, pagination.offset, pagination.limit)
-    return {
-      ...serieses,
-      rows: serieses.rows.map((i) => {
-        return i.toJSON()
-      })
-    }
+    return serieses
   }
 
-  @FieldResolver()
+  @FieldResolver(() => GraphQLString, { nullable: true })
   cover(@Root() series: Series) {
-    return minioS3Service.getPublicUrl(series.cover)
+    return this.minioS3Service.getPublicUrl(series.cover)
   }
 
-  @FieldResolver()
+  @FieldResolver(() => GraphQLString, { nullable: true })
   banner(@Root() series: Series) {
-    return minioS3Service.getPublicUrl(series.banner)
+    return this.minioS3Service.getPublicUrl(series.banner)
   }
 
 }

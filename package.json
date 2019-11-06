@@ -19,7 +19,7 @@
     "start:automator": "NODE_ENV=production node dist/entrypoints/automator.js",
     "start:twitterbot": "NODE_ENV=production node dist/entrypoints/twitterbot.js",
     "start:telegrambot": "NODE_ENV=production node dist/entrypoints/telegrambot.js",
-    "db:sync": "node dist/entrypoints/mysqlsyncer.js"
+    "db:sync": "node dist/entrypoints/syncer.js"
   },
   "workspaces": [
     "src/@jojo/*"

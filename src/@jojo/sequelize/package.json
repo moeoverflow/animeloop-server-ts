@@ -1,5 +1,5 @@
 {
-  "name": "@jojo/mysql",
+  "name": "@jojo/sequelize",
   "version": "1.0.0",
   "main": "index.js",
   "private": true,

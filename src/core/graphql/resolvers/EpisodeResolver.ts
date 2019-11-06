@@ -33,7 +33,7 @@ export class EpisodeResolver {
     if (episode === undefined) {
       throw new Error('episode_not_found');
     }
-    return episode.toJSON();
+    return episode
   }
 
   @Query(() => [EpisodeObjectType])
@@ -54,7 +54,7 @@ export class EpisodeResolver {
         ['index', 'ASC'],
       ],
     })
-    return episodes.map((i) => i.toJSON())
+    return episodes
   }
 
 }

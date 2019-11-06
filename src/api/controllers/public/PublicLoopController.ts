@@ -1,5 +1,5 @@
 import { Sequelize } from '@jojo/sequelize'
-import { Controller, Get, QueryParam } from 'routing-controllers'
+import { Get, JsonController, QueryParam } from 'routing-controllers'
 import { Collection } from '../../../core/database/postgresql/models/Collection'
 import { CollectionLoop } from '../../../core/database/postgresql/models/CollectionLoop'
 import { Episode } from '../../../core/database/postgresql/models/Episode'
@@ -7,7 +7,7 @@ import { Loop } from '../../../core/database/postgresql/models/Loop'
 import { Series } from '../../../core/database/postgresql/models/Series'
 import { injectLoopsFileUrl } from '../../../utils/injectLoopsFileUrl'
 
-@Controller('/loops')
+@JsonController('/loops')
 export class PublicLoopController {
 
   @Get('/best/rand')

@@ -7,12 +7,14 @@ export class SequelizeService {
   public sequelize: Sequelize
 
   constructor(configService: ConfigService) {
-    const mysqlConfig = configService.config.sequelize
+    const sequelizeConfig = configService.config.sequelize
     this.sequelize = new Sequelize({
-      database: mysqlConfig.database,
-      dialect: mysqlConfig.dialect,
-      username: mysqlConfig.username,
-      password: mysqlConfig.password,
+      database: sequelizeConfig.database,
+      dialect: sequelizeConfig.dialect,
+      username: sequelizeConfig.username,
+      password: sequelizeConfig.password,
+      port: sequelizeConfig.port,
+      host: sequelizeConfig.host,
       models: [],
     })
   }

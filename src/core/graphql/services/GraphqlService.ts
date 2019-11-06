@@ -1,5 +1,5 @@
 import { buildSchema } from '@jojo/graphql';
-import { Service } from 'typedi';
+import Container, { Service } from 'typedi';
 import { EpisodeResolver } from '../resolvers/EpisodeResolver';
 import { LoopResolver } from '../resolvers/LoopResolver';
 import { SeriesResolver } from '../resolvers/SeriesResolver';
@@ -19,6 +19,7 @@ export class GraphqlService {
           EpisodeResolver,
           LoopResolver,
         ],
+        container: Container,
       })
     }
     return this.schema
