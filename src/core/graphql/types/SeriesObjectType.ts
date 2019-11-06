@@ -1,5 +1,5 @@
 import { IAnilistItem } from '@jojo/anilist';
-import { BaseParanoidObjectType, Field, GraphQLJSON, ID, ObjectType, registerEnumType } from "@jojo/graphql";
+import { BaseObjectType, Field, GraphQLJSON, GraphQLString, ObjectType, registerEnumType } from "@jojo/graphql";
 import { SeriesType } from '../../database/postgresql/models/Series';
 
 registerEnumType(SeriesType, {
@@ -8,9 +8,9 @@ registerEnumType(SeriesType, {
 });
 
 @ObjectType()
-export class SeriesObjectType extends BaseParanoidObjectType {
+export class SeriesObjectType extends BaseObjectType {
 
-  @Field(() => ID)
+  @Field(() => GraphQLString)
   readonly uuid: string;
 
   @Field({ nullable: true })

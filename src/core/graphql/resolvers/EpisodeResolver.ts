@@ -28,7 +28,7 @@ export class EpisodeResolver {
     @RequestFields() requestFields: IRequestFields,
   ) {
     const episode = await Episode.findByPk(id, {
-      include: includeHelper(requestFields),
+      include: includeHelper(requestFields.episode),
     });
     if (episode === undefined) {
       throw new Error('episode_not_found');
@@ -48,7 +48,7 @@ export class EpisodeResolver {
           seriesId: args.seriesId,
         } : {}),
       },
-      include: includeHelper(requestFields),
+      include: includeHelper(requestFields.episodes),
       ...pagination,
       order: [
         ['index', 'ASC'],

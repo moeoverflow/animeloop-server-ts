@@ -34,10 +34,13 @@ export class LoopResolver {
 
   @Query(() => LoopObjectType, { nullable: true })
   async loop(
-    @Arg("id") id: number,
+    @Arg("uuid") uuid: string,
     @RequestFields() requestFields: IRequestFields,
   ) {
-    const loop = await Loop.findByPk(id, {
+    const loop = await Loop.findOne({
+      where: {
+        uuid,
+      },
       include: includeHelper(requestFields.loop),
     });
     if (loop === undefined) {

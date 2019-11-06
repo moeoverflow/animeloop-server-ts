@@ -1,4 +1,4 @@
-import { BaseParanoidObjectType, Field, GraphQLJSON, ID, ObjectType, registerEnumType } from "@jojo/graphql";
+import { Field, GraphQLJSON, ID, ObjectType, registerEnumType } from "@jojo/graphql";
 import { Episode } from '../../database/postgresql/models/Episode';
 import { LoopFiles, LoopSource } from '../../database/postgresql/models/Loop';
 import { Series } from '../../database/postgresql/models/Series';
@@ -11,7 +11,7 @@ registerEnumType(LoopSource, {
 });
 
 @ObjectType()
-export class LoopObjectType extends BaseParanoidObjectType {
+export class LoopObjectType {
 
   @Field(() => ID)
   readonly uuid: string;
@@ -48,4 +48,11 @@ export class LoopObjectType extends BaseParanoidObjectType {
 
   @Field(() => SeriesObjectType, { nullable: true })
   series: Series
+
+  @Field()
+  createdAt: Date
+
+  @Field()
+  updatedAt: Date
+
 }
