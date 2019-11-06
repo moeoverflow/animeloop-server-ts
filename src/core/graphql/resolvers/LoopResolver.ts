@@ -37,10 +37,9 @@ export class LoopResolver {
     @Arg("uuid") uuid: string,
     @RequestFields() requestFields: IRequestFields,
   ) {
+    const condition = uuid.length === 24 ? { mongodbId: uuid } : { uuid }
     const loop = await Loop.findOne({
-      where: {
-        uuid,
-      },
+      where: condition,
       include: includeHelper(requestFields.loop),
     });
     if (loop === undefined) {
@@ -78,7 +77,7 @@ export class LoopResolver {
     return loops
   }
 
-  @FieldResolver(() => GraphQLJSON)
+  @FieldResolver(() => GraphQLJSON, { nullable: true })
   files(@Root() loop: Loop) {
     const minioS3Service = Container.get(MinioS3Service)
     const _files = clone(loop.files)
