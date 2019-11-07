@@ -5,12 +5,15 @@ import { Inject, Service } from '@jojo/typedi'
 import log4js from 'log4js'
 import { DateTime } from 'luxon'
 import path from 'path'
+import request from 'request-promise-native'
 import shell from 'shelljs'
 import uuid from 'uuid'
 import { AnimeloopTask, AnimeloopTaskStatus } from '../../core/database/postgresql/models/AnimeloopTask'
 import { Episode } from '../../core/database/postgresql/models/Episode'
 import { Loop, LoopSource } from '../../core/database/postgresql/models/Loop'
 import { Series } from '../../core/database/postgresql/models/Series'
+import { MinioS3Service } from '../../core/services/MinioS3Service'
+
 
 const logger = log4js.getLogger('Automator:Service:AnimeloopTask')
 logger.level = 'debug'
@@ -20,6 +23,7 @@ export class AnimeloopTaskService {
 
   @Inject(() => MinioService) minioService: MinioService
   @Inject(() => AnilistService) anilistService: AnilistService
+  @Inject(() => MinioS3Service) minioS3Service: MinioS3Service
 
   constructor(
   ) {
@@ -41,6 +45,40 @@ export class AnimeloopTaskService {
       })
 
       const newSeriesInfo = this.anilistService.getNewSeriesInfo(animeloopTask.anilistItem)
+
+      if (series.cover && series.cover.startsWith('anilist')) {
+        newSeriesInfo.cover = series.cover
+      } else {
+        try {
+          const extname = path.extname(newSeriesInfo.cover)
+          const buffer = await request({
+            url: newSeriesInfo.cover,
+            encoding: null
+          })
+          const objectName = `anilist/${series.anilistId}/cover${extname}`
+          await this.minioS3Service.uploadFile(objectName, buffer)
+          newSeriesInfo.cover = objectName
+        } catch (error) {
+          newSeriesInfo.cover = series.cover
+        }
+      }
+      if (series.banner && series.banner.startsWith('anilist')) {
+        newSeriesInfo.banner = series.banner
+      } else {
+        const extname = path.extname(newSeriesInfo.banner)
+        try {
+          const buffer = await request({
+            url: newSeriesInfo.banner,
+            encoding: null
+          })
+          const objectName = `anilist/${series.anilistId}/banner${extname}`
+          await this.minioS3Service.uploadFile(objectName, buffer)
+          newSeriesInfo.banner = objectName
+        } catch (error) {
+          newSeriesInfo.banner = series.banner
+        }
+      }
+
       await series.update(newSeriesInfo, { transaction })
 
       const [episode] = await Episode.findOrCreate({
