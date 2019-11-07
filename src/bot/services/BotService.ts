@@ -1,60 +1,62 @@
-import { InstanceType, ObjectId } from '@jojo/mongodb'
-import { Service } from '@jojo/typedi'
-import path from 'path'
-import { Episode } from '../../core/database/mongodb/models/Episode'
-import { GroupModel } from '../../core/database/mongodb/models/Group'
-import { GroupLoopModel } from '../../core/database/mongodb/models/GroupLoop'
-import { Loop, LoopModel } from '../../core/database/mongodb/models/Loop'
-import { Series } from '../../core/database/mongodb/models/Series'
+import { Sequelize } from '@jojo/sequelize'
+import { Inject, Service } from '@jojo/typedi'
+import { Collection } from '../../core/database/postgresql/models/Collection'
+import { CollectionLoop } from '../../core/database/postgresql/models/CollectionLoop'
+import { Episode } from '../../core/database/postgresql/models/Episode'
+import { Loop } from '../../core/database/postgresql/models/Loop'
+import { Series } from '../../core/database/postgresql/models/Series'
 import { ConfigService } from '../../core/services/ConfigService'
+import { MinioS3Service } from '../../core/services/MinioS3Service'
 
 @Service()
 export class BotService {
 
+  @Inject(() => ConfigService) configService: ConfigService
+  @Inject(() => MinioS3Service) minioS3Service: MinioS3Service
+
   constructor(
-    private configService: ConfigService
   ) {
   }
 
   async getRandomLoopData() {
-    const loops = await LoopModel.aggregate([
-      { $sample: { size: 1 } },
-    ])
-    const loopId = loops.length > 0 ? loops[0]._id as ObjectId : undefined
-    const loop = await LoopModel.findOne({ _id: loopId }).populate('series').populate('episode').exec()
+    const loop = await Loop.findOne({
+      limit: 1,
+      order: Sequelize.literal('random()'),
+      include: [Series, Episode],
+    })
     if (!loop) throw new Error('random_loop_not_found')
-
     return this.getLoopData(loop)
   }
 
   async getRandomFavLoopData() {
-    const group = await GroupModel.findOne({
-      id: 'telegram-channel-the-best-animeloop'
+    const group = await Collection.findOne({
+      where: {
+        slug: 'telegram-channel-the-best-animeloop',
+      },
     })
     if (!group) throw new Error('group_not_found')
-    const GroupLoops = await GroupLoopModel.aggregate([
-      { $match: { group: group._id } },
-      { $sample: { size: 1 } },
-    ])
-    const loopId = GroupLoops.length > 0 ? GroupLoops[0].loop as ObjectId : undefined
-    const loop = await LoopModel.findOne({ _id: loopId }).populate('series').populate('episode').exec()
-    if (!loop) throw new Error('random_loop_not_found')
-
-    return this.getLoopData(loop)
+    const collectionLoop = await CollectionLoop.findOne({
+      order: Sequelize.literal('random()'),
+      include: [{
+        model: Loop,
+        include: [Series, Episode],
+      }],
+    })
+    if (!collectionLoop || !collectionLoop.loop) throw new Error('random_loop_not_found')
+    return this.getLoopData(collectionLoop.loop)
   }
 
-  private getLoopData(loop: InstanceType<Loop>) {
-    const series = loop.series as InstanceType<Series>
-    const episode = loop.episode as InstanceType<Episode>
+  private getLoopData(loop: Loop) {
+    const series = loop.series
+    const episode = loop.episode
 
     const loopUrl = `https://animeloop.org/loop/${loop.id}`
-    const statusMessage = `${series.title_japanese} ${episode.no}\n\
-    ${series.title} ${episode.no}\n\
-    ${series.title_english} ${episode.no}\n\
-    ${loop.period.begin.slice(0, 11)}~${loop.period.end.slice(0, 11)}\n\
-    #Animeloop\n\
-    loopUrl`
-    const filepath = path.join(this.configService.config.storage.dir.data, 'mp4_720p', `${loop._id}.mp4`)
+    const statusMessage = `${series.titleJA} ${episode.index}\n\
+    ${series.titleCHS || series.titleCHT} ${episode.index}\n\
+    ${series.titleEN} ${episode.index}\n\
+    ${loop.periodBegin.slice(0, 11)}~${loop.periodEnd.slice(0, 11)}\n\
+    #Animeloop\n`
+    const filepath = this.minioS3Service.getLocalFilePath(loop.files['mp4_720p'])
 
     return {
       loopUrl,

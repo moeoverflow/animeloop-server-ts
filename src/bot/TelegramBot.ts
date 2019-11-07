@@ -1,8 +1,8 @@
 import { TelegramService } from '@jojo/telegram'
 import { Service } from '@jojo/typedi'
-import { GroupModel } from '../core/database/mongodb/models/Group'
-import { GroupLoopModel } from '../core/database/mongodb/models/GroupLoop'
-import { LoopModel } from '../core/database/mongodb/models/Loop'
+import { Collection } from '../core/database/postgresql/models/Collection'
+import { CollectionLoop } from '../core/database/postgresql/models/CollectionLoop'
+import { Loop } from '../core/database/postgresql/models/Loop'
 import { BotService } from './services/BotService'
 
 @Service()
@@ -37,18 +37,23 @@ export default class TelegramBot {
 
       if (!postContent.startsWith('https://animeloop.org/loop')) return
       const splited = postContent.split('/')
-      const loopId = splited[splited.length - 1].slice(0, 24)
-      const loop = await LoopModel.findOne({ _id: loopId })
-      if (loop) {
-        const group = await GroupModel.findOne({
-          id: 'telegram-channel-the-best-animeloop'
-        })
-        if (!group) throw new Error('group_not_found')
-        await GroupLoopModel.findOrCreate({
-          loop: loopId as any,
-          group: group._id,
-        })
+      const loopId = splited[splited.length - 1].slice(0, 36)
+      const loop = await Loop.findOne({ where: { uuid: loopId } })
+      if (!loop) return
+      const collection = await Collection.findOne({
+        where: {
+          slug: 'telegram-channel-the-best-animeloop',
+        }
+      })
+      if (!collection) throw new Error('collection_not_found')
+      const doc = {
+        uuid: loopId,
+        collectionId: collection.id,
       }
+      await CollectionLoop.findOrCreate({
+        where: doc,
+        defaults: doc,
+      })
     })
     this.telegramService.tg.launch().then().catch()
   }

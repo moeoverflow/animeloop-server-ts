@@ -14,6 +14,12 @@ export class MinioS3Service {
   constructor() {
   }
 
+  getLocalFilePath(objectName: string) {
+    const { bucketName } = this.configService.config.s3
+    const { storage } = this.configService.config
+    return path.join(storage.dir.minio, bucketName, objectName)
+  }
+
   async uploadFile(objectName: string, stream: internal.Stream | Buffer | string) {
     const { bucketName } = this.configService.config.s3
     await this.minioService.minio.putObject(bucketName, objectName, stream)

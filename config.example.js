@@ -81,6 +81,7 @@ const config = {
   },
   storage: {
     dir: {
+      minio: '/miniodata',
       data: path.join(__dirname, 'storage', 'data'),
       upload: path.join(__dirname, 'storage', 'upload'),
       raw: path.join(__dirname, 'storage', 'raw'),
