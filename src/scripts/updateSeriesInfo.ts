@@ -4,7 +4,7 @@ import { Op } from '@jojo/sequelize'
 import { Container } from '@jojo/typedi'
 import { delay } from 'bluebird'
 import path from 'path'
-import request = require('request-promise-native')
+import request from 'request-promise-native'
 import { Series } from '../core/database/postgresql/models/Series'
 import { MinioS3Service } from '../core/services/MinioS3Service'
 

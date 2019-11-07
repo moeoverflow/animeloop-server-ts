@@ -6,7 +6,8 @@
   "dependencies": {
     "mkdirp": "^0.5.1",
     "typedi": "^0.8.0",
-    "request-promise-native": "^1.0.7"
+    "request-promise-native": "^1.0.7",
+    "luxon": "^1.21.0"
   },
   "devDependencies": {
     "@types/mkdirp": "^0.5.2",

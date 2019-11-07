@@ -1,6 +1,5 @@
 import { Service } from '@jojo/typedi'
-import bluebird from 'bluebird'
-import request from 'request'
+import request from 'request-promise-native'
 import { getBase64 } from '../../../automator/utils/getBase64'
 import { ConfigService } from '../../../core/services/ConfigService'
 
@@ -47,13 +46,11 @@ export class TraceMoeService {
   async searchImage(file: Buffer): Promise<ITraceMoeItem> {
     const { url, token } = this.configService.config.traceMoe
     const base64image = await getBase64(file)
-    const result: any = await bluebird.fromCallback((callback: any) => {
-      request.post({
-        url: `${url}?token=${token}`,
-        form: {
-          image: base64image,
-        },
-      }, callback)
+    const result: any = await request.post({
+      url: `${url}?token=${token}`,
+      form: {
+        image: base64image,
+      },
     })
 
     return JSON.parse(result.body)

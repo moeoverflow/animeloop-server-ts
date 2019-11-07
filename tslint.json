@@ -1,5 +1,10 @@
 {
   "extends": "tslint:recommended",
+  "linterOptions": {
+    "exclude": [
+      "src/scripts/*.ts"
+    ]
+  },
   "rules": {
     "no-reference": false,
     "max-line-length": false,

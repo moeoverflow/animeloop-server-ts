@@ -1,7 +1,6 @@
-import { Arg, Args, FieldResolver, Paginated, PaginationArgs, Query, Resolver, Root } from "@jojo/graphql";
+import { Arg, Args, FieldResolver, GraphQLString, Paginated, PaginationArgs, Query, Resolver, Root } from "@jojo/graphql";
 import { Op } from "@jojo/sequelize";
 import { Inject, Service } from '@jojo/typedi';
-import { GraphQLString } from 'graphql';
 import { Series } from '../../database/postgresql/models/Series';
 import { MinioS3Service } from '../../services/MinioS3Service';
 import { GetSeriesArgs } from '../args/SeriesArgs';
