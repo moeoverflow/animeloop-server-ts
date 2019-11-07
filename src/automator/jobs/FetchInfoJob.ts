@@ -3,10 +3,11 @@ import { ITraceMoeDoc, TraceMoeService } from '@jojo/tracemoe'
 import bluebird from 'bluebird'
 import Queue from 'bull'
 import { readFileSync } from 'fs'
-import { padStart } from 'lodash'
+import { maxBy, padStart } from 'lodash'
 import log4js from 'log4js'
 import { Container } from 'typedi'
-import { AnimeloopTaskModel, AnimeloopTaskStatus } from '../../core/database/mongodb/models/AnimeloopTask'
+import uuid from 'uuid'
+import { AnimeloopTask, AnimeloopTaskStatus } from '../../core/database/postgresql/models/AnimeloopTask'
 import { hmsToSeconds } from '../utils/hmsToSeconds'
 
 const logger = log4js.getLogger('Automator:Job:FetchInfoJob')
@@ -19,12 +20,70 @@ export interface IFetchInfoOutput {
 }
 
 export async function FetchInfoJob(job: Queue.Job<FetchInfoJobData>) {
-  const traceMoeService = Container.get(TraceMoeService)
   const anilistService = Container.get(AnilistService)
 
   const { taskId } = job.data
 
-  const animeloopTask = await AnimeloopTaskModel.findById(taskId)
+  const animeloopTask = await AnimeloopTask.findByPk(taskId)
+
+  animeloopTask.output.info.loops = animeloopTask.output.info.loops.map((i) => {
+    if (!i.uuid) i.uuid = uuid.v4()
+    return i
+  })
+  await animeloopTask.save()
+  await animeloopTask.update({
+    output: animeloopTask.output,
+  })
+
+  if (!animeloopTask.anilistId || !animeloopTask.episodeIndex) {
+    try {
+      await getTraceMoeResult(animeloopTask)
+    } catch (error) {
+      logger.error(error)
+      await animeloopTask.transit(
+        AnimeloopTaskStatus.InfoFetching,
+        AnimeloopTaskStatus.InfoWait,
+      )
+      return
+    }
+  }
+
+  await job.progress(70)
+
+  const { seriesTitle, anilistId, episodeIndex } = animeloopTask
+
+  let anilistItem: IAnilistItem
+  try {
+    if (!anilistId) {
+      throw new Error('anilistId_not_found')
+    }
+    anilistItem = await anilistService.getInfo(anilistId)
+  } catch (error) {
+    logger.warn('fetch anilist data failed.')
+    await animeloopTask.transit(
+      AnimeloopTaskStatus.InfoFetching,
+      AnimeloopTaskStatus.InfoWait,
+    )
+  }
+
+  await animeloopTask.transit(
+    AnimeloopTaskStatus.InfoFetching,
+    AnimeloopTaskStatus.InfoCompleted,
+    async (animeloopTask, transaction) => {
+      await animeloopTask.update({
+        seriesTitle,
+        episodeIndex,
+        anilistId,
+        anilistItem
+      }, { transaction })
+    },
+  )
+
+  await job.progress(100)
+}
+
+async function getTraceMoeResult(animeloopTask: AnimeloopTask) {
+  const traceMoeService = Container.get(TraceMoeService)
 
   if (!animeloopTask.output) {
     throw new Error('animeloop_task_output_not_found')
@@ -56,12 +115,7 @@ export async function FetchInfoJob(job: Queue.Job<FetchInfoJobData>) {
       results.push(result.docs.sort((prev, next) => prev.similarity - next.similarity)[0])
     }
   } catch (error) {
-    logger.warn('fetch trace.moe data failed.')
-    await animeloopTask.update({
-      $set: {
-        status: AnimeloopTaskStatus.InfoWait
-      }
-    })
+    throw new Error('fetch trace.moe data failed.')
   }
 
   const counts: any = {}
@@ -70,72 +124,30 @@ export async function FetchInfoJob(job: Queue.Job<FetchInfoJobData>) {
     // this line will convert {number} type id to {string} type key
     counts[id] = counts[id] ? counts[id] + 1 : 1
   })
-
-  const len = randomLoops.length
-  const mid = Math.round(len / 2) + (len % 2 === 0 ? 1 : 0)
-  let result
-  for (const key in counts) {
-    if (counts[key] >= mid) {
-      result = results.filter((result) => (result.anilist_id.toString() === key))[0]
-      break
-    }
-  }
-
+  const maxCountId = maxBy(Object.entries(counts), (i) => i[1])[0] as string
+  const result = results.find((i) => String(i.anilist_id) === maxCountId)
   if (!result) {
-    logger.warn('tracemoe has no matched info.')
-    await animeloopTask.update({
-      $set: {
-        status: AnimeloopTaskStatus.InfoWait
-      }
-    })
-    return
-  }
-
-  const { seriesTitle, episodeNo, anilistId } = parseResult(result)
-
-  await job.progress(70)
-
-  let anilistItem: IAnilistItem
-  try {
-    if (!anilistId) {
-      throw new Error('anilistId_not_found')
-    }
-    anilistItem = await anilistService.getInfo(anilistId)
-  } catch (error) {
-    logger.warn('fetch anilist data failed.')
-    await animeloopTask.update({
-      $set: {
-        status: AnimeloopTaskStatus.InfoWait
-      }
-    })
+    throw new Error('tracemoe has no matched info.')
   }
 
   await animeloopTask.update({
-    $set: {
-      status: AnimeloopTaskStatus.InfoCompleted,
-      seriesTitle,
-      episodeNo,
-      anilistId,
-      anilistItem
-    }
+    ...parseResult(result),
   })
-
-  await job.progress(100)
 }
 
 function parseResult(doc: ITraceMoeDoc) {
   const seriesTitle = doc.anime
-  let episodeNo = ''
+  let episodeIndex = ''
   if (doc.episode === '' || doc.episode === 'OVA/OAD') {
-    episodeNo = 'OVA'
+    episodeIndex = 'OVA'
   } else {
-    episodeNo = `${padStart(doc.episode, 2, '0')}`
+    episodeIndex = `${padStart(doc.episode, 2, '0')}`
   }
   const anilistId = doc.anilist_id
 
   return {
     seriesTitle,
-    episodeNo,
+    episodeIndex,
     anilistId
   }
 }

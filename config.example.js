@@ -4,9 +4,9 @@ const config = {
   /**
    * Third-party Service
    */
-  mysql: {
+  sequelize: {
     database: 'animeloop_dev',
-    dialect: 'mysql',
+    dialect: 'postgres',
     username: 'root',
     password: 'password',
   },
@@ -25,6 +25,10 @@ const config = {
     useSSL: false,
     accessKey: '',
     secretKey: '',
+  },
+  s3: {
+    bucketName: 'animeloop-dev',
+    bucketBaseUrl: 'http://127.0.0.1:9000',
   },
   transmission: {
     host: 'localhost',

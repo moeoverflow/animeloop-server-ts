@@ -1,0 +1,10 @@
+export * from 'sequelize-typescript';
+export { BaseModel } from './models/BaseModel';
+export { BaseParanoidModel } from './models/BaseParanoidModel';
+export { StateMachineParanoidModel } from './models/StateMachineParanoidModel';
+export { SequelizeService as SequelizeService } from './services/SequelizeService';
+export { enumWords } from './utils/enumWords';
+export { Sequelize, Transaction, IncludeOptions };
+export { Op };
+import Sequelize, { IncludeOptions, Transaction } from 'sequelize';
+const { Op } = Sequelize;

@@ -1,13 +1,15 @@
 {
-  "name": "@jojo/mysql",
+  "name": "@jojo/sequelize",
   "version": "1.0.0",
   "main": "index.js",
   "private": true,
   "dependencies": {
+    "lodash": "^4.17.13",
+    "mysql2": "^2.0.0",
+    "pg": "^7.12.1",
+    "pg-hstore": "^2.3.3",
     "sequelize": "^5.21.2",
     "sequelize-typescript": "^1.0.0",
-    "mysql2": "^2.0.0",
-    "lodash": "^4.17.13",
     "typedi": "^0.8.0"
   },
   "devDependencies": {

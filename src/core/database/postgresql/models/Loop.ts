@@ -1,4 +1,4 @@
-import { BaseParanoidModel, BelongsTo, Column, enumWords, ForeignKey, Sequelize, Table } from '@jojo/mysql';
+import { BaseParanoidModel, BelongsTo, Column, enumWords, ForeignKey, Sequelize, Table } from '@jojo/sequelize';
 import { Episode } from './Episode';
 import { Series } from './Series';
 
@@ -15,20 +15,49 @@ export interface LoopFiles {
   [key: string]: string
 }
 
-@Table
+@Table({
+  indexes: [
+    { unique: true, fields: ['uuid'] },
+    { unique: false, fields: ['seriesId', 'episodeId'] },
+  ]
+})
 export class Loop extends BaseParanoidModel<Loop> {
 
   @Column({
-    type: Sequelize.STRING(128),
+    type: Sequelize.TEXT,
     allowNull: false,
   })
   uuid: string
 
   @Column({
-    type: Sequelize.BIGINT,
-    allowNull: false,
+    type: Sequelize.FLOAT,
+    allowNull: true,
   })
-  duration: string
+  duration: number
+
+  @Column({
+    type: Sequelize.TEXT,
+    allowNull: true,
+  })
+  periodBegin: string
+
+  @Column({
+    type: Sequelize.TEXT,
+    allowNull: true,
+  })
+  periodEnd: string
+
+  @Column({
+    type: Sequelize.INTEGER,
+    allowNull: true,
+  })
+  frameBegin: number
+
+  @Column({
+    type: Sequelize.INTEGER,
+    allowNull: true,
+  })
+  frameEnd: number
 
   @Column({
     type: Sequelize.ENUM(...enumWords(LoopSource)),

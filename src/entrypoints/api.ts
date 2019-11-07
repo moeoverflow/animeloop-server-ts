@@ -3,4 +3,6 @@ import { Container } from 'typedi'
 import APIServer from '../api/APIServer'
 
 const apiServer = Container.get(APIServer)
-apiServer.run()
+apiServer.run().catch((err) => {
+  console.error(err)
+})
