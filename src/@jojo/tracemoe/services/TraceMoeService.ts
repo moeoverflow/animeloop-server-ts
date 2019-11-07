@@ -46,13 +46,12 @@ export class TraceMoeService {
   async searchImage(file: Buffer): Promise<ITraceMoeItem> {
     const { url, token } = this.configService.config.traceMoe
     const base64image = await getBase64(file)
-    const result: any = await request.post({
+    const result = await request.post({
       url: `${url}?token=${token}`,
       form: {
         image: base64image,
       },
     })
-
-    return JSON.parse(result.body)
+    return JSON.parse(result)
   }
 }
