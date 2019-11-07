@@ -1,6 +1,6 @@
+import { Service } from '@jojo/typedi'
 import { ObjectId } from 'mongodb';
 import path from 'path'
-import { Service } from 'typedi'
 import { InstanceType } from 'typegoose'
 import { Episode } from '../../core/database/mongodb/models/Episode'
 import { GroupModel } from '../../core/database/mongodb/models/Group'

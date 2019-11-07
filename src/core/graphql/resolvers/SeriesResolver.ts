@@ -1,11 +1,11 @@
 import { Arg, Args, FieldResolver, Paginated, PaginationArgs, Query, Resolver, Root } from "@jojo/graphql";
 import { Op } from "@jojo/sequelize";
-import { Inject, Service } from 'typedi';
+import { Inject, Service } from '@jojo/typedi';
+import { GraphQLString } from 'graphql';
 import { Series } from '../../database/postgresql/models/Series';
 import { MinioS3Service } from '../../services/MinioS3Service';
 import { GetSeriesArgs } from '../args/SeriesArgs';
 import { SeriesObjectType } from '../types/SeriesObjectType';
-import { GraphQLString } from 'graphql';
 
 const PaginatedSeriesObjectType = Paginated(SeriesObjectType)
 

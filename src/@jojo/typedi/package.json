@@ -1,0 +1,14 @@
+{
+  "name": "@jojo/typedi",
+  "version": "1.0.0",
+  "main": "index.js",
+  "private": true,
+  "dependencies": {
+    "typedi": "^0.8.0",
+    "routing-controllers": "^0.8.0",
+    "class-transformer": "^0.2.3",
+    "class-validator": "^0.10.2"
+  },
+  "devDependencies": {
+  }
+}

@@ -1,6 +1,6 @@
+import { Service } from '@jojo/typedi'
 import Bluebird from 'bluebird'
 import Twit from 'twit'
-import { Service } from 'typedi'
 import { ConfigService } from '../../../core/services/ConfigService'
 
 @Service()

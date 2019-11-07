@@ -1,6 +1,6 @@
+import { Service } from '@jojo/typedi'
 import { DateTime } from 'luxon'
 import request = require('request-promise-native')
-import { Service } from 'typedi'
 import { SeriesType } from '../../../core/database/postgresql/models/Series'
 
 export interface IAnilistItem {

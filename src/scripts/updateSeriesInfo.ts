@@ -1,10 +1,10 @@
 require("../init")
 import { AnilistService } from '@jojo/anilist'
 import { Op } from '@jojo/sequelize'
+import { Container } from '@jojo/typedi'
 import { delay } from 'bluebird'
 import path from 'path'
 import request = require('request-promise-native')
-import { Container } from 'typedi'
 import { Series } from '../core/database/postgresql/models/Series'
 import { MinioS3Service } from '../core/services/MinioS3Service'
 

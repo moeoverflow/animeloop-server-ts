@@ -1,8 +1,8 @@
 require("../init")
 import { MinioService } from '@jojo/minio'
+import { Container } from '@jojo/typedi'
 import { DateTime } from 'luxon'
 import path from 'path'
-import { Container } from 'typedi'
 import uuid from 'uuid'
 import { LoopModel } from '../core/database/mongodb/models/Loop'
 import { ConfigService } from '../core/services/ConfigService'

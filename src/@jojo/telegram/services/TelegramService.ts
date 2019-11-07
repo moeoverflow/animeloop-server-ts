@@ -1,5 +1,5 @@
+import { Service } from '@jojo/typedi'
 import Telegraf, { ContextMessageUpdate } from 'telegraf'
-import { Service } from 'typedi'
 import { ConfigService } from '../../../core/services/ConfigService'
 
 @Service()

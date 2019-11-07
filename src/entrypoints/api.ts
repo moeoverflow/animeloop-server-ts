@@ -1,5 +1,5 @@
 require("../init")
-import { Container } from 'typedi'
+import { Container } from '@jojo/typedi'
 import APIServer from '../api/APIServer'
 
 const apiServer = Container.get(APIServer)

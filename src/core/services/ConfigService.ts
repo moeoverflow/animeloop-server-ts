@@ -1,5 +1,5 @@
+import { Service } from '@jojo/typedi'
 import path from 'path'
-import { Service } from 'typedi'
 
 @Service()
 export class ConfigService {

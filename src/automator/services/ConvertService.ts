@@ -1,8 +1,8 @@
+import { Service } from '@jojo/typedi'
 import bluebird from 'bluebird'
 import log4js from 'log4js'
 import { basename, dirname, extname, join } from 'path'
 import shell from 'shelljs'
-import { Service } from 'typedi'
 
 const logger = log4js.getLogger('Automator:Service:ConvertService')
 logger.level = 'debug'

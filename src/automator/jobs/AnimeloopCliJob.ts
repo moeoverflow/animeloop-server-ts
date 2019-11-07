@@ -1,3 +1,4 @@
+import { Container } from '@jojo/typedi'
 import bluebird from 'bluebird'
 import Queue from 'bull'
 import { ChildProcess } from 'child_process'
@@ -7,7 +8,6 @@ import mkdirp from 'mkdirp'
 import path from 'path'
 import shellescape from 'shell-escape'
 import shell from 'shelljs'
-import { Container } from 'typedi'
 import { AnimeloopTask, AnimeloopTaskStatus } from '../../core/database/postgresql/models/AnimeloopTask'
 import { ConfigService } from '../../core/services/ConfigService'
 

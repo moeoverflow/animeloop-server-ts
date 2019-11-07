@@ -1,6 +1,6 @@
 require("../init")
+import { Container } from '@jojo/typedi'
 import * as Sentry from '@sentry/node'
-import { Container } from 'typedi'
 import AutomatorRunner from '../automator/AutomatorRunner'
 import { ConfigService } from '../core/services/ConfigService'
 

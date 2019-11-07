@@ -1,6 +1,6 @@
+import { Service } from '@jojo/typedi'
 import bluebird from 'bluebird'
 import request from 'request'
-import { Service } from 'typedi'
 import { getBase64 } from '../../../automator/utils/getBase64'
 import { ConfigService } from '../../../core/services/ConfigService'
 
