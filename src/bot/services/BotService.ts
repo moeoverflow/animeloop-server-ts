@@ -1,14 +1,12 @@
+import { InstanceType, ObjectId } from '@jojo/mongodb'
 import { Service } from '@jojo/typedi'
-import { ObjectId } from 'mongodb';
 import path from 'path'
-import { InstanceType } from 'typegoose'
 import { Episode } from '../../core/database/mongodb/models/Episode'
 import { GroupModel } from '../../core/database/mongodb/models/Group'
 import { GroupLoopModel } from '../../core/database/mongodb/models/GroupLoop'
 import { Loop, LoopModel } from '../../core/database/mongodb/models/Loop'
 import { Series } from '../../core/database/mongodb/models/Series'
 import { ConfigService } from '../../core/services/ConfigService'
-
 
 @Service()
 export class BotService {

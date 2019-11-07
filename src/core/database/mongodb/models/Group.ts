@@ -1,4 +1,4 @@
-import { prop, Typegoose } from 'typegoose'
+import { prop, Typegoose } from '@jojo/mongodb'
 
 export class Group extends Typegoose {
 
