@@ -46,9 +46,7 @@ export class AnimeloopTaskService {
 
       const newSeriesInfo = this.anilistService.getNewSeriesInfo(animeloopTask.anilistItem)
 
-      if (series.cover && series.cover.startsWith('anilist')) {
-        newSeriesInfo.cover = series.cover
-      } else {
+      if (newSeriesInfo.cover && (!series.cover || !series.cover.startsWith('anilist'))) {
         try {
           const extname = path.extname(newSeriesInfo.cover)
           const buffer = await request({
@@ -61,12 +59,12 @@ export class AnimeloopTaskService {
         } catch (error) {
           newSeriesInfo.cover = series.cover
         }
-      }
-      if (series.banner && series.banner.startsWith('anilist')) {
-        newSeriesInfo.banner = series.banner
       } else {
-        const extname = path.extname(newSeriesInfo.banner)
+        newSeriesInfo.cover = series.cover
+      }
+      if (newSeriesInfo.banner && (!series.banner || !series.banner.startsWith('anilist'))) {
         try {
+          const extname = path.extname(newSeriesInfo.banner)
           const buffer = await request({
             url: newSeriesInfo.banner,
             encoding: null
@@ -77,6 +75,8 @@ export class AnimeloopTaskService {
         } catch (error) {
           newSeriesInfo.banner = series.banner
         }
+      } else {
+        newSeriesInfo.banner = series.banner
       }
 
       await series.update(newSeriesInfo, { transaction })
