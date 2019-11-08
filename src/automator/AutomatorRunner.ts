@@ -255,27 +255,20 @@ export default class AutomatorRunner {
      */
     schedule.scheduleJob('7 * * * * *', async () => {
       logger.info('ScheduleJob:convert_file')
-
-      await AnimeloopTask.transaction(null, async (transaction) => {
-        const animeloopTasks = await AnimeloopTask.findAll({
-          where: {
-            status: AnimeloopTaskStatus.InfoCompleted,
-          },
-          transaction,
-        })
-        for (const animeloopTask of animeloopTasks) {
-          await animeloopTask.transit(
-            AnimeloopTaskStatus.InfoCompleted,
-            AnimeloopTaskStatus.Converting,
-            async (animeloopTask) => {
-              await this.bullService.addConvertJob({
-                taskId: animeloopTask.id,
-              })
-            },
-            transaction,
-          )
-        }
+      const animeloopTasks = await AnimeloopTask.findAll({
+        where: {
+          status: AnimeloopTaskStatus.InfoCompleted,
+        },
       })
+      for (const animeloopTask of animeloopTasks) {
+        await this.bullService.addConvertJob({
+          taskId: animeloopTask.id,
+        })
+        await animeloopTask.transit(
+          AnimeloopTaskStatus.InfoCompleted,
+          AnimeloopTaskStatus.Converting,
+        )
+      }
     })
 
     /**

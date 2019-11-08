@@ -61,10 +61,10 @@ export async function ConvertJob(job: Queue.Job<ConvertJobData>) {
   await animeloopTask.transit(
     AnimeloopTaskStatus.Converting,
     AnimeloopTaskStatus.Converted,
-    async (animeloopTask) => {
+    async (animeloopTask, transaction) => {
       await animeloopTask.update({
         output,
-      })
+      }, { transaction })
     }
   )
 
