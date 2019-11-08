@@ -50,7 +50,7 @@ export class BotService {
     const series = loop.series
     const episode = loop.episode
 
-    const loopUrl = `https://animeloop.org/loop/${loop.id}`
+    const loopUrl = `https://animeloop.org/loop/${loop.uuid}`
     const statusMessage = `${series.titleJA} ${episode.index}\n\
     ${series.titleCHS || series.titleCHT} ${episode.index}\n\
     ${series.titleEN} ${episode.index}\n\
