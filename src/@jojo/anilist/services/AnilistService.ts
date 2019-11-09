@@ -1,7 +1,7 @@
-import { Service } from '@jojo/typedi'
-import { DateTime } from 'luxon'
-import request from 'request-promise-native'
-import { SeriesType } from '../../../core/database/postgresql/models/Series'
+import { Service } from '@jojo/typedi';
+import { DateTime } from 'luxon';
+import request from 'request-promise-native';
+import { Series, SeriesType } from '../../../core/database/postgresql/models/Series';
 
 export interface IAnilistItem {
   id: number
@@ -126,12 +126,12 @@ export class AnilistService {
     }
   }
 
-  getNewSeriesInfo(anilistItem: IAnilistItem) {
+  getNewSeriesInfo(anilistItem: IAnilistItem): Partial<Series> {
     const startDate = anilistItem.startDate && anilistItem.startDate.year && anilistItem.startDate.month && anilistItem.startDate.day
-      ? DateTime.local(anilistItem.startDate.year, anilistItem.startDate.month, anilistItem.startDate.day)
+      ? DateTime.local(anilistItem.startDate.year, anilistItem.startDate.month, anilistItem.startDate.day).toJSDate()
       : null
     const endDate = anilistItem.endDate && anilistItem.endDate.year && anilistItem.endDate.month && anilistItem.endDate.day
-      ? DateTime.local(anilistItem.endDate.year, anilistItem.endDate.month, anilistItem.endDate.day)
+      ? DateTime.local(anilistItem.endDate.year, anilistItem.endDate.month, anilistItem.endDate.day).toJSDate()
       : null
 
     const type = this.getSeriesType(anilistItem.format)

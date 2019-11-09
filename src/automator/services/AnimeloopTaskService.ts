@@ -78,6 +78,9 @@ export class AnimeloopTaskService {
       } else {
         newSeriesInfo.banner = series.banner
       }
+      if (!newSeriesInfo.titleCHT) {
+        newSeriesInfo.titleCHT = series.titleCHT
+      }
 
       await series.update(newSeriesInfo, { transaction })
 
