@@ -18,8 +18,7 @@ jobs:
       - name: Install
         run: yarn install
       - name: Lint
-        uses: icrawl/action-eslint@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: shincurry/tslint-actions@test
         with:
-          job-name: Lint
+          token: ${{ secrets.GITHUB_TOKEN }}
+          pattern: '*.ts'
