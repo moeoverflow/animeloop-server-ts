@@ -1,9 +1,9 @@
-name: workflow
+name: CI
 
 on: [push]
 
 jobs:
-  job:
+  Job:
     runs-on: ubuntu-latest
     timeout-minutes: 3
     steps:
@@ -17,10 +17,12 @@ jobs:
           node-version: "${{ steps.nvm.outputs.NVMRC }}"
       - name: Install
         run: yarn install
+      - name: Build
+        run: yarn build
       - name: Lint
         uses: mooyoul/tslint-actions@master
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           pattern: '*.ts'
-      - name: Build
-        run: yarn build
+      - name: Test
+        run: yarn test
