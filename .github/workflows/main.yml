@@ -1,6 +1,6 @@
-name: TSLint
+name: workflow
 
-on: [pull_request]
+on: [push]
 
 jobs:
   job:
@@ -18,7 +18,9 @@ jobs:
       - name: Install
         run: yarn install
       - name: Lint
-        uses: shincurry/tslint-actions@test
+        uses: mooyoul/tslint-actions@master
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           pattern: '*.ts'
+      - name: Build
+        run: yarn build
