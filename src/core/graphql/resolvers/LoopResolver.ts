@@ -1,5 +1,5 @@
 import { Arg, Args, FieldResolver, GraphQLJSON, IRequestFields, PaginationArgs, Query, RequestFields, Resolver, Root } from "@jojo/graphql";
-import { IncludeOptions, Sequelize } from '@jojo/sequelize';
+import { IncludeOptions, Sequelize, Op } from '@jojo/sequelize';
 import { Container } from '@jojo/typedi';
 import { clone, pick } from 'lodash';
 import { Episode } from '../../database/postgresql/models/Episode';
@@ -8,6 +8,8 @@ import { Series } from '../../database/postgresql/models/Series';
 import { MinioS3Service } from '../../services/MinioS3Service';
 import { GetLoopArgs } from '../args/LoopArgs';
 import { LoopObjectType } from '../types/LoopObjectType';
+import { CollectionLoop } from '../../database/postgresql/models/CollectionLoop';
+import { Collection } from '../../database/postgresql/models/Collection';
 
 function includeHelper(requestFields: IRequestFields, separate: boolean = false): IncludeOptions[] | undefined {
   if (!requestFields) return undefined
@@ -54,9 +56,11 @@ export class LoopResolver {
     @Args() args: GetLoopArgs,
     @RequestFields() requestFields: IRequestFields,
   ) {
+    const loopIds = await this.getCollectionLoopIds(args)
     const loops = await Loop.findAll({
       where: {
         ...pick(args, 'episodeId', 'seriesId', 'source'),
+        ...(loopIds ? { id: { [Op.in]: loopIds }} : {}),
       },
       include: includeHelper(requestFields.loops),
       ...pagination,
@@ -67,9 +71,14 @@ export class LoopResolver {
   @Query(() => [LoopObjectType])
   async randomLoops(
     @Arg("limit") limit: number,
+    @Args() args: GetLoopArgs,
     @RequestFields() requestFields: IRequestFields,
   ) {
+    const loopIds = await this.getCollectionLoopIds(args)
     const loops = await Loop.findAll({
+      where: {
+        ...(loopIds ? { id: { [Op.in]: loopIds }} : {}),
+      },
       order: Sequelize.literal('random()'),
       limit: limit,
       include: includeHelper(requestFields.randomLoops),
@@ -87,4 +96,29 @@ export class LoopResolver {
     return _files
   }
 
+  private async getCollectionLoopIds(args: GetLoopArgs) {
+    let loopIds: number[] | null = null
+    let collectionId = args.collectionId
+    if (!collectionId && args.collectionSlug) {
+      const collection = await Collection.findOne({
+        where: {
+          slug: args.collectionSlug
+        },
+        raw: true,
+        attributes: ['id'],
+      })
+      collectionId = collection.id
+    }
+    if (collectionId) {
+      const collectionLoops = await CollectionLoop.findAll({
+        where: {
+          collectionId,
+        },
+        raw: true,
+        attributes: ['loopId'],
+      })
+      loopIds = collectionLoops.map((i) => i.loopId)
+    }
+    return loopIds
+  }
 }

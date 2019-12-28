@@ -12,4 +12,10 @@ export class GetLoopArgs {
 
   @Field({ nullable: true })
   episodeId?: number;
+
+  @Field({ nullable: true })
+  collectionId?: number;
+
+  @Field({ nullable: true })
+  collectionSlug?: string;
 }
