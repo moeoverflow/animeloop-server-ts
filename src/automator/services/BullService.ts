@@ -1,5 +1,5 @@
-import { Service } from '@jojo/typedi'
 import Queue from 'bull'
+import { Service } from 'jojo-typedi'
 import log4js from 'log4js'
 import { ConfigService } from '../../core/services/ConfigService'
 import { AnimeloopCliJob, AnimeloopCliJobData } from '../jobs/AnimeloopCliJob'

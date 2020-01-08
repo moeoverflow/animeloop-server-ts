@@ -1,5 +1,5 @@
-import { IAnilistItem } from '@jojo/anilist';
-import { BaseParanoidModel, Column, enumWords, Sequelize, Table } from '@jojo/sequelize';
+import { IAnilistItem } from 'jojo-anilist';
+import { BaseParanoidModel, Column, enumWords, Sequelize, Table } from 'jojo-sequelize';
 import { DateTime } from 'luxon';
 
 export enum SeriesType {

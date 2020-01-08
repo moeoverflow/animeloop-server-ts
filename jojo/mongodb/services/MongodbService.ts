@@ -1,7 +1,7 @@
-import { Container, Service } from '@jojo/typedi'
+import { Container, Service } from 'jojo-typedi'
 import mongoose from 'mongoose'
 import autoIncrement from 'mongoose-auto-increment'
-import { ConfigService } from '../../../core/services/ConfigService'
+import { ConfigService } from '../../../src/core/services/ConfigService'
 
 mongoose.Promise = global.Promise
 

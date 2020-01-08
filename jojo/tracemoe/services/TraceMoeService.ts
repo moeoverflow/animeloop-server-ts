@@ -1,7 +1,7 @@
-import { Service } from '@jojo/typedi'
+import { Service } from 'jojo-typedi'
 import request from 'request-promise-native'
-import { getBase64 } from '../../../automator/utils/getBase64'
-import { ConfigService } from '../../../core/services/ConfigService'
+import { getBase64 } from '../../../src/automator/utils/getBase64'
+import { ConfigService } from '../../../src/core/services/ConfigService'
 
 export interface ITraceMoeDoc {
   from: number

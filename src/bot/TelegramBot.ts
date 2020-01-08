@@ -1,5 +1,5 @@
-import { TelegramService } from '@jojo/telegram'
-import { Service } from '@jojo/typedi'
+import { TelegramService } from 'jojo-telegram'
+import { Service } from 'jojo-typedi'
 import { Collection } from '../core/database/postgresql/models/Collection'
 import { CollectionLoop } from '../core/database/postgresql/models/CollectionLoop'
 import { Loop } from '../core/database/postgresql/models/Loop'

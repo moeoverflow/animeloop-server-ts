@@ -1,4 +1,4 @@
-import { Container } from '@jojo/typedi'
+import { Container } from 'jojo-typedi'
 import { Loop } from '../core/database/postgresql/models/Loop'
 import { MinioS3Service } from '../core/services/MinioS3Service'
 

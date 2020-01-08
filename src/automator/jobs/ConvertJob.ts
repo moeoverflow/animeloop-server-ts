@@ -1,6 +1,6 @@
-import { Container } from '@jojo/typedi'
 import Queue from 'bull'
 import { existsSync } from 'fs'
+import { Container } from 'jojo-typedi'
 import path, { basename, extname } from 'path'
 import { AnimeloopTask, AnimeloopTaskStatus } from '../../core/database/postgresql/models/AnimeloopTask'
 import { ConvertService, MediaType } from '../services/ConvertService'

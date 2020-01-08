@@ -1,6 +1,6 @@
 require("../init")
-import { AnilistService } from '@jojo/anilist'
-import { Container } from '@jojo/typedi'
+import { AnilistService } from 'jojo-anilist'
+import { Container } from 'jojo-typedi'
 import { chunk } from 'lodash'
 import uuid from 'uuid'
 import { EpisodeModel } from '../core/database/mongodb/models/Episode'

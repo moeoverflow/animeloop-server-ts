@@ -1,5 +1,5 @@
 {
-  "name": "@jojo/twitter",
+  "name": "jojo-twitter",
   "version": "1.0.0",
   "main": "index.js",
   "private": true,

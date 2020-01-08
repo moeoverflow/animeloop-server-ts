@@ -1,6 +1,6 @@
 require("../init")
-import { MinioService } from '@jojo/minio'
-import { Container } from '@jojo/typedi'
+import { MinioService } from 'jojo-minio'
+import { Container } from 'jojo-typedi'
 import { DateTime } from 'luxon'
 import path from 'path'
 import uuid from 'uuid'

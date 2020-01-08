@@ -1,4 +1,4 @@
-import { findOrCreate, index, InstanceType, plugin, prop, Ref, Typegoose } from '@jojo/mongodb'
+import { findOrCreate, index, InstanceType, plugin, prop, Ref, Typegoose } from 'jojo-mongodb'
 import { Series } from './Series'
 
 @index({ series: 1 })

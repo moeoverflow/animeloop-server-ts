@@ -1,4 +1,4 @@
-import { Service } from '@jojo/typedi'
+import { Service } from 'jojo-typedi'
 import path from 'path'
 
 @Service()

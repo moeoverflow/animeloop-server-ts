@@ -1,7 +1,8 @@
-import { Service } from '@jojo/typedi';
+
+import { Service } from 'jojo-typedi';
 import { DateTime } from 'luxon';
 import request from 'request-promise-native';
-import { Series, SeriesType } from '../../../core/database/postgresql/models/Series';
+import { Series, SeriesType } from '../../../src/core/database/postgresql/models/Series';
 
 export interface IAnilistItem {
   id: number

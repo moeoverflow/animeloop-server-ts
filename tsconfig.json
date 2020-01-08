@@ -11,12 +11,12 @@
     "moduleResolution": "node",
     "sourceMap": true,
     "outDir": "dist",
-    "baseUrl": "src",
+    "baseUrl": "./",
     "paths": {
       "*": [
         "node_modules/*",
       ],
-      "@jojo/*": ["@jojo/*/index"],
+      "jojo/*": ["jojo/*/index"],
     },
     "lib": [
       "es5",
@@ -38,6 +38,7 @@
   },
   "include": [
     "src/**/*.ts",
+    "jojo/**/*.ts",
     "test/*.ts",
   ],
   "exclude": [

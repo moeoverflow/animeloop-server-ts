@@ -1,4 +1,4 @@
-import { BaseParanoidModel, BelongsTo, Column, enumWords, ForeignKey, Sequelize, Table } from '@jojo/sequelize';
+import { BaseParanoidModel, BelongsTo, Column, enumWords, ForeignKey, Sequelize, Table } from 'jojo-sequelize';
 import { Episode } from './Episode';
 import { Series } from './Series';
 

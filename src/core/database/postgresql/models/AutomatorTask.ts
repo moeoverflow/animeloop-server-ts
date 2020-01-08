@@ -1,4 +1,4 @@
-import { Column, enumWords, FindOptions, HasMany, Sequelize, StateMachineParanoidModel, Table } from '@jojo/sequelize';
+import { Column, enumWords, FindOptions, HasMany, Sequelize, StateMachineParanoidModel, Table } from 'jojo-sequelize';
 import { AnimeloopTask } from './AnimeloopTask';
 
 export enum AutomatorTaskStatus {

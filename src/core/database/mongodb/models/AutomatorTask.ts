@@ -1,4 +1,4 @@
-import { findOrCreate, InstanceType, plugin, prop, Typegoose } from '@jojo/mongodb'
+import { findOrCreate, InstanceType, plugin, prop, Typegoose } from 'jojo-mongodb'
 
 export enum AutomatorTaskStatus {
   Created = 'created',

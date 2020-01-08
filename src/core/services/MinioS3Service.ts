@@ -1,5 +1,5 @@
-import { MinioService } from '@jojo/minio';
-import { Inject, Service } from '@jojo/typedi';
+import { MinioService } from 'jojo-minio';
+import { Inject, Service } from 'jojo-typedi';
 import path from 'path';
 import internal from 'stream';
 import url from 'url';

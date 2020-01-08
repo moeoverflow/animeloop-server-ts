@@ -1,5 +1,5 @@
-import { TwitterService } from '@jojo/twitter'
-import { Service } from '@jojo/typedi'
+import { TwitterService } from 'jojo-twitter'
+import { Service } from 'jojo-typedi'
 import schedule from 'node-schedule'
 import { BotService } from './services/BotService'
 

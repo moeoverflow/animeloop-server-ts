@@ -1,8 +1,8 @@
-import { Service } from '@jojo/typedi'
+import { Service } from 'jojo-typedi'
 import log4js from 'log4js'
 import { DateTime } from 'luxon'
 import Parser from 'rss-parser'
-import { ConfigService } from '../../../core/services/ConfigService'
+import { ConfigService } from '../../../src/core/services/ConfigService'
 
 const logger = log4js.getLogger('Automator:Service:HorribleSubsService')
 logger.level = 'debug'

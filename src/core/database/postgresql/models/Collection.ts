@@ -1,4 +1,4 @@
-import { BaseParanoidModel, Column, Sequelize, Table } from '@jojo/sequelize';
+import { BaseParanoidModel, Column, Sequelize, Table } from 'jojo-sequelize';
 
 @Table({
   indexes: [

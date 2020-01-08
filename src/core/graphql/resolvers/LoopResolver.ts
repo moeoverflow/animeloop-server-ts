@@ -1,6 +1,6 @@
-import { Arg, Args, FieldResolver, GraphQLJSON, IRequestFields, PaginationArgs, Query, RequestFields, Resolver, Root } from "@jojo/graphql";
-import { IncludeOptions, Sequelize, Op } from '@jojo/sequelize';
-import { Container } from '@jojo/typedi';
+import { Arg, Args, FieldResolver, GraphQLJSON, IRequestFields, PaginationArgs, Query, RequestFields, Resolver, Root } from "jojo-graphql";
+import { IncludeOptions, Sequelize } from 'jojo-sequelize';
+import { Container } from 'jojo-typedi';
 import { clone, pick } from 'lodash';
 import { Episode } from '../../database/postgresql/models/Episode';
 import { Loop } from '../../database/postgresql/models/Loop';

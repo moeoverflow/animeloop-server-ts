@@ -1,6 +1,6 @@
-import { Service } from '@jojo/typedi'
+import { Service } from 'jojo-typedi'
 import { Sequelize } from 'sequelize-typescript'
-import { ConfigService } from '../../../core/services/ConfigService'
+import { ConfigService } from '../../../src/core/services/ConfigService'
 
 @Service()
 export class SequelizeService {

@@ -1,4 +1,4 @@
-import { index, prop, Ref, Typegoose } from '@jojo/mongodb'
+import { index, prop, Ref, Typegoose } from 'jojo-mongodb'
 import { Episode } from './Episode'
 import { Series } from './Series'
 
