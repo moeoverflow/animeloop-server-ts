@@ -1,7 +1,7 @@
 require("../init")
 import { AnilistService } from 'jojo-anilist'
 import { Op } from 'jojo-sequelize'
-import { Container } from 'jojo-typedi'
+import { Container } from 'jojo-base'
 import { delay } from 'bluebird'
 import path from 'path'
 import request from 'request-promise-native'

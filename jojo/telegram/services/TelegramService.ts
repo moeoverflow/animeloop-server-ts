@@ -1,6 +1,6 @@
-import { Service } from 'jojo-typedi'
+import { Service } from 'jojo-base'
 import Telegraf, { ContextMessageUpdate } from 'telegraf'
-import { ConfigService } from '../../../src/core/services/ConfigService'
+import { ConfigService } from './ConfigService'
 
 @Service()
 export class TelegramService  {
@@ -9,7 +9,7 @@ export class TelegramService  {
   constructor(
     private configService: ConfigService
   ) {
-    const config = this.configService.config.bot.telegram
+    const config = this.configService.getConfig('telegram')
     this.tg = new Telegraf(config.apiToken)
   }
 }

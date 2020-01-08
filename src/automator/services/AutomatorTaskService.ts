@@ -1,4 +1,4 @@
-import { Service } from 'jojo-typedi'
+import { Service } from 'jojo-base'
 
 @Service()
 export class AutomatorTaskService {

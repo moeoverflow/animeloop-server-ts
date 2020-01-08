@@ -2,7 +2,7 @@ import bluebird from 'bluebird'
 import Queue from 'bull'
 import { ChildProcess } from 'child_process'
 import { existsSync, readFileSync } from 'fs'
-import { Container } from 'jojo-typedi'
+import { Container } from 'jojo-base'
 import log4js from 'log4js'
 import mkdirp from 'mkdirp'
 import path from 'path'
@@ -71,7 +71,7 @@ export async function AnimeloopCliJob(job: Queue.Job<AnimeloopCliJobData>) {
   }
 
   const configService = Container.get(ConfigService)
-  const { animeloopCli } = configService.config
+  const animeloopCli = configService.getConfig("animeloopCli")
 
   let shellString: string = ''
   if (animeloopCli.bin.includes('docker run')) {

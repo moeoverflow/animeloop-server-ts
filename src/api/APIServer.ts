@@ -1,7 +1,7 @@
 require("../init")
 import express, { Router } from 'express'
+import { Inject, Service, useExpressServer } from 'jojo-base'
 import { graphqlHTTP } from 'jojo-graphql'
-import { Inject, Service, useExpressServer } from 'jojo-typedi'
 import path from 'path'
 import { GraphqlService } from '../core/graphql/services/GraphqlService'
 import cors from './middlewares/cors'

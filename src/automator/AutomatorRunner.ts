@@ -1,7 +1,7 @@
+import { Service } from 'jojo-base'
 import { HorribleSubsService } from 'jojo-horrible-subs'
 import { TraceMoeService } from 'jojo-tracemoe'
 import { TransmissionService } from 'jojo-transmission'
-import { Service } from 'jojo-typedi'
 import log4js from 'log4js'
 import schedule from 'node-schedule'
 import path from 'path'
@@ -160,7 +160,7 @@ export default class AutomatorRunner {
     schedule.scheduleJob('3 * * * * *', async () => {
       logger.info('ScheduleJob:add_animeloop_cli_jobs')
 
-      const storage = this.configService.config.storage
+      const storage = this.configService.getConfig("storage")
 
 
       await AutomatorTask.transaction(null, async (transaction) => {

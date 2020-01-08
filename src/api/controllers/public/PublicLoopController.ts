@@ -1,5 +1,5 @@
+import { Get, JsonController, QueryParam } from 'jojo-base'
 import { Sequelize } from 'jojo-sequelize'
-import { Get, JsonController, QueryParam } from 'jojo-typedi'
 import { Collection } from '../../../core/database/postgresql/models/Collection'
 import { CollectionLoop } from '../../../core/database/postgresql/models/CollectionLoop'
 import { Episode } from '../../../core/database/postgresql/models/Episode'

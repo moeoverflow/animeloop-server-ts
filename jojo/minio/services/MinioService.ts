@@ -1,19 +1,13 @@
-import { Service } from 'jojo-typedi'
+import { Service } from 'jojo-base'
 import * as Minio from 'minio'
-import { ConfigService } from '../../../src/core/services/ConfigService'
+import { ConfigService } from './ConfigService'
 
 @Service()
 export class MinioService {
   public minio: Minio.Client
 
   constructor(configService: ConfigService) {
-    const config = configService.config.minio
-    this.minio = new Minio.Client({
-      endPoint: config.endpoint,
-      port: config.port,
-      useSSL: config.useSSL,
-      accessKey: config.accessKey,
-      secretKey: config.secretKey,
-    })
+    const config = configService.getConfig("minio")
+    this.minio = new Minio.Client(config)
   }
 }

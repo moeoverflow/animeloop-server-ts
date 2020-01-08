@@ -1,18 +1,34 @@
-import { Service } from 'jojo-typedi'
-import path from 'path'
+import { BaseConfigService, Service } from 'jojo-base';
+import path from 'path';
+
+interface IConfig {
+  minioS3: {
+    bucketName: string
+    bucketBaseUrl: string,
+  }
+  storage: {
+    dir: {
+      minio: string
+      data: string
+      upload: string
+      raw: string
+      autogen: string
+    },
+  },
+  redis: {
+    host: string
+    port: number
+    auth: string
+    db: number
+  },
+  animeloopCli: {
+    bin: string
+  }
+}
 
 @Service()
-export class ConfigService {
-  public config: any
-
+export class ConfigService extends BaseConfigService<IConfig> {
   constructor() {
-    try {
-      const config = require(path.join(__dirname, '..', '..', '..', 'config.js'))
-      this.config = config
-    } catch (e) {
-      console.error(e)
-      process.exit()
-    }
-
+    super(path.join(__dirname, '../../../config.js'))
   }
 }

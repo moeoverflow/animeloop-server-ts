@@ -1,5 +1,5 @@
 import { IAnilistItem } from 'jojo-anilist'
-import { Service } from 'jojo-typedi'
+import { Service } from 'jojo-base'
 import { padStart } from 'lodash'
 import { SeriesModel } from '../../core/database/mongodb/models/Series'
 

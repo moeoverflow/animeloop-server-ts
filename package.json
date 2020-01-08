@@ -57,6 +57,7 @@
     "typescript-tslint-plugin": "^0.5.4"
   },
   "dependencies": {
+    "jojo-base": "^1.0.0",
     "jojo-anilist": "^1.0.0",
     "jojo-graphql": "^1.0.0",
     "jojo-horrible-subs": "^1.0.0",
@@ -67,7 +68,6 @@
     "jojo-tracemoe": "^1.0.0",
     "jojo-transmission": "^1.0.0",
     "jojo-twitter": "^1.0.0",
-    "jojo-typedi": "^1.0.0",
     "@sentry/node": "5.7.1",
     "async": "^3.1.0",
     "bluebird": "^3.7.1",

@@ -1,16 +1,17 @@
-import Bluebird from 'bluebird'
-import { Service } from 'jojo-typedi'
-import Twit from 'twit'
-import { ConfigService } from '../../../src/core/services/ConfigService'
+import Bluebird from 'bluebird';
+import { Service } from 'jojo-base';
+import Twit from 'twit';
+import { ConfigService } from './ConfigService';
 
 @Service()
 export class TwitterService {
   private twit: Twit
 
   constructor(
-    private configService: ConfigService
+    configService: ConfigService
   ) {
-    const config = this.configService.config.bot.twitter
+
+    const config = configService.getConfig("twitter")
     this.twit = new Twit(config)
   }
 

@@ -1,5 +1,5 @@
 import bluebird from 'bluebird'
-import { Service } from 'jojo-typedi'
+import { Service } from 'jojo-base'
 import log4js from 'log4js'
 import { basename, dirname, extname, join } from 'path'
 import shell from 'shelljs'

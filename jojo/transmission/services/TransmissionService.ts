@@ -1,8 +1,8 @@
 import bluebird from 'bluebird'
-import { Service } from 'jojo-typedi'
+import { Service } from 'jojo-base'
 import log4js from 'log4js'
 import Transmission from 'transmission'
-import { ConfigService } from '../../../src/core/services/ConfigService'
+import { ConfigService } from './ConfigService'
 
 const logger = log4js.getLogger('Automator:Service:TransmissionService')
 
@@ -24,8 +24,8 @@ export class TransmissionService {
   constructor(
     private configService: ConfigService
   ) {
-    const { host, port, username, password, ssl, url } = this.configService.config.transmission
-    this.transmission = new Transmission({ host, port, username, password, ssl, url })
+    const config = this.configService.getConfig("transmission")
+    this.transmission = new Transmission(config)
   }
 
   async findSeedingTasks(): Promise<any[]> {
@@ -37,7 +37,7 @@ export class TransmissionService {
 
   async addUrl(url: string) {
     logger.info('fetch HorribleSubs data')
-    const downloadDir = this.configService.config.transmission
+    const { downloadDir } = this.configService.getConfig("transmission")
     return (await bluebird.fromCallback((callback: any) => {
       this.transmission.addUrl(url, {
         'download-dir': downloadDir

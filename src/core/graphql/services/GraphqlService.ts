@@ -1,5 +1,5 @@
+import { Container, Service } from 'jojo-base';
 import { buildSchema } from 'jojo-graphql';
-import { Container, Service } from 'jojo-typedi';
 import { EpisodeResolver } from '../resolvers/EpisodeResolver';
 import { LoopResolver } from '../resolvers/LoopResolver';
 import { SeriesResolver } from '../resolvers/SeriesResolver';

@@ -1,8 +1,8 @@
-import { Service } from 'jojo-typedi'
+import { Service } from 'jojo-base'
 import log4js from 'log4js'
 import { DateTime } from 'luxon'
 import Parser from 'rss-parser'
-import { ConfigService } from '../../../src/core/services/ConfigService'
+import { ConfigService } from './ConfigService'
 
 const logger = log4js.getLogger('Automator:Service:HorribleSubsService')
 logger.level = 'debug'
@@ -26,7 +26,7 @@ export class HorribleSubsService {
 
   async fetchRss(limit: number = Number.MAX_VALUE) {
     logger.info('fetch HorribleSubs data')
-    const { blacklist, rss, delayDays } = this.configService.config.horribleSubs
+    const { blacklist, rss, delayDays } = this.configService.getConfig("horribleSubs")
     const parser = new Parser()
     try {
       const feed = await parser.parseURL(rss) as { items: IHorribleSubsItem[] }

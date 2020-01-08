@@ -1,7 +1,7 @@
 import { AnilistService } from 'jojo-anilist'
+import { Inject, Service } from 'jojo-base'
 import { MinioService } from 'jojo-minio'
 import { Transaction } from 'jojo-sequelize'
-import { Inject, Service } from 'jojo-typedi'
 import log4js from 'log4js'
 import { DateTime } from 'luxon'
 import path from 'path'

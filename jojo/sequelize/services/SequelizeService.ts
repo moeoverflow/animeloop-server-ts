@@ -1,20 +1,20 @@
-import { Service } from 'jojo-typedi'
+import { Service } from 'jojo-base'
 import { Sequelize } from 'sequelize-typescript'
-import { ConfigService } from '../../../src/core/services/ConfigService'
+import { ConfigService } from './ConfigService'
 
 @Service()
 export class SequelizeService {
   public sequelize: Sequelize
 
   constructor(configService: ConfigService) {
-    const sequelizeConfig = configService.config.sequelize
+    const config = configService.getConfig("sequelize")
     this.sequelize = new Sequelize({
-      database: sequelizeConfig.database,
-      dialect: sequelizeConfig.dialect,
-      username: sequelizeConfig.username,
-      password: sequelizeConfig.password,
-      port: sequelizeConfig.port,
-      host: sequelizeConfig.host,
+      database: config.database,
+      dialect: config.dialect,
+      username: config.username,
+      password: config.password,
+      port: config.port,
+      host: config.host,
       models: [],
     })
   }

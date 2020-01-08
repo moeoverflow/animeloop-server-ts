@@ -38,6 +38,7 @@
     "ban-types": false,
     "no-var-requires": false,
     "no-implicit-dependencies": [true, [
+      "jojo-base",
       "jojo-anilist",
       "jojo-graphql",
       "jojo-horrible-subs",
@@ -47,8 +48,7 @@
       "jojo-telegram",
       "jojo-tracemoe",
       "jojo-transmission",
-      "jojo-twitter",
-      "jojo-typedi"
+      "jojo-twitter"
     ]],
     "no-angle-bracket-type-assertion": false,
     "semicolon": false,

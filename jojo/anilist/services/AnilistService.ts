@@ -1,5 +1,5 @@
 
-import { Service } from 'jojo-typedi';
+import { Service } from 'jojo-base';
 import { DateTime } from 'luxon';
 import request from 'request-promise-native';
 import { Series, SeriesType } from '../../../src/core/database/postgresql/models/Series';

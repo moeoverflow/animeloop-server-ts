@@ -1,15 +1,15 @@
+import { Container } from 'jojo-base';
 import { Arg, Args, FieldResolver, GraphQLJSON, IRequestFields, PaginationArgs, Query, RequestFields, Resolver, Root } from "jojo-graphql";
-import { IncludeOptions, Sequelize } from 'jojo-sequelize';
-import { Container } from 'jojo-typedi';
+import { IncludeOptions, Op, Sequelize } from 'jojo-sequelize';
 import { clone, pick } from 'lodash';
+import { Collection } from '../../database/postgresql/models/Collection';
+import { CollectionLoop } from '../../database/postgresql/models/CollectionLoop';
 import { Episode } from '../../database/postgresql/models/Episode';
 import { Loop } from '../../database/postgresql/models/Loop';
 import { Series } from '../../database/postgresql/models/Series';
 import { MinioS3Service } from '../../services/MinioS3Service';
 import { GetLoopArgs } from '../args/LoopArgs';
 import { LoopObjectType } from '../types/LoopObjectType';
-import { CollectionLoop } from '../../database/postgresql/models/CollectionLoop';
-import { Collection } from '../../database/postgresql/models/Collection';
 
 function includeHelper(requestFields: IRequestFields, separate: boolean = false): IncludeOptions[] | undefined {
   if (!requestFields) return undefined

@@ -1,7 +1,7 @@
-import { Service } from 'jojo-typedi'
+import { Service } from 'jojo-base'
 import request from 'request-promise-native'
 import { getBase64 } from '../../../src/automator/utils/getBase64'
-import { ConfigService } from '../../../src/core/services/ConfigService'
+import { ConfigService } from './ConfigService'
 
 export interface ITraceMoeDoc {
   from: number
@@ -44,7 +44,7 @@ export class TraceMoeService {
   ) {}
 
   async searchImage(file: Buffer): Promise<ITraceMoeItem> {
-    const { url, token } = this.configService.config.traceMoe
+    const { url, token } = this.configService.getConfig("traceMoe")
     const base64image = await getBase64(file)
     const result = await request.post({
       url: `${url}?token=${token}`,

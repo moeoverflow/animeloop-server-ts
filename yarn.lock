@@ -1283,6 +1283,11 @@ entities@^1.1.1:
   resolved "https://registry.yarnpkg.com/entities/-/entities-1.1.2.tgz#bdfa735299664dfafd34529ed4f8522a275fea56"
   integrity sha512-f2LZMYl1Fzu7YSBKg+RoROelpOaNrcGmE9AZubeDfrCEia483oW4MI4VyFd5VNHIgQ/7qm1I0wUHK1eJnn2y2w==
 
+errorjs@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/errorjs/-/errorjs-1.0.2.tgz#a233d20c8ef5485309ac7488416465b6646189a3"
+  integrity sha512-2nUJ+LrCQsCSmvyLdq1ug3hYnns6ESu9apoQ//pp+gcR4NyCSnkX++HsLZYmMrNYQi8wQCtGwGyvMi5dpG9gBQ==
+
 es-abstract@^1.13.0, es-abstract@^1.5.1:
   version "1.16.0"
   resolved "https://registry.yarnpkg.com/es-abstract/-/es-abstract-1.16.0.tgz#d3a26dc9c3283ac9750dca569586e976d9dcc06d"
