@@ -22,20 +22,20 @@
     "db:sync": "node dist/entrypoints/syncer.js"
   },
   "workspaces": [
-    "src/@jojo/*"
+    "src/jojo/*"
   ],
   "_moduleAliases": {
-    "@jojo/typedi": "dist/@jojo/typedi/index",
-    "@jojo/sequelize": "dist/@jojo/sequelize/index",
-    "@jojo/mongodb": "dist/@jojo/mongodb/index",
-    "@jojo/graphql": "dist/@jojo/graphql/index",
-    "@jojo/anilist": "dist/@jojo/anilist/index",
-    "@jojo/tracemoe": "dist/@jojo/tracemoe/index",
-    "@jojo/transmission": "dist/@jojo/transmission/index",
-    "@jojo/horribleSubs": "dist/@jojo/horribleSubs/index",
-    "@jojo/minio": "dist/@jojo/minio/index",
-    "@jojo/twitter": "dist/@jojo/twitter/index",
-    "@jojo/telegram": "dist/@jojo/telegram/index"
+    "jojo-base": "dist/jojo/base/index",
+    "jojo-sequelize": "dist/jojo/sequelize/index",
+    "jojo-mongodb": "dist/jojo/mongodb/index",
+    "jojo-graphql": "dist/jojo/graphql/index",
+    "jojo-anilist": "dist/jojo/anilist/index",
+    "jojo-tracemoe": "dist/jojo/tracemoe/index",
+    "jojo-transmission": "dist/jojo/transmission/index",
+    "jojo-horrible-subs": "dist/jojo/horribleSubs/index",
+    "jojo-minio": "dist/jojo/minio/index",
+    "jojo-twitter": "dist/jojo/twitter/index",
+    "jojo-telegram": "dist/jojo/telegram/index"
   },
   "typings": "types",
   "devDependencies": {
@@ -63,7 +63,6 @@
     "chai": "^4.2.0",
     "mocha": "^6.2.2",
     "mocha-steps": "^1.1.0",
-    "module-alias": "^2.2.2",
     "nodemon": "^1.19.4",
     "ts-node": "^8.4.1",
     "tslint": "^5.20.0",
@@ -84,6 +83,7 @@
     "log4js": "^5.3.0",
     "luxon": "^1.21.0",
     "mkdirp": "^0.5.1",
+    "module-alias": "^2.2.2",
     "multer": "^1.4.2",
     "node-schedule": "^1.3.2",
     "reflect-metadata": "^0.1.12",

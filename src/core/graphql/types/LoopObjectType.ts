@@ -1,4 +1,4 @@
-import { Field, GraphQLJSON, ID, ObjectType, registerEnumType } from "@jojo/graphql";
+import { Field, GraphQLJSON, ID, ObjectType, registerEnumType } from "jojo-graphql";
 import { Episode } from '../../database/postgresql/models/Episode';
 import { LoopFiles, LoopSource } from '../../database/postgresql/models/Loop';
 import { Series } from '../../database/postgresql/models/Series';

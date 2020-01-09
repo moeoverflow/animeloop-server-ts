@@ -1,5 +1,5 @@
 require("../init")
-import { Container } from '@jojo/typedi'
+import { Container } from 'jojo-base'
 import AutomatorRunner from '../automator/AutomatorRunner'
 
 const automatorRunner = Container.get(AutomatorRunner)

@@ -1,6 +1,6 @@
 require("../init")
-import { SequelizeService } from '@jojo/sequelize'
-import { Container, Inject } from '@jojo/typedi'
+import { Container, Inject } from 'jojo-base'
+import { SequelizeService } from 'jojo-sequelize'
 
 export class SequelizeSyncer {
   @Inject() sequelizeService: SequelizeService

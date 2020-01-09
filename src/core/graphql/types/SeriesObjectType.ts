@@ -1,5 +1,5 @@
-import { IAnilistItem } from '@jojo/anilist';
-import { BaseObjectType, Field, GraphQLJSON, GraphQLString, ObjectType, registerEnumType } from "@jojo/graphql";
+import { IAnilistItem } from 'jojo-anilist';
+import { BaseObjectType, Field, GraphQLJSON, GraphQLString, ObjectType, registerEnumType } from "jojo-graphql";
 import { SeriesType } from '../../database/postgresql/models/Series';
 
 registerEnumType(SeriesType, {

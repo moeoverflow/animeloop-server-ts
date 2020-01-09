@@ -16,7 +16,7 @@
       "*": [
         "node_modules/*",
       ],
-      "@jojo/*": ["@jojo/*/index"],
+      "jojo-*": ["src/jojo/*/index"],
     },
     "lib": [
       "es5",

@@ -1,14 +1,13 @@
 # project
 storage
+src/config.ts
+config.js
 
 # VS Code
 .vscode
 
 # JetBrains
 .idea
-
-# Config
-config.js
 
 # TypeScript
 dist

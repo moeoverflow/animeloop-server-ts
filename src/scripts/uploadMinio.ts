@@ -1,6 +1,6 @@
 require("../init")
-import { MinioService } from '@jojo/minio'
-import { Container } from '@jojo/typedi'
+import { MinioService } from 'jojo-minio'
+import { Container } from 'jojo-base'
 import { DateTime } from 'luxon'
 import path from 'path'
 import uuid from 'uuid'
@@ -9,6 +9,7 @@ import { ConfigService } from '../core/services/ConfigService'
 
 const minioService = Container.get(MinioService)
 const configService = Container.get(ConfigService)
+const storage = configService.getConfig("storage")
 
 async function uploadMinio() {
   const loops = await LoopModel.find({
@@ -31,7 +32,7 @@ async function uploadMinio() {
     const id = uuid.v4()
     for (const [type, ext] of data) {
       if (loop.files && loop.files[type]) continue
-      const filepath = path.join(configService.config.storage.dir.data, type, `${loop._id}.${ext}`)
+      const filepath = path.join(storage.dir.data, type, `${loop._id}.${ext}`)
       const dateString = DateTime.fromJSDate(loop.uploadDate).toFormat('yyyy-MM-dd')
       const objectName = `loops/${dateString}/${type}/${id}.${ext}`
       try {

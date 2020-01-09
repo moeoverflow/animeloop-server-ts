@@ -1,10 +1,18 @@
-require('module-alias/register')
-import { MongodbService } from '@jojo/mongodb'
-import { SequelizeService } from '@jojo/sequelize'
-import { Container } from '@jojo/typedi'
+// tslint:disable: ordered-imports
+require('module-alias/register');
+
 import path from 'path'
 import 'reflect-metadata'
 
-Container.get(MongodbService)
+// set global container variables
+import { Container } from 'jojo-base'
+Container.set('project_config_filepath', path.join(__dirname, './config.js'))
+
+// initial MongoDB
+// import { MongodbService } from 'jojo-mongodb'
+// Container.get(MongodbService)
+
+// initial PostgreSQL
+import { SequelizeService } from 'jojo-sequelize'
 const sequelizeService = Container.get(SequelizeService)
 sequelizeService.sequelize.addModels([path.join(__dirname, './core/database/postgresql/models/*.[tj]s')])

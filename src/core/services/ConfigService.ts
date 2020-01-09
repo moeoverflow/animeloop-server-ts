@@ -1,18 +1,9 @@
-import { Service } from '@jojo/typedi'
-import path from 'path'
+import { BaseConfigService, Container, Service } from 'jojo-base';
+import { IProjectConfig } from '../../headers/config.h';
 
 @Service()
-export class ConfigService {
-  public config: any
-
+export class ConfigService extends BaseConfigService<IProjectConfig> {
   constructor() {
-    try {
-      const config = require(path.join(__dirname, '..', '..', '..', 'config.js'))
-      this.config = config
-    } catch (e) {
-      console.error(e)
-      process.exit()
-    }
-
+    super(Container.get("project_config_filepath"))
   }
 }

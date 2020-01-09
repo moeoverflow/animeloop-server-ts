@@ -1,4 +1,4 @@
-import { autoIncrement, index, plugin, prop, Typegoose } from '@jojo/mongodb'
+import { autoIncrement, index, plugin, prop, Typegoose } from 'jojo-mongodb'
 
 @index({ uid: 1 })
 @plugin(autoIncrement.plugin, { model: 'User', field: 'uid' })

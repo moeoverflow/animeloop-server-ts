@@ -1,5 +1,5 @@
 
-import { ArgsType, Field } from '@jojo/graphql';
+import { ArgsType, Field } from 'jojo-graphql';
 import { LoopSource } from '../../database/postgresql/models/Loop';
 @ArgsType()
 export class GetLoopArgs {

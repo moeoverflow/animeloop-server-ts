@@ -1,4 +1,4 @@
-import { Column, Model, Table } from '@jojo/sequelize';
+import { Column, Model, Table } from 'jojo-sequelize';
 
 @Table
 export class User extends Model<User> {

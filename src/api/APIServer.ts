@@ -1,21 +1,24 @@
 require("../init")
-import { graphqlHTTP } from '@jojo/graphql'
-import { Inject, Service, useExpressServer } from '@jojo/typedi'
 import express, { Router } from 'express'
+import { Inject, Service, useExpressServer } from 'jojo-base'
+import { graphqlHTTP } from 'jojo-graphql'
 import path from 'path'
 import { GraphqlService } from '../core/graphql/services/GraphqlService'
+import { ConfigService } from '../core/services/ConfigService'
 import cors from './middlewares/cors'
 
 @Service()
 export default class APIServer {
 
   @Inject() graphqlService: GraphqlService
+  @Inject() configService: ConfigService
 
   constructor(
   ) {
   }
 
   async run() {
+    const config = this.configService.getConfig("api")
     const app = express()
     const router = Router()
     useExpressServer(router, {
@@ -42,6 +45,6 @@ export default class APIServer {
       }),
     );
 
-    app.listen(8970)
+    app.listen(config.port, config.host)
   }
 }

@@ -1,0 +1,19 @@
+{
+  "name": "jojo-mongodb",
+  "version": "1.0.0",
+  "main": "index.js",
+  "private": true,
+  "dependencies": {
+    "mongodb": "^3.3.3",
+    "typegoose": "^5.4.1",
+    "mongoose": "^5.3.7",
+    "mongoose-auto-increment": "^5.0.1",
+    "mongoose-findorcreate": "^3.0.0",
+    "typedi": "^0.8.0"
+  },
+  "devDependencies": {
+    "@types/mongodb": "^3.1.14",
+    "@types/mongoose": "^5.2.20",
+    "@types/mongoose-auto-increment": "^5.0.30"
+  }
+}

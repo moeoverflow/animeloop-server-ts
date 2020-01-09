@@ -1,4 +1,4 @@
-import { BaseParanoidModel, BelongsTo, Column, ForeignKey, Sequelize, Table } from '@jojo/sequelize';
+import { BaseParanoidModel, BelongsTo, Column, ForeignKey, Sequelize, Table } from 'jojo-sequelize';
 import { Series } from './Series';
 
 @Table({

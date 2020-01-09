@@ -1,6 +1,6 @@
-import { IAnilistItem } from '@jojo/anilist';
-import { BelongsTo, Column, enumWords, ForeignKey, Sequelize, StateMachineParanoidModel, Table } from '@jojo/sequelize';
-import { ITraceMoeItem } from '@jojo/tracemoe';
+import { IAnilistItem } from 'jojo-anilist';
+import { BelongsTo, Column, enumWords, ForeignKey, Sequelize, StateMachineParanoidModel, Table } from 'jojo-sequelize';
+import { ITraceMoeItem } from 'jojo-tracemoe';
 import { IAnimeloopCliOutput } from '../../../../automator/jobs/AnimeloopCliJob';
 import { AutomatorTask } from './AutomatorTask';
 

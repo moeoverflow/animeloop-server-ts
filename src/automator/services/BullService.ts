@@ -1,5 +1,5 @@
-import { Service } from '@jojo/typedi'
 import Queue from 'bull'
+import { Service } from 'jojo-base'
 import log4js from 'log4js'
 import { ConfigService } from '../../core/services/ConfigService'
 import { AnimeloopCliJob, AnimeloopCliJobData } from '../jobs/AnimeloopCliJob'
@@ -26,7 +26,7 @@ export class BullService {
   constructor(
     private configService: ConfigService
   ) {
-    const { host, port, db } = this.configService.config.redis
+    const { host, port, db } = this.configService.getConfig("redis")
     this.animeloopCliQueue = new Queue(`Animeloop-${Jobs.AnimeloopCli}`, { redis: { host, port, db }})
     this.fetchInfoQueue = new Queue(`Animeloop-${Jobs.FetchInfo}`, { redis: { host, port, db }})
     this.convertQueue = new Queue(`Animeloop-${Jobs.Convert}`, { redis: { host, port, db }})

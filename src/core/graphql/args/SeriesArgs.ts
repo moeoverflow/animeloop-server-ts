@@ -1,5 +1,5 @@
 
-import { ArgsType, Field } from '@jojo/graphql';
+import { ArgsType, Field } from 'jojo-graphql';
 
 @ArgsType()
 export class GetSeriesArgs {

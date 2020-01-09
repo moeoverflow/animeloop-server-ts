@@ -1,4 +1,4 @@
-import { prop, Ref, Typegoose } from '@jojo/mongodb'
+import { prop, Ref, Typegoose } from 'jojo-mongodb'
 import { Loop } from './Loop'
 
 export class Tag extends Typegoose {

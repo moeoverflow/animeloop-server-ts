@@ -1,4 +1,4 @@
-import { findOrCreate, InstanceType, plugin, prop, Typegoose } from '@jojo/mongodb'
+import { findOrCreate, InstanceType, plugin, prop, Typegoose } from 'jojo-mongodb'
 
 @plugin(findOrCreate)
 export class Series extends Typegoose {

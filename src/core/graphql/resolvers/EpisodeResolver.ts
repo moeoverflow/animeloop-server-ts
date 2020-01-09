@@ -1,5 +1,5 @@
-import { Arg, Args, IRequestFields, PaginationArgs, Query, RequestFields, Resolver } from "@jojo/graphql";
-import { IncludeOptions } from '@jojo/sequelize';
+import { Arg, Args, IRequestFields, PaginationArgs, Query, RequestFields, Resolver } from "jojo-graphql";
+import { IncludeOptions } from 'jojo-sequelize';
 import { Episode } from '../../database/postgresql/models/Episode';
 import { Series } from '../../database/postgresql/models/Series';
 import { GetEpisodeArgs } from '../args/EpisodeArgs';
