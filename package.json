@@ -32,7 +32,7 @@
     "jojo-anilist": "dist/jojo/anilist/index",
     "jojo-tracemoe": "dist/jojo/tracemoe/index",
     "jojo-transmission": "dist/jojo/transmission/index",
-    "jojo-horribleSubs": "dist/jojo/horribleSubs/index",
+    "jojo-horrible-subs": "dist/jojo/horribleSubs/index",
     "jojo-minio": "dist/jojo/minio/index",
     "jojo-twitter": "dist/jojo/twitter/index",
     "jojo-telegram": "dist/jojo/telegram/index"
