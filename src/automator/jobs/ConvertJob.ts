@@ -58,15 +58,12 @@ export async function ConvertJob(job: Queue.Job<ConvertJobData>) {
     }
   }
 
+  await animeloopTask.update({
+    output,
+  })
+
   await animeloopTask.transit(
     AnimeloopTaskStatus.Converting,
     AnimeloopTaskStatus.Converted,
-    async (animeloopTask, transaction) => {
-      await animeloopTask.update({
-        output,
-      }, { transaction })
-    }
   )
-
-  await job.progress(100)
 }
