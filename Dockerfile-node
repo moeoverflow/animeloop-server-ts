@@ -1,9 +1,11 @@
-FROM node:12-alpine
+FROM node:12
 
 WORKDIR /usr/src/app
 
 COPY . .
 COPY package*.json .
 
-RUN yarn \
-&& yarn build
+RUN yarn
+RUN yarn build
+
+EXPOSE 7775

@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  animeloop-telegrambot:
+    container_name: animeloop-telegrambot
+    build:
+      context: .
+      dockerfile: ./Dockerfile-node
+    networks:
+      - postgres_default
+      - redis_default
+    command: yarn start:telegrambot
+networks:
+  postgres_default:
+    external: true
+  redis_default:
+    external: true

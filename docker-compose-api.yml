@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  animeloop-api:
+    container_name: animeloop-api
+    build:
+      context: .
+      dockerfile: ./Dockerfile-node
+    ports:
+      - 7775:7775
+    networks:
+      - postgres_default
+      - redis_default
+    command: yarn start:api
+networks:
+  postgres_default:
+    external: true
+  redis_default:
+    external: true
