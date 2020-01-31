@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  animeloop-automator:
+    container_name: animeloop-automator
+    build:
+      context: .
+      dockerfile: ./Dockerfile-automator
+    networks:
+      - postgres_default
+      - redis_default
+    command: yarn start:automator
+networks:
+  postgres_default:
+    external: true
+  redis_default:
+    external: true

@@ -2,6 +2,10 @@
 storage
 src/config.ts
 config.js
+docker-compose-api.yml
+docker-compose-automator.yml
+docker-compose-telegrambot.yml
+docker-compose-twitterbot.yml
 
 # VS Code
 .vscode

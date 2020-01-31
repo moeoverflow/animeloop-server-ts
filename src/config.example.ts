@@ -11,6 +11,12 @@ const config: IConfig = {
     username: 'root',
     password: 'password',
   },
+  redis: {
+    host: '127.0.0.1',
+    port: 6379,
+    auth: '',
+    db: 10
+  },
   minio: {
     endPoint: '127.0.0.1',
     port: 9000,
@@ -58,17 +64,11 @@ const config: IConfig = {
    */
   api: {
     host: '127.0.0.1',
-    port: 7775,
+    port: 8080,
   },
   automator: {},
   twitterBot: {},
   telegramBot: {},
-  redis: {
-    host: '127.0.0.1',
-    port: 6379,
-    auth: '',
-    db: 10
-  },
   minioS3: {
     bucketName: 'animeloop-dev',
     bucketBaseUrl: 'http://127.0.0.1:9000',
