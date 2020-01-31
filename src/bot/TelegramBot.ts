@@ -47,7 +47,7 @@ export default class TelegramBot {
       })
       if (!collection) throw new Error('collection_not_found')
       const doc = {
-        uuid: loopId,
+        loopId: loop.id,
         collectionId: collection.id,
       }
       await CollectionLoop.findOrCreate({
