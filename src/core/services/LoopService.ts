@@ -34,17 +34,17 @@ export class LoopService {
         throw new errors.NotFoundError('collection_not_found')
       }
       const ids = await CollectionLoop.sequelize.query(`
-        SELECT "CollectionLoop"."id"
+        SELECT "CollectionLoop"."loopId"
         FROM  (
             SELECT DISTINCT 1 + trunc(random() * ${estimateCount})::integer AS id
-            FROM   generate_series(1, 1000) g
+            FROM   generate_series(1, ${conditions.limit * 2}) g
             ) r
         JOIN   "CollectionLoop" USING (id)
         INNER JOIN "Loop" ON "Loop"."id" = "CollectionLoop"."loopId"
         WHERE "CollectionLoop"."collectionId" = ${collectionId}
         LIMIT ${conditions.limit};
       `)
-      return ids[0].map((i: any) => i.id)
+      return ids[0].map((i: any) => i.loopId)
     } else {
       const estimateCountResult = await Loop.sequelize.query(`
         SELECT reltuples::bigint AS estimate FROM pg_class where relname='Loop';
@@ -54,7 +54,7 @@ export class LoopService {
         SELECT "Loop"."id"
         FROM  (
             SELECT DISTINCT 1 + trunc(random() * ${estimateCount})::integer AS id
-            FROM   generate_series(1, 1000) g
+            FROM   generate_series(1, ${conditions.limit * 2}) g
             ) r
         JOIN   "Loop" USING (id)
         LIMIT ${conditions.limit};
