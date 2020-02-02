@@ -1,14 +1,15 @@
-import { Container } from 'jojo-base';
+import { Container, Inject } from 'jojo-base';
 import { Arg, Args, FieldResolver, GraphQLJSON, IRequestFields, PaginationArgs, Query, RequestFields, Resolver, Root } from "jojo-graphql";
-import { IncludeOptions, Op, Sequelize } from 'jojo-sequelize';
+import { IncludeOptions, Op } from 'jojo-sequelize';
 import { clone, pick } from 'lodash';
 import { Collection } from '../../database/postgresql/models/Collection';
 import { CollectionLoop } from '../../database/postgresql/models/CollectionLoop';
 import { Episode } from '../../database/postgresql/models/Episode';
 import { Loop } from '../../database/postgresql/models/Loop';
 import { Series } from '../../database/postgresql/models/Series';
+import { LoopService } from '../../services/LoopService';
 import { MinioS3Service } from '../../services/MinioS3Service';
-import { GetLoopArgs } from '../args/LoopArgs';
+import { GetLoopArgs, GetRandomLoopArgs } from '../args/LoopArgs';
 import { LoopObjectType } from '../types/LoopObjectType';
 
 function includeHelper(requestFields: IRequestFields, separate: boolean = false): IncludeOptions[] | undefined {
@@ -31,6 +32,8 @@ function includeHelper(requestFields: IRequestFields, separate: boolean = false)
 
 @Resolver(LoopObjectType)
 export class LoopResolver {
+
+  @Inject(() => LoopService) loopService: LoopService
 
   constructor() {}
 
@@ -70,17 +73,19 @@ export class LoopResolver {
 
   @Query(() => [LoopObjectType])
   async randomLoops(
-    @Arg("limit") limit: number,
-    @Args() args: GetLoopArgs,
+    @Arg("limit", { defaultValue: 12 }) limit: number,
+    @Args() args: GetRandomLoopArgs,
     @RequestFields() requestFields: IRequestFields,
   ) {
-    const loopIds = await this.getCollectionLoopIds(args)
+    const loopIds = await this.loopService.findRandomIds({
+      ...args,
+      limit: limit,
+    })
+    if (loopIds.length === 0) return []
     const loops = await Loop.findAll({
       where: {
-        ...(loopIds ? { id: { [Op.in]: loopIds }} : {}),
+        id: { [Op.in]: loopIds }
       },
-      order: Sequelize.literal('random()'),
-      limit: limit,
       include: includeHelper(requestFields.randomLoops),
     })
     return loops
