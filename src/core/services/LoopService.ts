@@ -36,13 +36,13 @@ export class LoopService {
       const ids = await CollectionLoop.sequelize.query(`
         SELECT "CollectionLoop"."loopId"
         FROM  (
-            SELECT DISTINCT 1 + trunc(random() * ${estimateCount})::integer AS id
-            FROM   generate_series(1, ${conditions.limit * 2}) g
+            SELECT DISTINCT 1 + trunc(random() * ${Number(estimateCount)})::integer AS id
+            FROM   generate_series(1, ${Number(conditions.limit * 2)}) g
             ) r
         JOIN   "CollectionLoop" USING (id)
         INNER JOIN "Loop" ON "Loop"."id" = "CollectionLoop"."loopId"
-        WHERE "CollectionLoop"."collectionId" = ${collectionId}
-        LIMIT ${conditions.limit};
+        WHERE "CollectionLoop"."collectionId" = ${Number(collectionId)}
+        LIMIT ${Number(conditions.limit)};
       `)
       return ids[0].map((i: any) => i.loopId)
     } else {
@@ -53,11 +53,11 @@ export class LoopService {
       const ids = await Loop.sequelize.query(`
         SELECT "Loop"."id"
         FROM  (
-            SELECT DISTINCT 1 + trunc(random() * ${estimateCount})::integer AS id
-            FROM   generate_series(1, ${conditions.limit * 2}) g
+            SELECT DISTINCT 1 + trunc(random() * ${Number(estimateCount)})::integer AS id
+            FROM   generate_series(1, ${Number(conditions.limit * 2)}) g
             ) r
         JOIN   "Loop" USING (id)
-        LIMIT ${conditions.limit};
+        LIMIT ${Number(conditions.limit)};
       `)
       return ids[0].map((i: any) => i.id)
     }
