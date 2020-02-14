@@ -19,3 +19,13 @@ export class GetLoopArgs {
   @Field({ nullable: true })
   collectionSlug?: string;
 }
+
+@ArgsType()
+export class GetRandomLoopArgs {
+
+  @Field({ nullable: true })
+  collectionId?: number;
+
+  @Field({ nullable: true })
+  collectionSlug?: string;
+}

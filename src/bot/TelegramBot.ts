@@ -35,7 +35,7 @@ export default class TelegramBot {
 
       const postContent = ctx.update.channel_post.text
 
-      if (!postContent.startsWith('https://animeloop.org/loop')) return
+      if (!postContent || !postContent.startsWith('https://animeloop.org/loop')) return
       const splited = postContent.split('/')
       const loopId = splited[splited.length - 1].slice(0, 36)
       const loop = await Loop.findOne({ where: { uuid: loopId } })

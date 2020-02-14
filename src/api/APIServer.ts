@@ -1,11 +1,13 @@
 require("../init")
 import express, { Router } from 'express'
-import { Inject, Service, useExpressServer } from 'jojo-base'
+import { Container, Inject, Service, useContainer, useExpressServer } from 'jojo-base'
 import { graphqlHTTP } from 'jojo-graphql'
 import path from 'path'
 import { GraphqlService } from '../core/graphql/services/GraphqlService'
 import { ConfigService } from '../core/services/ConfigService'
 import cors from './middlewares/cors'
+
+useContainer(Container);
 
 @Service()
 export default class APIServer {

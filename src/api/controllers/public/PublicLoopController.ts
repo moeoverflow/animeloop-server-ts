@@ -1,38 +1,25 @@
-import { Get, JsonController, QueryParam } from 'jojo-base'
-import { Sequelize } from 'jojo-sequelize'
-import { Collection } from '../../../core/database/postgresql/models/Collection'
-import { CollectionLoop } from '../../../core/database/postgresql/models/CollectionLoop'
+import { Get, Inject, JsonController, QueryParam } from 'jojo-base'
+import { Op } from 'jojo-sequelize'
 import { Episode } from '../../../core/database/postgresql/models/Episode'
 import { Loop } from '../../../core/database/postgresql/models/Loop'
 import { Series } from '../../../core/database/postgresql/models/Series'
+import { LoopService } from '../../../core/services/LoopService'
 import { injectLoopsFileUrl } from '../../../utils/injectLoopsFileUrl'
 
 @JsonController('/loops')
 export class PublicLoopController {
 
+  @Inject(() => LoopService) loopService: LoopService
+
   @Get('/best/rand')
   async getLoops(
-    @QueryParam('n') n: number
+    @QueryParam('limit') limit: number
   ) {
-    const collection = await Collection.findOne({
-      where: {
-        slug: 'telegram-channel-the-best-animeloop',
-      }
-    })
-    if (!collection) throw new Error('collection_not_found')
-    const collectionLoops = await CollectionLoop.findAll({
-      where: {
-        collectionId: collection.id,
-      },
-      order: Sequelize.literal('random()'),
-      limit: n ? Math.min(n, 100) : 100,
-      attributes: ['loopId'],
-      include: [Loop],
-    })
-    const loopIds = collectionLoops.map((i) => i.loopId)
+
+    const loopIds = await this.loopService.findRandomIds({ limit: limit || 12, collectionId: 1 })
     const loops = await Loop.findAll({
       where: {
-        id: loopIds,
+        id: { [Op.in]: loopIds },
       },
       include: [Series, Episode],
     })
