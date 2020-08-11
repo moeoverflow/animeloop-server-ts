@@ -5,7 +5,7 @@
   "private": true,
   "dependencies": {
     "typedi": "^0.8.0",
-    "request-promise-native": "^1.0.7"
+    "request-promise-native": "^1.0.9"
   },
   "devDependencies": {
     "@types/request-promise-native": "^1.0.17"
