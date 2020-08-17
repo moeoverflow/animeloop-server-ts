@@ -1938,12 +1938,10 @@ ignore-walk@^3.0.1:
   dependencies:
     minimatch "^3.0.4"
 
-image-downloader@^3.5.0:
-  version "3.5.0"
-  resolved "https://registry.yarnpkg.com/image-downloader/-/image-downloader-3.5.0.tgz#88c437f83b28817e09b400d5ab1f0f753410135d"
-  integrity sha512-7n6xFEcelGaJHy3Zq/D/H78BOZtdTo2f7KiI5vxGkvJT0pcz/7LcDShSr3MwRudgIG9/QY0mxEakQ9SAExFMzg==
-  dependencies:
-    request "^2.88.0"
+image-downloader@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/image-downloader/-/image-downloader-4.0.1.tgz#2cf211107050595ed1f99af4531ebea4aeea3dfc"
+  integrity sha512-VfjlMHx1DDPN27x6IC15+6oejeG0A1S955r7oF4rsxqAh8+ygJ3avK8yi8pJztz5qir/x1dFV+eCIy3155byhg==
 
 import-lazy@^2.1.0:
   version "2.1.0"
@@ -3539,7 +3537,7 @@ request-promise-native@^1.0.9:
     stealthy-require "^1.1.1"
     tough-cookie "^2.3.3"
 
-request@^2.68.0, request@^2.88.0:
+request@^2.68.0:
   version "2.88.0"
   resolved "https://registry.yarnpkg.com/request/-/request-2.88.0.tgz#9c2fca4f7d35b592efe57c7f0a55e81052124fef"
   integrity sha512-NAqBSrijGLZdM0WZNsInLJpkJokL72XYjUpnB0iwsRgxh7dB6COrHnTBNwN0E+lHDAJzu7kLAkDeY08z2/A0hg==
