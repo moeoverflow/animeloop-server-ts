@@ -1,7 +1,7 @@
 export * from "type-graphql";
 export { GraphQLResolveInfo, GraphQLString } from 'graphql';
 
-import graphqlHTTP from 'express-graphql';
+import { graphqlHTTP } from 'express-graphql';
 export { graphqlHTTP }
 
 export { GraphQLJSON, GraphQLJSONObject }from 'graphql-type-json';
