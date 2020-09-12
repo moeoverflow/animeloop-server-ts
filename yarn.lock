@@ -3713,10 +3713,10 @@ tough-cookie@~2.4.3:
     psl "^1.1.24"
     punycode "^1.4.1"
 
-transmission@^0.4.9:
-  version "0.4.9"
-  resolved "https://registry.yarnpkg.com/transmission/-/transmission-0.4.9.tgz#560e4060f0b2623cf29aa48d64247ed1be16d7cd"
-  integrity sha1-Vg5AYPCyYjzymqSNZCR+0b4W180=
+transmission@^0.4.10:
+  version "0.4.10"
+  resolved "https://registry.yarnpkg.com/transmission/-/transmission-0.4.10.tgz#eee62e03fb8f1a57cb5edeb11e96e3da603f3baf"
+  integrity sha512-GXss/sNTuHqgvy7TTE3soF8wuS8BzqZO3HV3mc61tg7vVT5u5Gr5kja82QF23GfGeZjdzFUeJGwJrEHU1DWq8Q==
   dependencies:
     async "^2.1.4"
     yargs "^1.3.3"
