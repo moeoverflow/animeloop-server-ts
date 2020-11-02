@@ -6,7 +6,7 @@
   "dependencies": {
     "class-validator": "^0.11.0",
     "express-graphql": "^0.11.0",
-    "graphql": "^14.5.8",
+    "graphql": "^15.4.0",
     "graphql-type-json": "^0.3.0",
     "type-graphql": "^0.17.5",
     "typedi": "^0.8.0"
