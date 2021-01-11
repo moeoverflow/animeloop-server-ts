@@ -6,7 +6,7 @@
   "dependencies": {
     "mongodb": "^3.6.0",
     "typegoose": "^5.4.1",
-    "mongoose": "^5.3.7",
+    "mongoose": "^5.11.11",
     "mongoose-auto-increment": "^5.0.1",
     "mongoose-findorcreate": "^3.0.0",
     "typedi": "^0.8.0"
